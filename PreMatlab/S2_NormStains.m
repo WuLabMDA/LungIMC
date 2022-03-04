@@ -1,5 +1,3 @@
-raw_roi_dir = 'TonsilSlidesROIs';
-raw_process_dir = 'TonsilProcessing';
 organize_dir = 'MatROI';
 
 stain_selection = {'139La_CD45RO', '141Pr_aSMA', '142Nd_TIGIT', '143Nd_ICOS', '144Nd_HLA-DR', ...

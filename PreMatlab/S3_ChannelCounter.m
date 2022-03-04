@@ -1,7 +1,6 @@
-raw_process_dir = 'TonsilProcessing';
 mat_dir = 'MatROI'; % Name of the folder with the tissues/patients
-channels_expected = 35; % Input the number of channels that we expect per ROI
 
+channels_expected = 35; % Input the number of channels that we expect per ROI
 slide_list = dir(fullfile(data_root, raw_process_dir, mat_dir)); % list of the slides 
 slide_num = length(slide_list) - 2; % Length of above list 
 

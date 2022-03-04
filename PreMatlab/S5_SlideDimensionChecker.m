@@ -1,4 +1,3 @@
-raw_process_dir = 'TonsilProcessing';
 group_dir = 'GroupROI';% Name of the folder were organized data will be stored
 split_dir = fullfile(data_root, raw_process_dir, group_dir);
 mkdir(split_dir); % Makes the directory were the organized data will be stored

@@ -1,4 +1,3 @@
-raw_process_dir = 'TonsilProcessing';
 group_dir = 'GroupROI';% Name of the folder were organized data will be stored
 stain_dir = 'SegROI'; % Name of the folder images used for cell segentation.
 

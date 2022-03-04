@@ -1,4 +1,3 @@
-raw_process_dir = 'TonsilProcessing';
 mat_dir = 'MatROI'; % Name of the folder with the tissues/patients
 
 slide_list = dir(fullfile(data_root, raw_process_dir, mat_dir)); % list of the slides 

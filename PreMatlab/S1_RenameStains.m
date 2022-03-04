@@ -1,5 +1,3 @@
-raw_roi_dir = 'TonsilSlidesROIs';
-
 patient_list = dir(fullfile(data_root, raw_roi_dir));
 num_patients = length(patient_list) - 2;
 for pp = 1:num_patients
