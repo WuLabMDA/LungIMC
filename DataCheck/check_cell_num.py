@@ -33,5 +33,5 @@ if __name__ == "__main__":
     avg_cell_roi = ttl_cell_num * 1.0 / ttl_roi_num
     print("On average, there are {:.1f} cells per ROI.".format(avg_cell_roi))
 
-# There are 1318 ROIs with 2360714 cells.
+# There are 1318 ROIs with 2, 360, 714 cells.
 # On average, there are 1791.1 cells per ROI.
