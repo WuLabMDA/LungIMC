@@ -1,15 +1,15 @@
-raw_dir = 'PROCESSING';
+raw_process_dir = 'TonsilProcessing';
 group_dir = 'GroupROI';% Name of the folder were organized data will be stored
 stain_dir = 'SegROI'; % Name of the folder images used for cell segentation.
 
-group_list = dir(fullfile(data_root, raw_dir, group_dir)); % list of the data groups
+group_list = dir(fullfile(data_root, raw_process_dir, group_dir)); % list of the data groups
 group_num = length(group_list) - 2 ; % Length of above group list 
 
 for ii = 1:group_num % Loops through each slide
     disp("Prepare group " + ii + " in " + group_num);
     g_id = group_list(ii+2).name;
-    org_grp_dir = fullfile(data_root, raw_dir, group_dir, g_id);
-    seg_grp_dir = fullfile(data_root, raw_dir, stain_dir, g_id);
+    org_grp_dir = fullfile(data_root, raw_process_dir, group_dir, g_id);
+    seg_grp_dir = fullfile(data_root, raw_process_dir, stain_dir, g_id);
     if ~exist(seg_grp_dir, 'dir')
         mkdir(seg_grp_dir)
     end

@@ -1,15 +1,15 @@
-raw_dir = 'PROCESSING';
+raw_process_dir = 'TonsilProcessing';
 group_dir = 'GroupROI';% Name of the folder were organized data will be stored
-split_dir = fullfile(data_root, raw_dir, group_dir);
+split_dir = fullfile(data_root, raw_process_dir, group_dir);
 mkdir(split_dir); % Makes the directory were the organized data will be stored
 
 mat_dir = 'MatROI'; % Name of the folder with the tissues/patients
-slide_list = dir(fullfile(data_root, raw_dir, mat_dir)); % list of the slides 
+slide_list = dir(fullfile(data_root, raw_process_dir, mat_dir)); % list of the slides 
 slide_num = length(slide_list) - 2 ; % Length of above list 
 for i = 1:slide_num % Loops through each slide
     disp(i + "/" + slide_num);
     p_id = slide_list(i+2).name;
-    slide_ROI_dir = fullfile(data_root, raw_dir, mat_dir, p_id);
+    slide_ROI_dir = fullfile(data_root, raw_process_dir, mat_dir, p_id);
     roi_list = dir(slide_ROI_dir); % list of all the ROIs 
     number_of_roi = length(roi_list) - 2;
     dimensions_list_named = strings(1,3);
@@ -17,11 +17,11 @@ for i = 1:slide_num % Loops through each slide
     % Within each patient folder we will count the total number of files 
     for j = 1:number_of_roi % Loops through the number of ROI in a slide
         roi_id = roi_list(j+2).name; % Gets one ROI at a time to check inside of
-        cur_ROI_dir = fullfile(data_root, raw_dir, mat_dir, p_id, roi_id);
+        cur_ROI_dir = fullfile(data_root, raw_process_dir, mat_dir, p_id, roi_id);
         image_list = dir(cur_ROI_dir);
         image_list_name = {image_list.name};
         % Creates a list of dimensions with respective ROI 
-        load(fullfile(data_root, raw_dir, mat_dir, p_id, roi_id,  string(image_list_name(3))), 'stain_img');
+        load(fullfile(data_root, raw_process_dir, mat_dir, p_id, roi_id,  string(image_list_name(3))), 'stain_img');
         dimensions_list_named(j,1:2) = size(stain_img); 
         dimensions_list_named(j,3) = roi_id;
     end
@@ -64,8 +64,8 @@ for i = 1:slide_num % Loops through each slide
     % per their dimension category
     for t = 1:number_of_roi
         des_num = sort_categories_list(t,3); % destination number 
-        destination_dir = fullfile(data_root,raw_dir,group_dir, p_id_name_list(des_num));
-        source_dir = fullfile(data_root,raw_dir,mat_dir, p_id, roi_list(t+2).name);
+        destination_dir = fullfile(data_root,raw_process_dir,group_dir, p_id_name_list(des_num));
+        source_dir = fullfile(data_root,raw_process_dir,mat_dir, p_id, roi_list(t+2).name);
         copyfile(source_dir, fullfile(destination_dir, roi_list(t+2).name));
     end 
     

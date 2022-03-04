@@ -1,4 +1,5 @@
-raw_roi_dir = 'StudySlidesROIs';
+raw_roi_dir = 'TonsilSlidesROIs';
+raw_process_dir = 'TonsilProcessing';
 organize_dir = 'MatROI';
 
 stain_selection = {'139La_CD45RO', '141Pr_aSMA', '142Nd_TIGIT', '143Nd_ICOS', '144Nd_HLA-DR', ...
@@ -24,7 +25,7 @@ for pp = 1:num_patients
     num_rois = length(roi_list) - 2;
     for rr = 1:num_rois
         roi_id = roi_list(rr+2).name;
-        tif_save_dir = fullfile(data_root, 'PROCESSING', organize_dir, p_id, roi_id);
+        tif_save_dir = fullfile(data_root, raw_process_dir, organize_dir, p_id, roi_id);
         if ~exist(tif_save_dir, 'dir')
             mkdir(tif_save_dir)
         end  

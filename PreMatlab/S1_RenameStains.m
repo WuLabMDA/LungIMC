@@ -1,11 +1,11 @@
-roi_dir = 'StudySlidesROIs';
+raw_roi_dir = 'TonsilSlidesROIs';
 
-patient_list = dir(fullfile(data_root, roi_dir));
+patient_list = dir(fullfile(data_root, raw_roi_dir));
 num_patients = length(patient_list) - 2;
 for pp = 1:num_patients
     disp(pp + "/" + num_patients);
     p_id = patient_list(pp+2).name;
-    raw_p_dir = fullfile(data_root, roi_dir, p_id);
+    raw_p_dir = fullfile(data_root, raw_roi_dir, p_id);
     roi_list = dir(raw_p_dir);
     num_rois = length(roi_list) - 2;
     for rr = 1:num_rois
