@@ -8,7 +8,7 @@ import numpy as np
 def set_args():
     parser = argparse.ArgumentParser(description = "Filter Segmented Cells")
     parser.add_argument("--data_root",        type=str,       default="/Data")
-    parser.add_argument("--data_type",        type=str,       default="Study")
+    parser.add_argument("--data_type",        type=str,       default="Study", choices = ["Study", "Tonsil"])
 
     args = parser.parse_args()
     return args
@@ -33,5 +33,10 @@ if __name__ == "__main__":
     avg_cell_roi = ttl_cell_num * 1.0 / ttl_roi_num
     print("On average, there are {:.1f} cells per ROI.".format(avg_cell_roi))
 
-# There are 1318 ROIs with 2, 360, 714 cells.
-# On average, there are 1791.1 cells per ROI.
+## Default settings
+# Study
+# There are 1,318 ROIs with 2,360,714 cells.
+# On average, there are 1,791.1 cells per ROI.
+# Tonsil
+# There are 55 ROIs with 195851 cells.
+# On average, there are 3560.9 cells per ROI.

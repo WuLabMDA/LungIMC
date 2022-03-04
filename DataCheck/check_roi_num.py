@@ -7,7 +7,7 @@ import argparse
 def set_args():
     parser = argparse.ArgumentParser(description = "Filter Segmented Cells")
     parser.add_argument("--data_root",        type=str,       default="/Data")
-    parser.add_argument("--data_type",        type=str,       default="Study")
+    parser.add_argument("--data_type",        type=str,       default="Study", choices = ["Study", "Tonsil"])
 
     args = parser.parse_args()
     return args
