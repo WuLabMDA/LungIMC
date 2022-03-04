@@ -29,13 +29,11 @@ if __name__ == "__main__":
     seg_root_dir = os.path.join(args.data_root, args.data_type + "Processing")
     segroi_dir = os.path.join(seg_root_dir, args.roi_dir)
     visroi_dir = os.path.join(seg_root_dir, args.vis_dir)
-    if os.path.exists(visroi_dir):
-        shutil.rmtree(visroi_dir)
-    os.makedirs(visroi_dir)
+    if not os.path.exists(visroi_dir):
+        os.makedirs(visroi_dir)
     segresult_dir = os.path.join(seg_root_dir, args.result_dir)
-    if os.path.exists(segresult_dir):
-        shutil.rmtree(segresult_dir)
-    os.makedirs(segresult_dir)
+    if not os.path.exists(segresult_dir):
+        os.makedirs(segresult_dir)
 
     # Initilize cell seg app
     cellseg_app = Mesmer()
@@ -52,7 +50,6 @@ if __name__ == "__main__":
             stain_list = [os.path.join(cur_roi_dir, ele + ".tif") for ele in [args.nuc_stain, args.mem_stain]]
             input_roi_arr_list.append(np.stack([io.imread(ele) for ele in stain_list], axis=2))
         input_roi_arrs = np.stack(input_roi_arr_list, axis=0).astype(np.float64)
-
         # Perform segmentation
         seg_preds = cellseg_app.predict(input_roi_arrs, image_mpp=0.5)
 
