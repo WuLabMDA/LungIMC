@@ -32,11 +32,3 @@ if __name__ == "__main__":
     print("There are {} ROIs with {} cells.".format(ttl_roi_num, ttl_cell_num))
     avg_cell_roi = ttl_cell_num * 1.0 / ttl_roi_num
     print("On average, there are {:.1f} cells per ROI.".format(avg_cell_roi))
-
-## Default settings
-# Study
-# There are 1,318 ROIs with 2,360,714 cells.
-# On average, there are 1,791.1 cells per ROI.
-# Tonsil
-# There are 55 ROIs with 195851 cells.
-# On average, there are 3560.9 cells per ROI.
