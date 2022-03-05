@@ -13,9 +13,10 @@ from deepcell.utils.plot_utils import make_outline_overlay
 def set_args():
     parser = argparse.ArgumentParser(description = "IMC Cell Segmentation")
     parser.add_argument("--data_root",              type=str,       default="/Data")
+    parser.add_argument("--data_type",              type=str,       default="Study", choices = ["Study", "Tonsil"])    
     parser.add_argument("--nuc_stain",              type=str,       default="191Ir")
     parser.add_argument("--mem_stain",              type=str,       default="NaKATPase")
-    parser.add_argument("--data_type",              type=str,       default="Study", choices = ["Study", "Tonsil"])
+    parser.add_argument("--image_mpp",              type=float,     default=1.0)
     parser.add_argument("--roi_dir",                type=str,       default="SegROI")
     parser.add_argument("--vis_dir",                type=str,       default="VisROI")
     parser.add_argument("--result_dir",             type=str,       default="SegResults")
@@ -29,11 +30,13 @@ if __name__ == "__main__":
     seg_root_dir = os.path.join(args.data_root, args.data_type + "Processing")
     segroi_dir = os.path.join(seg_root_dir, args.roi_dir)
     visroi_dir = os.path.join(seg_root_dir, args.vis_dir)
-    if not os.path.exists(visroi_dir):
-        os.makedirs(visroi_dir)
+    if os.path.exists(visroi_dir):
+        shutil.rmtree(visroi_dir)
+    os.makedirs(visroi_dir)
     segresult_dir = os.path.join(seg_root_dir, args.result_dir)
-    if not os.path.exists(segresult_dir):
-        os.makedirs(segresult_dir)
+    if os.path.exists(segresult_dir):
+        shutil.rmtree(segresult_dir)
+    os.makedirs(segresult_dir)
 
     # Initilize cell seg app
     cellseg_app = Mesmer()
@@ -51,7 +54,7 @@ if __name__ == "__main__":
             input_roi_arr_list.append(np.stack([io.imread(ele) for ele in stain_list], axis=2))
         input_roi_arrs = np.stack(input_roi_arr_list, axis=0).astype(np.float64)
         # Perform segmentation
-        seg_preds = cellseg_app.predict(input_roi_arrs, image_mpp=0.5)
+        seg_preds = cellseg_app.predict(input_roi_arrs, image_mpp=args.image_mpp)
 
         # Save cell segmentation results
         cur_roi_seg_dir = os.path.join(segresult_dir, p_id)
