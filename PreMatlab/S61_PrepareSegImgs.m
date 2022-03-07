@@ -1,4 +1,4 @@
-%% Only use NaKATPase
+% NaKATPase
 
 group_dir = 'GroupROI';% Name of the folder were organized data will be stored
 stain_dir = 'SegROI'; % Name of the folder images used for cell segentation.
@@ -44,5 +44,3 @@ for ii = 1:group_num % Loops through each slide
     end
 end
 disp("Cell segmentation image preparation completed!")
-
-% B2M & NaKATPase

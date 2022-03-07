@@ -1,4 +1,4 @@
-%% Max NaKATPase and B2M
+%% Max(NaKATPase,B2M)
 
 group_dir = 'GroupROI';% Name of the folder were organized data will be stored
 stain_dir = 'SegROI'; % Name of the folder images used for cell segentation.
