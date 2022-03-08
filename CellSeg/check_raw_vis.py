@@ -40,7 +40,8 @@ if __name__ == "__main__":
             roi_name = cur_img_name[:-8]
             src_raw_path = os.path.join(src_p_dir, roi_name + "_raw.png")
             src_seg_path = os.path.join(src_p_dir, roi_name + "_seg.png")
-            dst_raw_path = os.path.join(merge_raw_dir, cur_p_name + roi_name + ".png")
-            dst_seg_path = os.path.join(merge_seg_dir, cur_p_name + roi_name + ".png")
+            dst_roi_name = roi_name[:roi_name.find("_")]
+            dst_raw_path = os.path.join(merge_raw_dir, cur_p_name + dst_roi_name + ".png")
+            dst_seg_path = os.path.join(merge_seg_dir, cur_p_name + dst_roi_name + ".png")
             shutil.copyfile(src_raw_path, dst_raw_path)
             shutil.copyfile(src_seg_path, dst_seg_path)
