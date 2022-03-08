@@ -1,7 +1,7 @@
 %% Sum(NaKATPase,B2M)
 
 group_dir = 'GroupROI';% Name of the folder were organized data will be stored
-stain_dir = 'SegROI'; % Name of the folder images used for cell segentation.
+stain_dir = 'ROISeg'; % Name of the folder images used for cell segentation.
 
 group_list = dir(fullfile(data_root, raw_process_dir, group_dir)); % list of the data groups
 group_num = length(group_list) - 2 ; % Length of above group list 
