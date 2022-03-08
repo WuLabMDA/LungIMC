@@ -7,4 +7,4 @@ addpath(genpath('./npymatlab'));
 % set variables
 data_root = 'E:\LungIMCData';
 raw_roi_dir = 'RawStudySlidesROIs';
-raw_process_dir = 'RawStudyProcessing';
+raw_process_dir = 'StudyProcessing';
