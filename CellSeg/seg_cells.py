@@ -13,9 +13,9 @@ from deepcell.utils.plot_utils import make_outline_overlay
 def set_args():
     parser = argparse.ArgumentParser(description = "IMC Cell Segmentation")
     parser.add_argument("--data_root",              type=str,       default="/Data")
-    parser.add_argument("--data_type",              type=str,       default="Study", choices = ["Study", "Tonsil"])
-    parser.add_argument("--nuc_stain",              type=str,       default="191Ir", choices = ["191Ir", "Ir191_Ir193_Sum"])
-    parser.add_argument("--mem_stain",              type=str,       default="NaKATPase", choices = ["NaKATPase", "NaK_B2M_Sum", "NaK_B2M_Max"])
+    parser.add_argument("--data_type",              type=str,       default="Study",           choices = ["Study", "Tonsil"])
+    parser.add_argument("--nuc_stain",              type=str,       default="Ir191_Ir193_Sum", choices = ["191Ir", "Ir191_Ir193_Sum"])
+    parser.add_argument("--mem_stain",              type=str,       default="NaKATPase",       choices = ["NaKATPase", "NaK_B2M_Sum", "NaK_B2M_Max"])
     parser.add_argument("--image_mpp",              type=float,     default=1.0)
     parser.add_argument("--roi_dir",                type=str,       default="ROISeg")
     parser.add_argument("--vis_dir",                type=str,       default="VisROI")
@@ -66,7 +66,7 @@ if __name__ == "__main__":
             np.save(cur_roi_seg_path, seg_preds[idx,:,:,0])
 
         # Save visualization results
-        rgb_images = create_rgb_image(input_roi_arrs, channel_colors=['green', 'blue'])
+        rgb_images = create_rgb_image(input_roi_arrs, channel_colors=["blue", "green"])
         overlay_rois = make_outline_overlay(rgb_data=rgb_images, predictions=seg_preds)
         cur_roi_vis_dir = os.path.join(visroi_dir, p_id)
         os.makedirs(cur_roi_vis_dir)
