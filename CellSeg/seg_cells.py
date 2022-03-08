@@ -40,6 +40,8 @@ if __name__ == "__main__":
 
     # Initilize cell seg app
     cellseg_app = Mesmer()
+    print("Nuc stain is: {}".format(args.nuc_stain))
+    print("Mem stain is: {}".format(args.mem_stain))
 
     # traverse patients one-by-one
     patient_list = sorted([ele for ele in os.listdir(segroi_dir)])
