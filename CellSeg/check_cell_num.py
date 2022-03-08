@@ -9,8 +9,6 @@ def set_args():
     parser = argparse.ArgumentParser(description = "Filter Segmented Cells")
     parser.add_argument("--data_root",        type=str,       default="/Data")
     parser.add_argument("--data_type",        type=str,       default="Study", choices = ["Study", "Tonsil"])
-    parser.add_argument("--nucmem_setting",   type=str,       default="G1-NaKATPase",
-                        choices = ["G1-NaKATPase", "G2-NaK_B2M_Sum", "G3-NaK_B2M_Max", "G4-Ir191_193_NaK"])
 
     args = parser.parse_args()
     return args
@@ -18,8 +16,7 @@ def set_args():
 
 if __name__ == "__main__":
     args = set_args()
-    print("----{}".format(args.nucmem_setting))
-    seg_root_dir = os.path.join(args.data_root, args.data_type + "Processing", args.nucmem_setting, "SegResults")
+    seg_root_dir = os.path.join(args.data_root, args.data_type + "Processing", "SegResults")
     slide_list = sorted([ele for ele in os.listdir(seg_root_dir) if os.path.isdir(os.path.join(seg_root_dir, ele))])
 
     ttl_roi_num, ttl_cell_num = 0, 0
