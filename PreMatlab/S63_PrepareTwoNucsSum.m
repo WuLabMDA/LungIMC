@@ -1,4 +1,4 @@
-%% Max(NaKATPase,B2M)
+%% Sum(191Ir,193Ir)
 
 group_dir = 'GroupROI';% Name of the folder were organized data will be stored
 stain_dir = 'ROISeg'; % Name of the folder images used for cell segentation.
@@ -23,24 +23,24 @@ for ii = 1:group_num % Loops through each slide
         if ~exist(seg_roi_dir, 'dir')
             mkdir(seg_roi_dir)
         end
-        % load NaKATPase
-        nak_mat_path = fullfile(org_roi_dir, 'NaKATPase.mat');
-        nak_struct = load(nak_mat_path);
-        nak_img = nak_struct.stain_img;
-        % load B2M
-        b2m_mat_path = fullfile(org_roi_dir, 'B2M.mat');
-        b2m_struct = load(b2m_mat_path);
-        b2m_img = b2m_struct.stain_img; 
-        % max 
-        mem_max = max(nak_img, b2m_img);
-        % normalize
-        max_val = prctile(mem_max(:), 99);
-        min_val = prctile(mem_max(:), 1);
-        mem_max(mem_max > max_val) = max_val;
-        mem_max(mem_max < min_val) = min_val;
-        mem_img = uint8(255.0 * (mem_max - min_val) / (max_val - min_val));
-        imwrite(mem_img, fullfile(seg_roi_dir, 'NaK_B2M_Max.tif'));
+        % load 191Ir
+        Ir191_mat_path = fullfile(org_roi_dir, '191Ir.mat');
+        Ir191_struct = load(Ir191_mat_path);
+        Ir191_img = Ir191_struct.stain_img;
         
+        % load 193Ir
+        Ir193_mat_path = fullfile(org_roi_dir, '193Ir.mat');
+        Ir193_struct = load(Ir193_mat_path);
+        Ir193_img = Ir193_struct.stain_img; 
+        % sum 
+        nuc_sum = Ir191_img + Ir193_img;
+        % normalize
+        max_val = prctile(nuc_sum(:), 99);
+        min_val = prctile(nuc_sum(:), 1);
+        nuc_sum(nuc_sum > max_val) = max_val;
+        nuc_sum(nuc_sum < min_val) = min_val;
+        nuc_img = uint8(255.0 * (nuc_sum - min_val) / (max_val - min_val));
+        imwrite(nuc_img, fullfile(seg_roi_dir, 'Ir191_193_Sum.tif'));
     end
 end
 disp("Cell segmentation image preparation completed!")
