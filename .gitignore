@@ -1,5 +1,12 @@
 # Files
 *.jar
+.Rhistory
+.Rapp.history
+.RData
+.RDataTmp
+.Ruserdata
+.Rproj.user/
+
 
 # Folder
 
@@ -132,3 +139,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.Rproj.user
