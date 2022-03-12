@@ -64,7 +64,6 @@ if __name__ == "__main__":
             cy = int(cnt_m["m01"] / cnt_m["m00"])
             scell_fea.extend([cx, cy])
             cell_stain_pixels = stain_imgs[inst_map==1]
-            import pdb; pdb.set_trace()
             cell_stain_means = np.mean(cell_stain_pixels, axis=0)
             scell_fea.extend(cell_stain_means.tolist())
             roi_cell_feas.append(scell_fea)
