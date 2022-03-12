@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
-import shutil, argparse
+import shutil, argparse, pytz
 import numpy as np
 from skimage import io
 from scipy.io import loadmat
+from datetime import datetime
 import tifffile, cv2
 import warnings
 
@@ -39,7 +40,8 @@ if __name__ == "__main__":
     # deal with all rois
     roi_list = sorted([os.path.splitext(ele)[0] for ele in os.listdir(mask_root) if ele.endswith(".npy")])
     for ind, cur_roi in enumerate(roi_list):
-        print("Work on {}/{}".format(ind+1, len(roi_list)))
+        cur_time_str = datetime.now(pytz.timezone('America/Chicago')).strftime("%H:%M:%S")
+        print("Work on {}/{} Current time: {}".format(ind+1, len(roi_list), cur_time_str))
         cur_roi_mask_path = os.path.join(mask_root, cur_roi + ".npy")
         seg_mask = np.load(cur_roi_mask_path)
         inst_list = sorted(np.unique(seg_mask).tolist())
@@ -60,8 +62,11 @@ if __name__ == "__main__":
             cell_cnt = contours[0]
             # extract cell centers
             cnt_m = cv2.moments(cell_cnt)
-            cx = int(cnt_m["m10"] / cnt_m["m00"])
-            cy = int(cnt_m["m01"] / cnt_m["m00"])
+            if cnt_m["m00"] != 0:
+                cx = int(cnt_m["m10"] / cnt_m["m00"])
+                cy = int(cnt_m["m01"] / cnt_m["m00"])
+            else:
+                cx, cy = 0, 0
             scell_fea.extend([cx, cy])
             cell_stain_pixels = stain_imgs[inst_map==1]
             cell_stain_means = np.mean(cell_stain_pixels, axis=0)
