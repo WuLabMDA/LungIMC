@@ -41,36 +41,32 @@ if __name__ == "__main__":
     for ind, cur_roi in enumerate(roi_list):
         print("Work on {}/{}".format(ind+1, len(roi_list)))
         cur_roi_mask_path = os.path.join(mask_root, cur_roi + ".npy")
-        if not os.path.exists(cur_roi_mask_path):
-            print("No mask")
-        # seg_mask = np.squeeze(tifffile.imread(cur_roi_mask_path))
-        # inst_list = sorted(list(np.unique(seg_mask)))
-        # inst_list.remove(0) # remove background
-        # # locate stain images
-        # stain_imgs = np.zeros((seg_mask.shape[0], seg_mask.shape[1], len(stain_list), np.float32)
+        seg_mask = np.load(cur_roi_mask_path)
+        inst_list = sorted(np.unique(seg_mask).tolist())
+        inst_list.remove(0) # remove background
+        # collect stain images
+        stain_imgs = np.zeros((seg_mask.shape[0], seg_mask.shape[1], len(stain_list)), np.float32)
         cur_roi_stain_dir = os.path.join(stain_root, cur_roi)
         for sind, cur_stain in enumerate(stain_list):
             cur_stain_path = os.path.join(cur_roi_stain_dir, cur_stain + ".tiff")
-            if not os.path.exists(cur_stain_path):
-                print("No stain {}".format(cur_stain))
-        #     stain_imgs[:, :, sind] = tifffile.imread(cur_stain_path).astype(np.float32)
-        #
-        # # extract cell features
-        # roi_cell_feas = []
-        # for inst_id in inst_list:
-        #     scell_fea = []
-        #     # locate the cell mask region
-        #     inst_map = np.array(seg_mask == inst_id, np.uint8)
-        #     contours, hierarchy = cv2.findContours(inst_map, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
-        #     cell_cnt = contours[0]
-        #     # extract cell centers
-        #     cnt_m = cv2.moments(cell_cnt)
-        #     cx = int(cnt_m["m10"] / cnt_m["m00"])
-        #     cy = int(cnt_m["m01"] / cnt_m["m00"])
-        #     scell_fea.extend([cx, cy])
-        #     cell_stain_pixels = stain_imgs[inst_map==1]
-        #     cell_stain_means = np.mean(cell_stain_pixels, axis=0)
-        #     scell_fea.extend(cell_stain_means.tolist())
-        #     roi_cell_feas.append(scell_fea)
-        # # save roi cell features
-        # np.save(os.path.join(cellfea_dir, cur_roi + ".npy"), np.asarray(roi_cell_feas))
+            stain_imgs[:, :, sind] = tifffile.imread(cur_stain_path).astype(np.float32)
+        # extract cell features
+        roi_cell_feas = []
+        for inst_id in inst_list:
+            scell_fea = []
+            # locate the cell mask region
+            inst_map = np.array(seg_mask == inst_id, np.uint8)
+            contours, hierarchy = cv2.findContours(inst_map, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+            cell_cnt = contours[0]
+            # extract cell centers
+            cnt_m = cv2.moments(cell_cnt)
+            cx = int(cnt_m["m10"] / cnt_m["m00"])
+            cy = int(cnt_m["m01"] / cnt_m["m00"])
+            scell_fea.extend([cx, cy])
+            cell_stain_pixels = stain_imgs[inst_map==1]
+            import pdb; pdb.set_trace()
+            cell_stain_means = np.mean(cell_stain_pixels, axis=0)
+            scell_fea.extend(cell_stain_means.tolist())
+            roi_cell_feas.append(scell_fea)
+        # save roi cell features
+        np.save(os.path.join(cellfea_dir, cur_roi + ".npy"), np.asarray(roi_cell_feas))
