@@ -6,7 +6,7 @@ if (!dir.exists(batch_effects_dir))
 # checking for batch effects
 detect_batch_effect(uncorrected, out_dir = batch_effects_dir, downsample = NULL,
                     norm_method = "scale", xdim = 8, ydim = 8,
-                    markers = imc_markers, batch_col = "batch", seed = 1234)
+                    markers = markers, batch_col = "batch", seed = 1234)
 
 # quick detection of batch effects.
 detect_batch_effect_express(uncorrected, out_dir = batch_effects_dir,
