@@ -30,5 +30,5 @@ dev.off()
 
 # save objects
 no_control_path <- file.path(data_root, "BatchCorrection", "NoControl.RData")
-save(fea_filenames, roi_nrows, roi_feas, uncorrected, corrected, file = no_control_path)
+save(fea_filenames, markers, roi_nrows, roi_feas, uncorrected, corrected, file = no_control_path)
 
