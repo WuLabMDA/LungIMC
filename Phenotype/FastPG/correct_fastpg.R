@@ -1,3 +1,8 @@
+if(!require(dplyr)){
+    install.packages("dplyr")
+    library(dplyr)
+}
+
 # load and select features
 data_root <- "/Data"
 fea_root_dir <- file.path(data_root, "BatchCorrection", "NoControl")
@@ -10,7 +15,7 @@ message(paste("Cell Number: ", NROW(cell_feas), " Feature Number: ", NCOL(cell_f
 
 # Setup FastPG parameters
 k <- 30
-num_threads <- 16
+num_threads <- 32
 
 # Run FastPG
 message(paste("FastPG Start @ ", format(Sys.time(), "%a %b %d %X %Y")))
