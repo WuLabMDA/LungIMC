@@ -28,7 +28,15 @@ dev.off()
 # emd$scatter
 # dev.off()
 
-# save objects
-no_control_path <- file.path(data_root, "BatchCorrection", "NoControl", "CellFeasROI.RData")
-save(fea_filenames, markers, roi_nrows, roi_feas, uncorrected, corrected, file = no_control_path)
-
+# Create UMAPs
+sam <- sample(1:nrow(uncorrected), 50000)
+sample_uncorrected <- uncorrected[sam, ]
+sample_corrected <- corrected[sam, ]
+plot1 <- plot_dimred(sample_uncorrected, "Uncorrected", type = "umap", plot = "batch", markers = markers)
+plot2 <- plot_dimred(sample_corrected, "Corrected", type = "umap", plot = "batch", markers = markers)
+# Umap plots
+plot_save_two(plot1, plot2, file.path(vis_correction_dir, "umap.png"))
+# Density plots
+plot_density(sample_uncorrected, sample_corrected, markers = markers,
+             filename = file.path(vis_correction_dir, "density.png"), 
+             y = "batch", ncol = 6)
