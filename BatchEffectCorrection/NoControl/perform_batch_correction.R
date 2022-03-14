@@ -6,7 +6,7 @@ labels <- corrected %>% create_som(markers = markers, rlen = 10)
 uncorrected$label <- corrected$label <- labels
 
 # batch effect correction visualization
-vis_correction_dir <- file.path(data_root, "BatchCorrection", "NoControlCorrection")
+vis_correction_dir <- file.path(data_root, "BatchCorrection", "NoControl")
 if (!dir.exists(vis_correction_dir))
     dir.create(vis_correction_dir, recursive = TRUE)
 
@@ -29,6 +29,6 @@ dev.off()
 # dev.off()
 
 # save objects
-no_control_path <- file.path(data_root, "BatchCorrection", "NoControl.RData")
+no_control_path <- file.path(data_root, "BatchCorrection", "NoControl", "CellFeasROI.RData")
 save(fea_filenames, markers, roi_nrows, roi_feas, uncorrected, corrected, file = no_control_path)
 
