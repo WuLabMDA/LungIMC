@@ -1,6 +1,6 @@
 # load Panel metadata
 panel_file_path <- file.path(data_root, "BatchCorrection", "Metadata", "PanelsIMC.csv")
-imc_markers <- read.csv(panel_file_path) %>% pull(Marker)
+markers <- read.csv(panel_file_path) %>% pull(Marker)
 
 
 # load ROI metadata
@@ -32,7 +32,7 @@ for (ind in 1:file_num) {
 
 # convert to feature matrix and add markers
 roi_feas <- bind_rows(roi_fea_list)
-colnames(roi_feas) <- imc_markers
+colnames(roi_feas) <- markers
 # add cell ids
 roi_feas$id <- 1:sum(roi_nrows)
 # add ROI ids
@@ -45,5 +45,5 @@ condition_ids <- roi_metadata[["Condition"]][match(fea_filenames, roi_metadata[[
 roi_feas$condition <- condition_ids
 
 # transform data
-uncorrected <- transform_asinh(df = roi_feas, markers = imc_markers, cofactor = 5, .keep = TRUE)
+uncorrected <- transform_asinh(df = roi_feas, markers = markers, cofactor = 5, .keep = TRUE)
 
