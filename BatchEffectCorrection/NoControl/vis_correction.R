@@ -1,5 +1,5 @@
 # batch effect correction visualization
-vis_correction_dir <- file.path(data_root, "BatchCorrection", "VisCorrection")
+vis_correction_dir <- file.path(data_root, "BatchCorrection", "NoControlCorrection")
 if (!dir.exists(vis_correction_dir))
     dir.create(vis_correction_dir, recursive = TRUE)
 
