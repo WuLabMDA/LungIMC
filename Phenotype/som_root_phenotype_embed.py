@@ -95,7 +95,7 @@ if __name__ == "__main__":
     norm_feas = (cell_feas - min_feas) / range_feas
     norm_feas[norm_feas < 0] = 0
     norm_feas[norm_feas > 1] = 1.0
-    for ind, fea_name in enumerate(fea_names):
+    for ind, fea_name in enumerate(antibody_names):
         fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
         axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=norm_feas[:, ind], s=0.1, cmap=plt.cm.jet)
         axes.set_title("Feature: {}".format(fea_name))
