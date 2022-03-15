@@ -9,4 +9,4 @@ som_labels <- kohonen::som(cell_feas, grid = kohonen::somgrid(xdim = 8, ydim = 8
 correct_communities <- som_labels$unit.classif
 message(paste("There are ", length(unique(correct_communities)), " communties detected."))
 community_path <- file.path(fea_root_dir, community_name)
-save(correct_communities, file = community_path)
+save(cell_feas, correct_communities, file = community_path)
