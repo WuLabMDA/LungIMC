@@ -29,13 +29,17 @@ ENV CONDA_DEFAULT_ENV=py383
 ENV CONDA_PREFIX=/App/miniconda/envs/$CONDA_DEFAULT_ENV
 ENV PATH=$CONDA_PREFIX/bin:$PATH
 
+# Create some folders for python packages
+WORKDIR /.local
+RUN chmod 777 /.local
+# Set working directory
+WORKDIR /App/LungIMC
+
 # Install python packages
-RUN pip install gpustat==0.6.0 setuptools==45 pytz==2021.1 numba==0.54.1
+RUN pip install gpustat==0.6.0 setuptools==45 pytz==2021.1
+RUN pip install tqdm==4.62.0 numba==0.54.1 ipython==8.0.0
 RUN pip install deepdish==0.3.6 pandas==1.1.5 seaborn==0.11.2 matplotlib==3.5.0
 RUN pip install scikit-learn==1.0.1 xgboost==1.5.1 statsmodels==0.13.1
 RUN pip install opencv-python==4.5.4.60 scikit-image==0.18.0
 RUN pip install pyreadr==0.4.4
 RUN conda install -c conda-forge umap-learn
-
-# Set working directory
-WORKDIR /App/LungIMC
