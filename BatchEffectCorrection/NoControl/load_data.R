@@ -47,3 +47,24 @@ roi_feas$condition <- condition_ids
 # transform data
 uncorrected <- transform_asinh(df = roi_feas, markers = markers, cofactor = 5, .keep = TRUE)
 
+# save RData
+rdata_dir <- file.path(data_root, "BatchCorrection", "RData")
+if (!dir.exists(rdata_dir))
+    dir.create(rdata_dir, recursive = TRUE)
+## save meta data
+no_control_meta_path <- file.path(rdata_dir, "Meta.RData")
+save(fea_filenames, markers, roi_nrows, file = no_control_meta_path)
+## save raw features
+raw_labels <- roi_feas %>% create_som(markers = markers, rlen = 10)
+roi_feas$label <- raw_labels
+RawFeas <- roi_feas %>% data.frame()
+raw_fea_path <- file.path(rdata_dir, "RawFeas.csv")
+write.csv(RawFeas, raw_fea_path, row.names = FALSE)
+## save transformed features
+transform_labels <- uncorrected %>% create_som(markers = markers, rlen = 10)
+uncorrected$label <- transform_labels
+TransformedFeas <- uncorrected %>% data.frame()
+transform_fea_path <- file.path(rdata_dir, "TransformedFeas.csv")
+write.csv(TransformedFeas, transform_fea_path, row.names = FALSE)
+
+
