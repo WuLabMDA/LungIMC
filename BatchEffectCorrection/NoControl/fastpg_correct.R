@@ -1,4 +1,5 @@
-library(FastPG)
+fea_root_dir <- file.path(data_root, "BatchCorrection", "NoControl")
+load(file.path(fea_root_dir, "CorrectedFeas.RData"))
 community_name = "CorrectedCommunities.RData"
 cell_feas <- select(corrected, CK, aSMA, CD31, CD45)
 cell_feas <- as.matrix(cell_feas)
