@@ -76,7 +76,8 @@ if __name__ == "__main__":
     norm_heat = (heat_mat - min_antibody) / range_antibody
     heat_df = pd.DataFrame(norm_heat, columns=antibody_names)
     heat_df.index = cluster_ids
-    heat_g = sns.clustermap(data=heat_df, figsize=(5, 15), metric="euclidean", method="ward", col_cluster=False, cmap="jet")
+    heat_g = sns.clustermap(data=heat_df, figsize=(5, 25), metric="euclidean", method="ward", col_cluster=False, cmap="jet")
+    # heat_g.cax.set_visible(False)
     heatmap_name = "SOM_{}{}CommunitiesHeatmap{}Cells{}Markers.png".format(args.fea_option, community_num, cell_num, fea_num)
     fea_heatmap = os.path.join(phenotype_dir, heatmap_name)
     heat_g.savefig(fea_heatmap, dpi=300)
