@@ -1,0 +1,12 @@
+fea_root_dir <- file.path(data_root, "BatchCorrection", "NoControl")
+load(file.path(fea_root_dir, "TransformedFeas.RData"))
+community_name = "TransformedCommunitiesSOM.RData"
+cell_feas <- select(uncorrected, CK, aSMA, CD31, CD45)
+cell_feas <- as.matrix(cell_feas)
+message(paste("Cell Number: ", NROW(cell_feas), " Feature Number: ", NCOL(cell_feas)))
+som_labels <- kohonen::som(cell_feas, grid = kohonen::somgrid(xdim = 8, ydim = 8), 
+                           rlen = 10, dist.fcts = "euclidean")
+transform_communities <- som_labels$unit.classif
+message(paste("There are ", length(unique(transform_communities)), " communties detected."))
+community_path <- file.path(fea_root_dir, community_name)
+save(transform_communities, file = community_path)
