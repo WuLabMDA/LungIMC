@@ -11,7 +11,7 @@ import pyreadr
 from sklearn.manifold import TSNE
 # import umap
 
-from utils import antibody_names, random_colors
+from pheno_utils import antibody_names, random_colors
 
 def set_args():
     parser = argparse.ArgumentParser(description = "IMC Community Detection")
@@ -85,7 +85,7 @@ if __name__ == "__main__":
     print("t-SNE Done @ ", datetime.now().strftime("%H:%M:%S"))
 
     # Draw antibody heatmap
-    fea_heatmap_dir = os.path.join(phenotype_dir, "SOM_{}StainsHeatmap".format(args.fea_option))
+    fea_heatmap_dir = os.path.join(phenotype_dir, "SOM_{}{}CellsStainsHeatmap".format(args.fea_option, cell_num))
     if os.path.exists(fea_heatmap_dir):
         shutil.rmtree(fea_heatmap_dir)
     os.makedirs(fea_heatmap_dir)
