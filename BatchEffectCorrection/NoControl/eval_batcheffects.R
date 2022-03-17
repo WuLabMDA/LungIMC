@@ -1,5 +1,5 @@
 # set batch effects evaluation directory
-batch_effects_dir <- file.path(data_root, "BatchCorrection", "EvalBatchEffects")
+batch_effects_dir <- file.path(data_root, "EvalBatchEffects")
 if (!dir.exists(batch_effects_dir))
     dir.create(batch_effects_dir, recursive = TRUE)
 
