@@ -6,7 +6,7 @@ labels <- corrected %>% create_som(markers = markers, rlen = 10)
 uncorrected$label <- corrected$label <- labels
 
 ## save corrected features
-rdata_dir <- file.path(data_root, "BatchCorrection", "RData")
+rdata_dir <- file.path(data_root, "RData")
 if (!dir.exists(rdata_dir))
     dir.create(rdata_dir, recursive = TRUE)
 CorrectedFeas <- corrected %>% data.frame()
@@ -15,7 +15,7 @@ write.csv(CorrectedFeas, correct_fea_path, row.names = FALSE)
 
 
 # batch effect correction visualization
-vis_correction_dir <- file.path(data_root, "BatchCorrection", "NoControl")
+vis_correction_dir <- file.path(data_root, "NoControl")
 if (!dir.exists(vis_correction_dir))
     dir.create(vis_correction_dir, recursive = TRUE)
 
