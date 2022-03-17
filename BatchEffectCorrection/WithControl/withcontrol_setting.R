@@ -6,4 +6,4 @@ library(FastPG)
 
 
 # set data root
-data_root <- "E:/LungIMCData"
+data_root <- file.path("E:/LungIMCData", "BatchCorrection")
