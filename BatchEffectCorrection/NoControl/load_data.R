@@ -1,23 +1,17 @@
 # load Panel metadata
-panel_file_path <- file.path(data_root, "BatchCorrection", "Metadata", "PanelsIMC.csv")
+panel_file_path <- file.path(data_root, "Metadata", "PanelsIMC.csv")
 markers <- read.csv(panel_file_path) %>% pull(Marker)
 
 
 # load ROI metadata
-roi_meta_path <- file.path(data_root, "BatchCorrection", "Metadata", "NoControlMetaIMC.csv")
+roi_meta_path <- file.path(data_root, "Metadata", "NoControlMetaIMC.csv")
 roi_metadata <- suppressMessages(readr::read_csv(roi_meta_path))
-
-
-# load ROI cell features
-roi_fea_dir <- file.path(data_root, "StudyProcessing", "CellFeas")
-fea_filenames <- list.files(roi_fea_dir, pattern = "npy$")
-fea_filenames <- tools::file_path_sans_ext(fea_filenames)
-## Filter out ROIs outside the metadata
-fea_filenames <- fea_filenames[fea_filenames %in% roi_metadata[["Filename"]]]
+fea_filenames <- roi_metadata$Filename
 
 
 # load features
 file_num <- length(fea_filenames)
+roi_fea_dir <- file.path(data_root, "NoControl", "CellFeas")
 np <- import("numpy")
 p_len <- 2
 p_num <- 35
@@ -48,7 +42,7 @@ roi_feas$condition <- condition_ids
 uncorrected <- transform_asinh(df = roi_feas, markers = markers, cofactor = 5, .keep = TRUE)
 
 # save RData
-rdata_dir <- file.path(data_root, "BatchCorrection", "RData")
+rdata_dir <- file.path(data_root, "RData")
 if (!dir.exists(rdata_dir))
     dir.create(rdata_dir, recursive = TRUE)
 ## save meta data
