@@ -30,7 +30,7 @@ cowplot::plot_grid(emd$violin, emd$scatterplot)
 dev.off()
 
 # Create UMAPs
-sam <- sample(1:nrow(uncorrected), 50000)
+sam <- sample(1:nrow(uncorrected), 100000)
 sample_uncorrected <- uncorrected[sam, ]
 sample_corrected <- corrected[sam, ]
 plot1 <- plot_dimred(sample_uncorrected, "Uncorrected", type = "umap", plot = "batch", markers = markers)

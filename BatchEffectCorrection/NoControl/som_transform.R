@@ -1,4 +1,4 @@
-rdata_dir <- file.path(data_root, "BatchCorrection", "RData")
+rdata_dir <- file.path(data_root, "RData")
 if (!dir.exists(rdata_dir))
     dir.create(rdata_dir, recursive = TRUE)
 
