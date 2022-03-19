@@ -18,9 +18,8 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--batchcorrection_dir",    type=str,       default="BatchCorrection")
     parser.add_argument("--phenotype_dir",          type=str,       default="Phenotype")
-    parser.add_argument("--control_option",         type=str,       default="NoControl", choices = ["NoControl", "WithControl"])
-    parser.add_argument("--fea_option",             type=str,       default="Corrected", choices = ["Transformed", "Corrected"])
-    parser.add_argument("--sample",                 default=True,  action="store_false")
+    parser.add_argument("--fea_option",             type=str,       default="Transformed", choices = ["Transformed", "Corrected", "ControlCorrected"])
+    parser.add_argument("--sample",                 default=True,   action="store_false")
     parser.add_argument("--sample_cell_size",       type=int,       default=100000)
     parser.add_argument("--seed",                   type=int,       default=1234)
     args = parser.parse_args()
@@ -29,28 +28,27 @@ def set_args():
 
 if __name__ == "__main__":
     args = set_args()
-
     # prepare directory
-    phenotype_dir = os.path.join(args.data_root, args.phenotype_dir, args.control_option)
+    phenotype_dir = os.path.join(args.data_root, args.phenotype_dir, args.fea_option)
     if not os.path.exists(phenotype_dir):
         os.makedirs(phenotype_dir)
-    cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, args.control_option)
-    fea_path = os.path.join(cellfea_dir, args.fea_option + "Feas.RData")
-    fea_rdata = pyreadr.read_r(fea_path)
+
+    cell_feas, communities = None, None
+    cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, "RData")
+    # obtain cell features
+    fea_path = os.path.join(cellfea_dir, args.fea_option + "Feas.csv")
+    cell_feas = pd.read_csv(fea_path)
+    cell_feas = cell_feas[antibody_names].to_numpy()
+    # load communites
     community_path = os.path.join(cellfea_dir, args.fea_option + "CommunitiesSOM.RData")
     community_rdata = pyreadr.read_r(community_path)
-    cell_feas, communities = None, None
-    if args.fea_option == "Corrected":
-        cell_feas = fea_rdata["corrected"]
-        communities = community_rdata["correct_communities"]
-    else:
-        cell_feas = fea_rdata["uncorrected"]
+    if args.fea_option == "Transformed":
         communities = community_rdata["transform_communities"]
-    # Obtain cell features
-    cell_feas = cell_feas[antibody_names].to_numpy()
-    # convert communites to list (integer)
+    else:
+        communities = community_rdata["correct_communities"]
     communities = communities.to_numpy().astype(int)
     communities = np.squeeze(communities)
+
     # Cell sampling
     if args.sample:
         cell_indices = np.arange(0, cell_feas.shape[0])
@@ -89,8 +87,8 @@ if __name__ == "__main__":
     if os.path.exists(fea_heatmap_dir):
         shutil.rmtree(fea_heatmap_dir)
     os.makedirs(fea_heatmap_dir)
-    min_feas = np.percentile(cell_feas, q=5, axis=0)
-    max_feas = np.percentile(cell_feas, q=95, axis=0)
+    min_feas = np.percentile(cell_feas, q=1, axis=0)
+    max_feas = np.percentile(cell_feas, q=99, axis=0)
     range_feas = max_feas - min_feas
     norm_feas = (cell_feas - min_feas) / range_feas
     norm_feas[norm_feas < 0] = 0
