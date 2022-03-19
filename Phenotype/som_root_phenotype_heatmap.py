@@ -30,18 +30,16 @@ if __name__ == "__main__":
     if not os.path.exists(phenotype_dir):
         os.makedirs(phenotype_dir)
     cell_feas, communities = None, None
-    cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, "RData")
-    cellfea_path = os.path.join(cellfea_dir, args.fea_option + "Feas.csv")
-    # load CSV
-    cell_feas = community_rdata["cell_feas"]
     # load communites
+    cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, "RData")
     community_path = os.path.join(cellfea_dir, args.fea_option + "CommunitiesSOM.RData")
     community_rdata = pyreadr.read_r(community_path)
     if args.fea_option == "Transformed":
         communities = community_rdata["transform_communities"]
     else:
         communities = community_rdata["correct_communities"]
-        
+    cell_feas = community_rdata["cell_feas"]
+
     # Obtain cell features
     antibody_names = list(cell_feas)
     cell_feas = cell_feas.to_numpy()
