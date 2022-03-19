@@ -10,7 +10,7 @@ rdata_dir <- file.path(data_root, "RData")
 if (!dir.exists(rdata_dir))
     dir.create(rdata_dir, recursive = TRUE)
 CorrectedFeas <- corrected %>% data.frame()
-correct_fea_path <- file.path(rdata_dir, "CorrectedFeas.csv")
+correct_fea_path <- file.path(rdata_dir, "SelfCorrectFeas.csv")
 write.csv(CorrectedFeas, correct_fea_path, row.names = FALSE)
 
 
