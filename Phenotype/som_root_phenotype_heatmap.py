@@ -15,8 +15,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--batchcorrection_dir",    type=str,       default="BatchCorrection")
     parser.add_argument("--phenotype_dir",          type=str,       default="Phenotype")
-    parser.add_argument("--control_option",         type=str,       default="NoControl", choices = ["NoControl", "WithControl"])
-    parser.add_argument("--fea_option",             type=str,       default="Corrected", choices = ["Transformed", "Corrected"])
+    parser.add_argument("--fea_option",             type=str,       default="Transformed", choices = ["Transformed", "Corrected", "ControlCorrected"])
     parser.add_argument("--sample",                 default=False,  action="store_true")
     parser.add_argument("--sample_cell_size",       type=int,       default=100000)
     parser.add_argument("--seed",                   type=int,       default=1234)
@@ -27,19 +26,22 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
     # prepare directory
-    phenotype_dir = os.path.join(args.data_root, args.phenotype_dir, args.control_option)
+    phenotype_dir = os.path.join(args.data_root, args.phenotype_dir, args.fea_option)
     if not os.path.exists(phenotype_dir):
         os.makedirs(phenotype_dir)
-    cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, args.control_option)
+    cell_feas, communities = None, None
+    cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, "RData")
+    cellfea_path = os.path.join(cellfea_dir, args.fea_option + "Feas.csv")
+    # load CSV
+    cell_feas = community_rdata["cell_feas"]
+    # load communites
     community_path = os.path.join(cellfea_dir, args.fea_option + "CommunitiesSOM.RData")
     community_rdata = pyreadr.read_r(community_path)
-    cell_feas, communities = None, None
-    if args.fea_option == "Corrected":
-        cell_feas = community_rdata["cell_feas"]
-        communities = community_rdata["correct_communities"]
-    else:
-        cell_feas = community_rdata["cell_feas"]
+    if args.fea_option == "Transformed":
         communities = community_rdata["transform_communities"]
+    else:
+        communities = community_rdata["correct_communities"]
+        
     # Obtain cell features
     antibody_names = list(cell_feas)
     cell_feas = cell_feas.to_numpy()
