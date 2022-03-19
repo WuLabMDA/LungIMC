@@ -46,7 +46,7 @@ rdata_dir <- file.path(data_root, "RData")
 if (!dir.exists(rdata_dir))
     dir.create(rdata_dir, recursive = TRUE)
 ## save meta data
-no_control_meta_path <- file.path(rdata_dir, "Meta.RData")
+no_control_meta_path <- file.path(rdata_dir, "StudyMeta.RData")
 save(fea_filenames, markers, roi_nrows, file = no_control_meta_path)
 # ## save raw features
 # raw_labels <- roi_feas %>% create_som(markers = markers, rlen = 10)
@@ -57,6 +57,6 @@ save(fea_filenames, markers, roi_nrows, file = no_control_meta_path)
 ## save transformed features
 transform_labels <- uncorrected %>% create_som(markers = markers, rlen = 10)
 uncorrected$label <- transform_labels
-TransformedFeas <- uncorrected %>% data.frame()
-transform_fea_path <- file.path(rdata_dir, "TransformedFeas.csv")
-write.csv(TransformedFeas, transform_fea_path, row.names = FALSE)
+TransformFeas <- uncorrected %>% data.frame()
+transform_fea_path <- file.path(rdata_dir, "TransformFeas.csv")
+write.csv(TransformFeas, transform_fea_path, row.names = FALSE)
