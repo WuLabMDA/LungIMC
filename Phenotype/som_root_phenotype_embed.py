@@ -42,10 +42,7 @@ if __name__ == "__main__":
     # load communites
     community_path = os.path.join(cellfea_dir, args.fea_option + "CommunitiesSOM.RData")
     community_rdata = pyreadr.read_r(community_path)
-    if args.fea_option == "Transformed":
-        communities = community_rdata["transform_communities"]
-    else:
-        communities = community_rdata["correct_communities"]
+    communities = community_rdata["communities"]
     communities = communities.to_numpy().astype(int)
     communities = np.squeeze(communities)
 

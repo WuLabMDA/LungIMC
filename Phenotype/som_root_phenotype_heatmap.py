@@ -34,11 +34,8 @@ if __name__ == "__main__":
     cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, "RData")
     community_path = os.path.join(cellfea_dir, args.fea_option + "CommunitiesSOM.RData")
     community_rdata = pyreadr.read_r(community_path)
-    if args.fea_option == "Transformed":
-        communities = community_rdata["transform_communities"]
-    else:
-        communities = community_rdata["correct_communities"]
     cell_feas = community_rdata["cell_feas"]
+    communities = community_rdata["communities"]
 
     # Obtain cell features
     antibody_names = list(cell_feas)
