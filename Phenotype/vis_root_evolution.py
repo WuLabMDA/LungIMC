@@ -30,8 +30,9 @@ if __name__ == "__main__":
     args = set_args()
     # prepare directory
     vis_dir = os.path.join(args.data_root, args.vis_dir, args.fea_option)
-    if not os.path.exists(vis_dir):
-        os.makedirs(vis_dir)
+    if os.path.exists(vis_dir):
+        shutil.rmtree(vis_dir)
+    os.makedirs(vis_dir)
 
     # load metadata
     cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, "RData")
@@ -121,8 +122,7 @@ if __name__ == "__main__":
     interested_antibodies = ["CK", "CD45"]
     for antibody_name in interested_antibodies:
         ck_embed_dir = os.path.join(vis_dir, "{}_SOM_Embed".format(antibody_name))
-        if not os.path.exists(ck_embed_dir):
-            os.makedirs(ck_embed_dir)
+        os.makedirs(ck_embed_dir)
         antibody_ind = antibody_names.index(antibody_name)
         # draw overall figure
         fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
