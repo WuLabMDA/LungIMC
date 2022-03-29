@@ -22,6 +22,7 @@ def set_args():
 
 if __name__ == "__main__":
     args = set_args()
+    key_antibody = "ck"
     # prepare directory
     merge_dir_root = os.path.join(args.data_root, args.data_type + "Processing", args.merge_dir)
     stain_dir = os.path.join(merge_dir_root, "Stains")
@@ -32,10 +33,14 @@ if __name__ == "__main__":
         cur_cnt_path = os.path.join(cnt_dir, ele + ".h5")
         if not os.path.exists(cur_cnt_path):
             print("{} no contours.".format(ele))
-
-    # data_root = os.path.join(args.data_root, args.tissue_type)
-    # cellfea_dir = os.path.join(data_root, "CellFea")
-    # cnt_dir = os.path.join(cellfea_dir, "CellCNTs")
-    # overlay_dir = os.path.join(cellfea_dir, "OverlayCK")
-    # if not os.path.exists(overlay_dir):
-    #     os.makedirs(overlay_dir)
+    # prepare folder for cell saving
+    filter_vis_dir = os.path.join(args.data_root, args.vis_dir, args.fea_option)
+    filter_overlay_dir = os.path.join(filter_vis_dir, "{}Overlay".format(key_antibody))
+    if not os.path.exists(filter_overlay_dir):
+        os.makedirs(filter_overlay_dir)
+    # load roi cell mapping
+    roi_cells_dict = {}
+    key_roi_cells_path = os.path.join(filter_vis_dir, "{}_roi_cells.pkl".format(key_antibody))
+    with open(key_roi_cells_path, "rb") as handle:
+        roi_cells_dict = pickle.load(handle)
+    import pdb; pdb.set_trace()
