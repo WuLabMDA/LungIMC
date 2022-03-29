@@ -49,8 +49,8 @@ if __name__ == "__main__":
         cur_roi = key
         slide_name = cur_roi[:-7]
         # ADC slides: 2017-1G
-        # Normal: 2017-IL, 2045-2R
-        if slide_name != "2017-IL":
+        # Normal: 2017-IL, 2405-2R
+        if slide_name not in ["2017-1G", "2017-IL", "2405-2R"]:
             continue
         print("Overlay {}".format(cur_roi))
         # load CK image
