@@ -26,7 +26,14 @@ if __name__ == "__main__":
     key_cluster_ids = None # starting from 1
     # Transform
     if args.fea_option == "Transform":
-        key_cluster_ids = [7, 8, 15, 16, 24, 32]
+        key_cluster_ids = [7, 15, 8, 16, 24, 32, 39, 40, 48, 56, 64, 61, 62, 63, 54, 23, 47]
+    elif args.fea_option == "SelfCorrect":
+        key_cluster_ids = [46, 47, 64, 55, 56, 40, 48, 24, 32, 63, 31, 54]
+    elif args.fea_option == "ControlCorrect":
+        key_cluster_ids = [2, 11, 42, 43, 4, 6, 18, 34, 50, 1, 9, 17, 10, 26, 41, 49, 25, 33]
+    else:
+        print("No option {}".format(args.fea_option))
+        exit()
 
     # cellfea root
     cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, "RData")
