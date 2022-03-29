@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     # deal with all rois
     roi_list = sorted([os.path.splitext(ele)[0] for ele in os.listdir(mask_dir_root) if ele.endswith(".npy")])
-    cell_num_list = []
+    # cell_num_list = []
     for ind, cur_roi in enumerate(roi_list):
         print("Work on {}/{}".format(ind+1, len(roi_list)))
         roi_cnt_dict = {}
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         roi_cnt_dict["height"] = mask_h
         roi_cnt_dict["width"] = mask_w
         roi_cnt_dict["cell_num"] = cell_num
-        cell_num_list.append(cell_num)
+        # cell_num_list.append(cell_num)
         cell_cnt_dict = {}
         for inst_id in range(1, 1+cell_num):
             # locate the cell mask region
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         # save to json
         roi_cnt_path = os.path.join(cnt_dir_root, cur_roi + ".h5")
         dd.io.save(roi_cnt_path, roi_cnt_dict)
-    cell_num_dict = {"roi_names": roi_list, "cell_nums": cell_num_list}
-    roi_cell_num_path = os.path.join(cnt_dir_root, "roi_cell_num.pkl")
-    with open(roi_cell_num_path, 'wb') as handle:
-        pickle.dump(cell_num_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    # cell_num_dict = {"roi_names": roi_list, "cell_nums": cell_num_list}
+    # roi_cell_num_path = os.path.join(cnt_dir_root, "roi_cell_num.pkl")
+    # with open(roi_cell_num_path, 'wb') as handle:
+    #     pickle.dump(cell_num_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
