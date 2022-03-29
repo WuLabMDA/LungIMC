@@ -73,7 +73,7 @@ if __name__ == "__main__":
     fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
     axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
     axes.set_title("Cell Community Detection")
-    s_sne_name = "SOM_{}{}CommunitiesTSNE{}Cells{}Markers.png".format(args.fea_option, community_num, cell_num, fea_num)
+    s_sne_name = "SOM{}CommunitiesTSNE{}Cells{}Markers.png".format(community_num, cell_num, fea_num)
     t_sne_path = os.path.join(phenotype_dir, s_sne_name)
     plt.savefig(t_sne_path, dpi=300)
     plt.close()

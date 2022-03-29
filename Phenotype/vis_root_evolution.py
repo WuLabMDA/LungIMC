@@ -96,17 +96,17 @@ if __name__ == "__main__":
     print("Start t-SNE @ ", datetime.now().strftime("%H:%M:%S"))
     tsne = TSNE(n_components=2)
     embed_feas = tsne.fit_transform(cell_feas)
-    community_colors = random_colors(community_num)
-    color_dict = {unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
-    cell_colors = [color_dict[val] for val in communities]
-    hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
-    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
-    axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
-    axes.set_title("Cell Community Detection")
-    s_sne_name = "SOM{}CommunitiesTSNE{}Cells{}Markers.png".format(community_num, cell_num, fea_num)
-    t_sne_path = os.path.join(vis_dir, s_sne_name)
-    plt.savefig(t_sne_path, dpi=300)
-    plt.close()
+    # community_colors = random_colors(community_num)
+    # color_dict = {unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
+    # cell_colors = [color_dict[val] for val in communities]
+    # hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
+    # fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
+    # axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
+    # axes.set_title("Cell Community Detection")
+    # s_sne_name = "SOM{}CommunitiesTSNE{}Cells{}Markers.png".format(community_num, cell_num, fea_num)
+    # t_sne_path = os.path.join(vis_dir, s_sne_name)
+    # plt.savefig(t_sne_path, dpi=300)
+    # plt.close()
     print("t-SNE Done @ ", datetime.now().strftime("%H:%M:%S"))
 
     # feature normalization
