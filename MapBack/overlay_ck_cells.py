@@ -13,7 +13,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_type",              type=str,       default="Study", choices = ["Study", "Tonsil"])
     parser.add_argument("--merge_dir",              type=str,       default="MergeSeg")
-    parser.add_argument("--vis_dir",                type=str,       default="Vis")
+    parser.add_argument("--vis_dir",                type=str,       default="Phenotype")
     parser.add_argument("--fea_option",             type=str,       default="Transform", choices = ["Transform", "SelfCorrect", "ControlCorrect"])
     parser.add_argument("--seed",                   type=int,       default=1234)
     args = parser.parse_args()
