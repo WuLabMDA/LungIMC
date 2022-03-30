@@ -7,7 +7,7 @@ import argparse, shutil
 def set_args():
     parser = argparse.ArgumentParser(description = "Merge Cell Segmentation")
     parser.add_argument("--data_root",              type=str,       default="/Data")
-    parser.add_argument("--data_type",              type=str,       default="Study", choices = ["Study", "Tonsil"])
+    parser.add_argument("--data_type",              type=str,       default="Study",           choices = ["Study", "Suppl", "Tonsil"])
     parser.add_argument("--seg_dir",                type=str,       default="SegResults")
     parser.add_argument("--merge_dir",              type=str,       default="MergeSeg")
 
