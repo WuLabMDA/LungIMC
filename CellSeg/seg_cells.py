@@ -13,7 +13,7 @@ from deepcell.utils.plot_utils import make_outline_overlay
 def set_args():
     parser = argparse.ArgumentParser(description = "IMC Cell Segmentation")
     parser.add_argument("--data_root",              type=str,       default="/Data")
-    parser.add_argument("--data_type",              type=str,       default="Study",           choices = ["Study", "Suppl", "Tonsil"])
+    parser.add_argument("--data_type",              type=str,       default="Study",           choices = ["Study", "Tonsil"])
     parser.add_argument("--nuc_stain",              type=str,       default="Ir191_193_Sum",   choices = ["Ir191_193_Sum", "191Ir"])
     parser.add_argument("--mem_stain",              type=str,       default="NaKATPase",       choices = ["NaKATPase", "NaK_B2M_Sum"])
     parser.add_argument("--image_mpp",              type=float,     default=1.0)
