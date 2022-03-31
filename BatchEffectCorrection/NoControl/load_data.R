@@ -47,7 +47,7 @@ if (!dir.exists(rdata_dir))
     dir.create(rdata_dir, recursive = TRUE)
 ## save meta data
 no_control_meta_path <- file.path(rdata_dir, "StudyMeta.RData")
-save(fea_filenames, markers, roi_nrows, file = no_control_meta_path)
+save(markers, fea_filenames, roi_nrows, file = no_control_meta_path)
 # ## save raw features
 # raw_labels <- roi_feas %>% create_som(markers = markers, rlen = 10)
 # roi_feas$label <- raw_labels
