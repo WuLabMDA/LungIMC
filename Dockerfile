@@ -41,4 +41,4 @@ RUN pip install tqdm==4.62.0 numba==0.54.1 ipython==8.0.0 seaborn==0.11.2
 RUN pip install scikit-learn==1.0.1 xgboost==1.5.1 statsmodels==0.13.1 matplotlib==3.5.0
 RUN pip install opencv-python==4.5.4.60 scikit-image==0.18.0
 RUN pip install pyreadr==0.4.4 openpyxl==3.0.6
-RUN pip install deepdish==0.3.6 pandas==1.2.0
+RUN pip install deepdish==0.3.6 pandas==1.1.5
