@@ -47,6 +47,7 @@ if __name__ == "__main__":
     fea_path = os.path.join(cellfea_dir, args.fea_option + "Feas.csv")
     cell_feas = pd.read_csv(fea_path)
     cell_feas = cell_feas[antibody_names].to_numpy()
+    import pdb; pdb.set_trace()
     community_path = os.path.join(cellfea_dir, args.fea_option + "CommunitiesSOM.RData")
     community_rdata = pyreadr.read_r(community_path)
     communities = community_rdata["communities"]
