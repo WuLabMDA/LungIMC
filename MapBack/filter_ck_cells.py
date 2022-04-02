@@ -25,9 +25,9 @@ if __name__ == "__main__":
     key_cluster_ids = None # starting from 1
     # Transform
     if args.fea_option == "Transform":
-        key_cluster_ids = [7, 15, 8, 16, 24, 32, 39, 40, 48, 56, 64]
+        key_cluster_ids = [2, 1, 9, 17, 33, 42, 43, 27, 35, 18, 26, 20, 10, 19]
     elif args.fea_option == "SelfCorrect":
-        key_cluster_ids = [46, 47, 64, 55, 56, 40, 48, 24, 32, 63, 31, 54]
+        key_cluster_ids = [57, 58, 59, 60, 50, 55]
     elif args.fea_option == "ControlCorrect":
         key_cluster_ids = [1, 9, 17, 10, 26, 41, 49, 25, 33]
     else:
