@@ -29,7 +29,7 @@ if __name__ == "__main__":
     elif args.fea_option == "SelfCorrect":
         key_cluster_ids = [57, 58, 59, 60, 50, 55]
     elif args.fea_option == "ControlCorrect":
-        key_cluster_ids = [64, 62, 63, 39, 40, 48, 47, 56]
+        key_cluster_ids = [30, 47, 31, 39, 14, 22, 40, 48, 56, 64, 16, 24, 7, 8, 55, 23, 32]
     else:
         print("No option {}".format(args.fea_option))
         exit()
