@@ -121,6 +121,8 @@ if __name__ == "__main__":
     interested_antibodies = ["CK", "CD45"]
     for antibody_name in interested_antibodies:
         ck_embed_dir = os.path.join(vis_dir, "{}_SOM_Embed".format(antibody_name))
+        if os.path.exists(ck_embed_dir):
+            shutil.rmtree(ck_embed_dir)
         os.makedirs(ck_embed_dir)
         antibody_ind = antibody_names.index(antibody_name)
         # draw overall figure
