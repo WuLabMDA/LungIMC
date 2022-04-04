@@ -16,8 +16,6 @@ def set_args():
     parser.add_argument("--batchcorrection_dir",    type=str,       default="BatchCorrection")
     parser.add_argument("--phenotype_dir",          type=str,       default="Phenotype")
     parser.add_argument("--fea_option",             type=str,       default="Transform", choices = ["Transform", "SelfCorrect", "ControlCorrect"])
-    parser.add_argument("--sample",                 default=False,  action="store_true")
-    parser.add_argument("--sample_cell_size",       type=int,       default=100000)
     parser.add_argument("--seed",                   type=int,       default=1234)
     args = parser.parse_args()
     return args
@@ -43,15 +41,6 @@ if __name__ == "__main__":
     # convert communites to list (integer)
     communities = communities.to_numpy().astype(int)
     communities = np.squeeze(communities).tolist()
-    # Cell sampling
-    if args.sample:
-        cell_indices = np.arange(0, cell_feas.shape[0])
-        np.random.shuffle(cell_indices)
-        sample_indices = cell_indices[:args.sample_cell_size].astype(int)
-        cell_feas = cell_feas[sample_indices, :]
-        communities = communities[sample_indices]
-    else:
-        sample_indices = np.arange(0, cell_feas.shape[0])
     # Print cell information
     cell_num, fea_num = cell_feas.shape
     print("Input data has {} cells and {} features.".format(cell_num, fea_num))
@@ -67,6 +56,8 @@ if __name__ == "__main__":
         cur_mean_fea = np.mean(cur_community_fea, axis=0)
         heat_mat[community_id-1, :] = cur_mean_fea
         cluster_ids.append(str(community_id) + "-" + "{:.3f}".format(np.sum(communities==community_id) * 1.0 / len(communities)))
+    heatmap_npy_path = os.path.join(phenotype_dir, "Heatmap{}Cells{}Communities{}Markers.npy".format(cell_num, community_num, fea_num))
+    np.save(heatmap_npy_path, heat_mat)
     min_antibody = np.min(heat_mat, axis=0)
     max_antibody = np.max(heat_mat, axis=0)
     range_antibody = max_antibody - min_antibody
@@ -75,6 +66,6 @@ if __name__ == "__main__":
     heat_df.index = cluster_ids
     heat_g = sns.clustermap(data=heat_df, figsize=(5, 25), metric="euclidean", method="ward", col_cluster=False, cmap="jet")
     # heat_g.cax.set_visible(False)
-    heatmap_name = "SOM_{}{}CommunitiesHeatmap{}Cells{}Markers.png".format(args.fea_option, community_num, cell_num, fea_num)
+    heatmap_name = "Heatmap{}Cells{}Communities{}Markers.png".format(cell_num, community_num, fea_num)
     fea_heatmap = os.path.join(phenotype_dir, heatmap_name)
     heat_g.savefig(fea_heatmap, dpi=300)

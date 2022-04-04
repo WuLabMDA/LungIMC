@@ -73,14 +73,14 @@ if __name__ == "__main__":
     fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
     axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
     axes.set_title("Cell Community Detection")
-    s_sne_name = "SOM{}CommunitiesTSNE{}Cells{}Markers.png".format(community_num, cell_num, fea_num)
+    s_sne_name = "TSNE{}Cells{}Communities{}Markers.png".format(cell_num, community_num, fea_num)
     t_sne_path = os.path.join(phenotype_dir, s_sne_name)
     plt.savefig(t_sne_path, dpi=300)
     plt.close()
     print("t-SNE Done @ ", datetime.now().strftime("%H:%M:%S"))
 
     # Draw antibody heatmap
-    fea_heatmap_dir = os.path.join(phenotype_dir, "SOM_{}{}CellsStainsHeatmap".format(args.fea_option, cell_num))
+    fea_heatmap_dir = os.path.join(phenotype_dir, "{}CellsStainsHeatmap".format(cell_num))
     if os.path.exists(fea_heatmap_dir):
         shutil.rmtree(fea_heatmap_dir)
     os.makedirs(fea_heatmap_dir)
