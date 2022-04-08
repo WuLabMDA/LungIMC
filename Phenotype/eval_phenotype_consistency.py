@@ -4,7 +4,7 @@ import os, sys
 import numpy as np
 import argparse, shutil, pickle, pytz
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, cluster
 import pyreadr
 
 
@@ -38,6 +38,11 @@ if __name__ == "__main__":
     correct_communities = correct_community_rdata["communities"]
     correct_communities = correct_communities.to_numpy().astype(int)
     correct_communities = np.squeeze(correct_communities)
+    # measure the clustering consitency
+    phenotype_consistency = cluster.normalized_mutual_info_score(raw_communities, correct_communities)
+    print("Phenotype Consistency Score is: {:.3f}".format(phenotype_consistency))
+    adjusted_score = cluster.adjusted_mutual_info_score(raw_communities, correct_communities)
+    print("Adjusted Consistency Score is: {:.3f}".format(adjusted_score))
     # draw the confusion matrix
     consistency_cm = confusion_matrix(raw_communities, correct_communities)
     fig = plt.figure()
