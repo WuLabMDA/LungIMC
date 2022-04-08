@@ -32,17 +32,28 @@ if __name__ == "__main__":
     raw_communities = raw_community_rdata["communities"]
     raw_communities = raw_communities.to_numpy().astype(int)
     raw_communities = np.squeeze(raw_communities)
+    # raw_community_txt_path = os.path.join(cellfea_dir, "RawCommunities.txt")
+    # with open(raw_community_txt_path, 'w') as file:
+    #     for item in raw_communities:
+    #         file.write("{}\n".format(item))
     # load the communties from corrected data
     correct_community_path = os.path.join(cellfea_dir, "SelfCorrectCommunitiesSOM.RData")
     correct_community_rdata = pyreadr.read_r(correct_community_path)
     correct_communities = correct_community_rdata["communities"]
     correct_communities = correct_communities.to_numpy().astype(int)
     correct_communities = np.squeeze(correct_communities)
+    # correct_community_txt_path = os.path.join(cellfea_dir, "CorrectCommunities.txt")
+    # with open(correct_community_txt_path, 'w') as file:
+    #     for item in correct_communities:
+    #         file.write("{}\n".format(item))
     # measure the clustering consitency
-    phenotype_consistency = cluster.normalized_mutual_info_score(raw_communities, correct_communities)
-    print("Phenotype Consistency Score is: {:.3f}".format(phenotype_consistency))
-    adjusted_score = cluster.adjusted_mutual_info_score(raw_communities, correct_communities)
-    print("Adjusted Consistency Score is: {:.3f}".format(adjusted_score))
+    nmi_score = cluster.normalized_mutual_info_score(raw_communities, correct_communities)
+    print("NMI Score is: {:.3f}".format(nmi_score))
+    # adjusted_nmi_score = cluster.adjusted_mutual_info_score(raw_communities, correct_communities)
+    # print("Adjusted NMI Score is: {:.3f}".format(adjusted_nmi_score))
+    # rand_score = cluster.adjusted_rand_score(raw_communities, correct_communities)
+    # print("Adjusted Rand Score is: {:.3f}".format(rand_score))
+
     # draw the confusion matrix
     consistency_cm = confusion_matrix(raw_communities, correct_communities)
     fig = plt.figure()
