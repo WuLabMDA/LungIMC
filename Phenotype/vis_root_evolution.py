@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import pyreadr
 from sklearn.manifold import TSNE
 
-from pheno_utils import random_colors
+from phenotype_utils import random_colors
 
 
 def set_args():

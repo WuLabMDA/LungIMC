@@ -11,7 +11,7 @@ import pyreadr
 from sklearn.manifold import TSNE
 # import umap
 
-from pheno_utils import antibody_names, random_colors
+from phenotype_utils import antibody_names, random_colors
 
 def set_args():
     parser = argparse.ArgumentParser(description = "IMC Community Detection")
