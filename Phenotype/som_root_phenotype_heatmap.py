@@ -56,8 +56,8 @@ if __name__ == "__main__":
         cur_mean_fea = np.mean(cur_community_fea, axis=0)
         heat_mat[community_id-1, :] = cur_mean_fea
         cluster_ids.append(str(community_id) + "-" + "{:.3f}".format(np.sum(communities==community_id) * 1.0 / len(communities)))
-    heatmap_npy_path = os.path.join(phenotype_dir, "Heatmap{}Cells{}Communities{}Markers.npy".format(cell_num, community_num, fea_num))
-    np.save(heatmap_npy_path, heat_mat)
+    # heatmap_npy_path = os.path.join(phenotype_dir, "Heatmap{}Cells{}Communities{}Markers.npy".format(cell_num, community_num, fea_num))
+    # np.save(heatmap_npy_path, heat_mat)
     min_antibody = np.min(heat_mat, axis=0)
     max_antibody = np.max(heat_mat, axis=0)
     range_antibody = max_antibody - min_antibody
