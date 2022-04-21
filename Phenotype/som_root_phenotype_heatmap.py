@@ -15,7 +15,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--batchcorrection_dir",    type=str,       default="BatchCorrection")
     parser.add_argument("--phenotype_dir",          type=str,       default="Phenotype")
-    parser.add_argument("--fea_option",             type=str,       default="Transform", choices = ["Transform", "SelfCorrect", "ControlCorrect"])
+    parser.add_argument("--fea_option",             type=str,       default="Transform", choices = ["Transform", "SelfCorrect"])
     parser.add_argument("--seed",                   type=int,       default=1234)
     args = parser.parse_args()
     return args

@@ -18,7 +18,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--batchcorrection_dir",    type=str,       default="BatchCorrection")
     parser.add_argument("--vis_dir",                type=str,       default="Phenotype")
-    parser.add_argument("--fea_option",             type=str,       default="Transform", choices = ["Transform", "SelfCorrect", "ControlCorrect"])
+    parser.add_argument("--fea_option",             type=str,       default="Transform", choices = ["Transform", "SelfCorrect"])
     parser.add_argument("--sample",                 default=True,   action="store_false")
     parser.add_argument("--sample_cell_size",       type=int,       default=100000)
     parser.add_argument("--seed",                   type=int,       default=1234)
