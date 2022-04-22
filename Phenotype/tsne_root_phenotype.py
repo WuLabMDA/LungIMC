@@ -69,24 +69,43 @@ if __name__ == "__main__":
     # Print cell information
     cell_num, fea_num = cell_feas.shape
     print("Input data has {} cells and {} features.".format(cell_num, fea_num))
-    identified_communites = [cluster_dict[val] for val in communities]
-    unique_ids = ["CK", "CD45", "Stroma"]
-    community_num = len(unique_ids)
-    # Draw t-SNE embbeded map
-    community_colors = [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
-    color_dict = {unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
-    cell_colors = [color_dict[val] for val in identified_communites]
-    hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
     tsne = TSNE(n_components=2)
     embed_feas = tsne.fit_transform(cell_feas)
+
+    # Merge tsne Plotting
     fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
+    identified_communites = [cluster_dict[val] for val in communities]
+    merge_unique_ids = ["CK", "CD45", "Stroma"]
+    community_colors = [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
+    color_dict = {merge_unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
+    cell_colors = [color_dict[val] for val in identified_communites]
+    hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
     axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
-    axes.set_title("Cell Community Detection")
+    axes.set_title("Merge Cell Distribution")
+    s_sne_name = "TSNE{}CellsMergeCommunities{}Markers.png".format(cell_num, fea_num)
+    t_sne_path = os.path.join(phenotype_dir, s_sne_name)
+    plt.savefig(t_sne_path, dpi=300)
+    plt.close()
+
+    # Individual clusters
+    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
+    unique_ids = np.unique(communities)
+    community_num = len(unique_ids)
+    community_colors = random_colors(community_num)
+    color_dict = {unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
+    cell_colors = [color_dict[val] for val in communities]
+    hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
+    axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1, label=communities)
+    axes.set_title("Individual Cluster Distribution")
+    axes.legend(loc="upper right")
     s_sne_name = "TSNE{}Cells{}Communities{}Markers.png".format(cell_num, community_num, fea_num)
     t_sne_path = os.path.join(phenotype_dir, s_sne_name)
     plt.savefig(t_sne_path, dpi=300)
     plt.close()
     print("Finish @ ", datetime.now().strftime("%H:%M:%S"))
+
+
+
 
     # # Draw antibody heatmap
     # fea_heatmap_dir = os.path.join(phenotype_dir, "{}CellsStainsHeatmap".format(cell_num))
