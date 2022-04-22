@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, sys
+import random
 import numpy as np
 from datetime import datetime
 import argparse, shutil, pickle, pytz
@@ -28,13 +29,17 @@ def set_args():
 
 if __name__ == "__main__":
     args = set_args()
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    print("Start @ ", datetime.now().strftime("%H:%M:%S"))
+
     # prepare directory
     phenotype_dir = os.path.join(args.data_root, args.phenotype_dir, args.fea_option)
     if not os.path.exists(phenotype_dir):
         os.makedirs(phenotype_dir)
 
     # cluster info
-    identified_cluster_path = os.path.join(args.data_root, "Metadata", "IdentifiedClusters.xlsx")
+    identified_cluster_path = os.path.join(args.data_root, args.phenotype_dir, "IdentifiedClusters.xlsx")
     cluster_info = pd.read_excel(identified_cluster_path, sheet_name=args.fea_option, header=0, index_col=None)
     cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["Category"])}
 
@@ -51,7 +56,6 @@ if __name__ == "__main__":
     communities = community_rdata["communities"]
     communities = communities.to_numpy().astype(int)
     communities = np.squeeze(communities)
-
     # Cell sampling
     if args.sample:
         cell_indices = np.arange(0, cell_feas.shape[0])
@@ -73,7 +77,6 @@ if __name__ == "__main__":
     color_dict = {unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
     cell_colors = [color_dict[val] for val in identified_communites]
     hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
-    print("Start t-SNE @ ", datetime.now().strftime("%H:%M:%S"))
     tsne = TSNE(n_components=2)
     embed_feas = tsne.fit_transform(cell_feas)
     fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
@@ -83,7 +86,7 @@ if __name__ == "__main__":
     t_sne_path = os.path.join(phenotype_dir, s_sne_name)
     plt.savefig(t_sne_path, dpi=300)
     plt.close()
-    print("t-SNE Done @ ", datetime.now().strftime("%H:%M:%S"))
+    print("Finish @ ", datetime.now().strftime("%H:%M:%S"))
 
     # # Draw antibody heatmap
     # fea_heatmap_dir = os.path.join(phenotype_dir, "{}CellsStainsHeatmap".format(cell_num))
