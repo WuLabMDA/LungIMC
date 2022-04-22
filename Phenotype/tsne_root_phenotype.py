@@ -90,7 +90,13 @@ if __name__ == "__main__":
 
 
     # Interested Clusters
-    interested_clusters = [11, 29, 38, 39, 2]
+    interested_clusters = None
+    if args.fea_option == "Transform":
+        interested_clusters = [3, 6, 15, 25, 2]
+    elif args.fea_option == "SelfCorrect":
+        interested_clusters = [11, 29, 38, 39, 2]
+    else:
+        interested_clusters = sorted(list(set(communities)))
     community_colors = random_colors(len(interested_clusters))
     color_dict = {}
     for ind, cur_color in enumerate(community_colors):
