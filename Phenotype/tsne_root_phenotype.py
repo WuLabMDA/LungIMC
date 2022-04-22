@@ -31,7 +31,8 @@ if __name__ == "__main__":
     args = set_args()
     random.seed(args.seed)
     np.random.seed(args.seed)
-    print("Start @ ", datetime.now().strftime("%H:%M:%S"))
+
+    print("Start @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
 
     # prepare directory
     phenotype_dir = os.path.join(args.data_root, args.phenotype_dir, args.fea_option)
@@ -72,20 +73,21 @@ if __name__ == "__main__":
     tsne = TSNE(n_components=2)
     embed_feas = tsne.fit_transform(cell_feas)
 
-    # # Merge tsne Plotting
-    # fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
-    # identified_communites = [cluster_dict[val] for val in communities]
-    # merge_unique_ids = ["CK", "CD45", "Stroma"]
-    # community_colors = [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
-    # color_dict = {merge_unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
-    # cell_colors = [color_dict[val] for val in identified_communites]
-    # hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
-    # axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
-    # axes.set_title("Merge Cell Distribution")
-    # s_sne_name = "TSNE{}CellsMergeCommunities{}Markers.png".format(cell_num, fea_num)
-    # t_sne_path = os.path.join(phenotype_dir, s_sne_name)
-    # plt.savefig(t_sne_path, dpi=300)
-    # plt.close()
+    # Merge tsne Plotting
+    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
+    identified_communites = [cluster_dict[val] for val in communities]
+    merge_unique_ids = ["CK", "CD45", "Stroma"]
+    community_colors = [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
+    color_dict = {merge_unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
+    cell_colors = [color_dict[val] for val in identified_communites]
+    hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
+    axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
+    axes.set_title("Merge Cell Distribution")
+    s_sne_name = "TSNE{}CellsMergeCommunities{}Markers.png".format(cell_num, fea_num)
+    t_sne_path = os.path.join(phenotype_dir, s_sne_name)
+    plt.savefig(t_sne_path, dpi=300)
+    plt.close()
+
 
     # Individual clusters
     interested_clusters = [11, 29, 38, 39, 2]
@@ -98,12 +100,13 @@ if __name__ == "__main__":
     unique_ids = np.unique(communities)
     community_num = len(unique_ids)
     community_colors = random_colors(community_num)
-    color_dict = {unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
-    cell_colors = [color_dict[communities[ind]] for ind in interested_inds]
-    hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
+    # color_dict = {unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
+    # cell_colors = [color_dict[communities[ind]] for ind in interested_inds]
+    # hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
     # axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
     intereted_feas = embed_feas[interested_inds]
-    axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=hex_colors, s=0.1)
+    intereted_communites = [communities[ind] for ind in interested_inds]
+    axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=intereted_communites, s=0.1)
     axes.set_title("Individual Cluster Distribution")
     axes.legend(loc="upper right")
     axes.set_xlim([-50, 50])
@@ -112,9 +115,7 @@ if __name__ == "__main__":
     t_sne_path = os.path.join(phenotype_dir, s_sne_name)
     plt.savefig(t_sne_path, dpi=300)
     plt.close()
-    print("Finish @ ", datetime.now().strftime("%H:%M:%S"))
-
-
+    print("Finish @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
 
 
     # # Draw antibody heatmap
