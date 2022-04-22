@@ -99,10 +99,11 @@ if __name__ == "__main__":
     community_num = len(unique_ids)
     community_colors = random_colors(community_num)
     color_dict = {unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
-    cell_colors = [color_dict[val] for val in communities]
+    cell_colors = [color_dict[communities[ind]] for ind in interested_inds]
     hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
     # axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
-    axes.scatter(embed_feas[interested_inds, 0], embed_feas[interested_inds, 1], c=hex_colors[interested_inds], s=0.1)
+    intereted_feas = embed_feas[interested_inds]
+    axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=hex_colors, s=0.1)
     axes.set_title("Individual Cluster Distribution")
     axes.legend(loc="upper right")
     axes.set_xlim([-50, 50])
