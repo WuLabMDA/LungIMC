@@ -58,6 +58,7 @@ if __name__ == "__main__":
     communities = community_rdata["communities"]
     communities = communities.to_numpy().astype(int)
     communities = np.squeeze(communities)
+
     # Cell sampling
     if args.sample:
         cell_indices = np.arange(0, cell_feas.shape[0])
@@ -71,23 +72,31 @@ if __name__ == "__main__":
     # Print cell information
     cell_num, fea_num = cell_feas.shape
     print("Input data has {} cells and {} features.".format(cell_num, fea_num))
-    tsne = TSNE(n_components=2)
-    embed_feas = tsne.fit_transform(cell_feas)
 
-    # Merge tsne Plotting
-    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
-    identified_communites = [cluster_dict[val] for val in communities]
-    merge_unique_ids = ["CK", "CD45", "Stroma"]
-    community_colors = [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
-    color_dict = {merge_unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
-    cell_colors = [color_dict[val] for val in identified_communites]
-    hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
-    axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
-    axes.set_title("Merge Cell Distribution")
-    s_sne_name = "TSNE{}CellsMergeCommunities{}Markers.png".format(cell_num, fea_num)
-    t_sne_path = os.path.join(phenotype_dir, s_sne_name)
-    plt.savefig(t_sne_path, dpi=300)
-    plt.close()
+    # obtain tsne embedded features
+    embed_feas = None
+    embed_feas_path = os.path.join(phenotype_dir, "FeaEmbedTSNE{}Cells.npy".format(cell_num))
+    if os.path.exists(embed_feas_path):
+        embed_feas = np.load(embed_feas_path)
+    else:
+        tsne = TSNE(n_components=2)
+        embed_feas = tsne.fit_transform(cell_feas)
+        np.save(embed_feas_path, embed_feas)
+
+    # # Merge tsne Plotting
+    # fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
+    # identified_communites = [cluster_dict[val] for val in communities]
+    # merge_unique_ids = ["CK", "CD45", "Stroma"]
+    # community_colors = [(1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)]
+    # color_dict = {merge_unique_ids[ind]: (np.array(cur_color) * 255.0).astype(np.uint8) for ind, cur_color in enumerate(community_colors)}
+    # cell_colors = [color_dict[val] for val in identified_communites]
+    # hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
+    # axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
+    # axes.set_title("Merge Cell Distribution")
+    # s_sne_name = "TSNE{}CellsMergeCommunities{}Markers.png".format(cell_num, fea_num)
+    # t_sne_path = os.path.join(phenotype_dir, s_sne_name)
+    # plt.savefig(t_sne_path, dpi=300)
+    # plt.close()
 
 
     # # Interested Clusters
@@ -111,8 +120,8 @@ if __name__ == "__main__":
         intereted_communites = [communities[ind] for ind in interested_inds]
         axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=color_dict[cur_cluster], label=str(cur_cluster), s=0.1)
     axes.set_title("Distribution of Interested Clusters")
-    axes.legend(loc="upper left", ncol=4, scatterpoints=1, fontsize=12)
-    axes.set_xlim([-50, 50])
+    axes.legend(loc="upper left", ncol=4, fontsize=10)
+    axes.set_xlim([-60, 50])
     axes.set_ylim([-50, 50])
     s_sne_name = "TSNE{}CellsInterestedCommunities{}Markers.png".format(cell_num, fea_num)
     t_sne_path = os.path.join(phenotype_dir, s_sne_name)
