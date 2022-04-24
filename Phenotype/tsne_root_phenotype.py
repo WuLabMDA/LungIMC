@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # cluster info
     identified_cluster_path = os.path.join(args.data_root, args.phenotype_dir, "IdentifiedClusters.xlsx")
     cluster_info = pd.read_excel(identified_cluster_path, sheet_name=args.fea_option, header=0, index_col=None)
-    cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["Category"])}
+    cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["VisConfirm"])}
 
     # features & communites
     cell_feas, communities = None, None
@@ -92,9 +92,9 @@ if __name__ == "__main__":
     # Interested Clusters
     interested_clusters = None
     if args.fea_option == "Transform":
-        interested_clusters = [3, 6, 15, 25, 2]
+        interested_clusters = [3, 6]
     elif args.fea_option == "SelfCorrect":
-        interested_clusters = [11, 29, 38, 39, 2]
+        interested_clusters = [11, 39, 2]
     else:
         interested_clusters = sorted(list(set(communities)))
     community_colors = random_colors(len(interested_clusters))
