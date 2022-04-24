@@ -117,8 +117,6 @@ if __name__ == "__main__":
     # t_sne_path = os.path.join(phenotype_dir, s_sne_name)
     # plt.savefig(t_sne_path, dpi=300)
     # plt.close()
-    # print("Finish @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
-
 
     # # Draw antibody heatmap
     # fea_heatmap_dir = os.path.join(phenotype_dir, "{}CellsStainsHeatmap".format(cell_num))
@@ -137,3 +135,5 @@ if __name__ == "__main__":
     #     axes.set_title("Feature: {}".format(fea_name))
     #     plt.savefig(os.path.join(fea_heatmap_dir, "{}_heatmap.png".format(fea_name)), dpi=300)
     #     plt.close()
+
+    print("Finish @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
