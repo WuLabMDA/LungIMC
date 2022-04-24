@@ -98,25 +98,26 @@ if __name__ == "__main__":
     #     interested_clusters = [11, 39, 2]
     # else:
     #     interested_clusters = sorted(list(set(communities)))
-    # community_colors = random_colors(len(interested_clusters))
-    # color_dict = {}
-    # for ind, cur_color in enumerate(community_colors):
-    #     ind_color = (np.array(cur_color) * 255.0).astype(np.uint8)
-    #     color_dict[interested_clusters[ind]] = "#{:02x}{:02x}{:02x}".format(ind_color[0], ind_color[1], ind_color[2])
-    # fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
-    # for cur_cluster in interested_clusters:
-    #     interested_inds = [i for i, val in enumerate(communities) if val == cur_cluster]
-    #     intereted_feas = embed_feas[interested_inds]
-    #     intereted_communites = [communities[ind] for ind in interested_inds]
-    #     axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=color_dict[cur_cluster], label=str(cur_cluster), s=0.1)
-    # axes.set_title("Distribution of Interested Clusters")
-    # axes.legend(loc="upper left")
-    # axes.set_xlim([-50, 50])
-    # axes.set_ylim([-50, 50])
-    # s_sne_name = "TSNE{}CellsInterestedCommunities{}Markers.png".format(cell_num, fea_num)
-    # t_sne_path = os.path.join(phenotype_dir, s_sne_name)
-    # plt.savefig(t_sne_path, dpi=300)
-    # plt.close()
+    interested_clusters = sorted(list(set(communities)))
+    community_colors = random_colors(len(interested_clusters))
+    color_dict = {}
+    for ind, cur_color in enumerate(community_colors):
+        ind_color = (np.array(cur_color) * 255.0).astype(np.uint8)
+        color_dict[interested_clusters[ind]] = "#{:02x}{:02x}{:02x}".format(ind_color[0], ind_color[1], ind_color[2])
+    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
+    for cur_cluster in interested_clusters:
+        interested_inds = [i for i, val in enumerate(communities) if val == cur_cluster]
+        intereted_feas = embed_feas[interested_inds]
+        intereted_communites = [communities[ind] for ind in interested_inds]
+        axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=color_dict[cur_cluster], label=str(cur_cluster), s=0.1)
+    axes.set_title("Distribution of Interested Clusters")
+    axes.legend(loc="upper left", ncol=4, scatterpoints=1, fontsize=12)
+    axes.set_xlim([-50, 50])
+    axes.set_ylim([-50, 50])
+    s_sne_name = "TSNE{}CellsInterestedCommunities{}Markers.png".format(cell_num, fea_num)
+    t_sne_path = os.path.join(phenotype_dir, s_sne_name)
+    plt.savefig(t_sne_path, dpi=300)
+    plt.close()
 
     # # Draw antibody heatmap
     # fea_heatmap_dir = os.path.join(phenotype_dir, "{}CellsStainsHeatmap".format(cell_num))
