@@ -42,7 +42,8 @@ if __name__ == "__main__":
     # cluster info
     identified_cluster_path = os.path.join(args.data_root, args.phenotype_dir, "IdentifiedClusters.xlsx")
     cluster_info = pd.read_excel(identified_cluster_path, sheet_name=args.fea_option, header=0, index_col=None)
-    cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["VisConfirm"])}
+    cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["Category"])}
+    # cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["VisConfirm"])}
 
     # features & communites
     cell_feas, communities = None, None
@@ -89,34 +90,34 @@ if __name__ == "__main__":
     plt.close()
 
 
-    # Interested Clusters
-    interested_clusters = None
-    if args.fea_option == "Transform":
-        interested_clusters = [3, 6]
-    elif args.fea_option == "SelfCorrect":
-        interested_clusters = [11, 39, 2]
-    else:
-        interested_clusters = sorted(list(set(communities)))
-    community_colors = random_colors(len(interested_clusters))
-    color_dict = {}
-    for ind, cur_color in enumerate(community_colors):
-        ind_color = (np.array(cur_color) * 255.0).astype(np.uint8)
-        color_dict[interested_clusters[ind]] = "#{:02x}{:02x}{:02x}".format(ind_color[0], ind_color[1], ind_color[2])
-    fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
-    for cur_cluster in interested_clusters:
-        interested_inds = [i for i, val in enumerate(communities) if val == cur_cluster]
-        intereted_feas = embed_feas[interested_inds]
-        intereted_communites = [communities[ind] for ind in interested_inds]
-        axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=color_dict[cur_cluster], label=str(cur_cluster), s=0.1)
-    axes.set_title("Distribution of Interested Clusters")
-    axes.legend(loc="upper left")
-    axes.set_xlim([-50, 50])
-    axes.set_ylim([-50, 50])
-    s_sne_name = "TSNE{}CellsInterestedCommunities{}Markers.png".format(cell_num, fea_num)
-    t_sne_path = os.path.join(phenotype_dir, s_sne_name)
-    plt.savefig(t_sne_path, dpi=300)
-    plt.close()
-    print("Finish @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
+    # # Interested Clusters
+    # interested_clusters = None
+    # if args.fea_option == "Transform":
+    #     interested_clusters = [3, 6]
+    # elif args.fea_option == "SelfCorrect":
+    #     interested_clusters = [11, 39, 2]
+    # else:
+    #     interested_clusters = sorted(list(set(communities)))
+    # community_colors = random_colors(len(interested_clusters))
+    # color_dict = {}
+    # for ind, cur_color in enumerate(community_colors):
+    #     ind_color = (np.array(cur_color) * 255.0).astype(np.uint8)
+    #     color_dict[interested_clusters[ind]] = "#{:02x}{:02x}{:02x}".format(ind_color[0], ind_color[1], ind_color[2])
+    # fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
+    # for cur_cluster in interested_clusters:
+    #     interested_inds = [i for i, val in enumerate(communities) if val == cur_cluster]
+    #     intereted_feas = embed_feas[interested_inds]
+    #     intereted_communites = [communities[ind] for ind in interested_inds]
+    #     axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=color_dict[cur_cluster], label=str(cur_cluster), s=0.1)
+    # axes.set_title("Distribution of Interested Clusters")
+    # axes.legend(loc="upper left")
+    # axes.set_xlim([-50, 50])
+    # axes.set_ylim([-50, 50])
+    # s_sne_name = "TSNE{}CellsInterestedCommunities{}Markers.png".format(cell_num, fea_num)
+    # t_sne_path = os.path.join(phenotype_dir, s_sne_name)
+    # plt.savefig(t_sne_path, dpi=300)
+    # plt.close()
+    # print("Finish @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
 
 
     # # Draw antibody heatmap
