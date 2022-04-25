@@ -14,6 +14,7 @@ from sklearn.manifold import TSNE
 
 from phenotype_utils import antibody_names, random_colors
 
+
 def set_args():
     parser = argparse.ArgumentParser(description = "IMC Community Detection")
     parser.add_argument("--data_root",              type=str,       default="/Data")
@@ -31,7 +32,6 @@ if __name__ == "__main__":
     args = set_args()
     random.seed(args.seed)
     np.random.seed(args.seed)
-
     print("Start @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
 
     # prepare directory
@@ -42,8 +42,8 @@ if __name__ == "__main__":
     # cluster info
     identified_cluster_path = os.path.join(args.data_root, args.phenotype_dir, "IdentifiedClusters.xlsx")
     cluster_info = pd.read_excel(identified_cluster_path, sheet_name=args.fea_option, header=0, index_col=None)
-    cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["Category"])}
-    # cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["VisConfirm"])}
+    # cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["Category"])}
+    cluster_dict = {cluster_id: category for cluster_id, category in zip(cluster_info["ClusterID"], cluster_info["VisConfirm"])}
 
     # features & communites
     cell_feas, communities = None, None
@@ -93,21 +93,17 @@ if __name__ == "__main__":
     # hex_colors = ["#{:02x}{:02x}{:02x}".format(ele[0], ele[1], ele[2]) for ele in cell_colors]
     # axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=hex_colors, s=0.1)
     # axes.set_title("Merge Cell Distribution")
-    # s_sne_name = "TSNE{}CellsMergeCommunities{}Markers.png".format(cell_num, fea_num)
+    # axes.set_xlim([-50, 50])
+    # axes.set_ylim([-50, 50])
+    # s_sne_name = "TSNE{}CellsMergeCommunities.png".format(cell_num)
     # t_sne_path = os.path.join(phenotype_dir, s_sne_name)
     # plt.savefig(t_sne_path, dpi=300)
     # plt.close()
 
 
     # # Interested Clusters
-    # interested_clusters = None
-    # if args.fea_option == "Transform":
-    #     interested_clusters = [3, 6]
-    # elif args.fea_option == "SelfCorrect":
-    #     interested_clusters = [11, 39, 2]
-    # else:
-    #     interested_clusters = sorted(list(set(communities)))
-    interested_clusters = sorted(list(set(communities)))
+    batch_num, cluster_num = 2, 8
+    interested_clusters = list(range(1+(batch_num-1)*cluster_num, 1+batch_num*cluster_num))
     community_colors = random_colors(len(interested_clusters))
     color_dict = {}
     for ind, cur_color in enumerate(community_colors):
@@ -120,10 +116,10 @@ if __name__ == "__main__":
         intereted_communites = [communities[ind] for ind in interested_inds]
         axes.scatter(intereted_feas[:, 0], intereted_feas[:, 1], c=color_dict[cur_cluster], label=str(cur_cluster), s=0.1)
     axes.set_title("Distribution of Interested Clusters")
-    axes.legend(loc="upper left", ncol=4, fontsize=10)
+    axes.legend(loc="upper left", markerscale=5, scatterpoints=1, fontsize=10)
     axes.set_xlim([-60, 50])
     axes.set_ylim([-50, 50])
-    s_sne_name = "TSNE{}CellsInterestedCommunities{}Markers.png".format(cell_num, fea_num)
+    s_sne_name = "TSNE{}CellsInterestedCommunitiesBatch{}.png".format(cell_num, batch_num)
     t_sne_path = os.path.join(phenotype_dir, s_sne_name)
     plt.savefig(t_sne_path, dpi=300)
     plt.close()
