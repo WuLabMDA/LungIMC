@@ -12,6 +12,9 @@ antibody_names = ['B2M', 'B7_H3', 'CD11b', 'CD11c', 'CD14', 'CD163', 'CD19', 'CD
                   'PD_L1', 'TIGIT', 'TIM3', 'VISTA', 'aSMA']
 
 
+interested_immune_antibodies = ['CD45', 'CD94', 'CD3e', 'CD4', 'FoxP3', 'CD8a', 'CD19', 'CD68', 'CD11b', 'CD11c', 'CD14', 'MPO']
+interested_nonimmnue_antibodies = ['CK', 'CD31', 'aSMA']
+
 ####
 def random_colors(N, bright=True):
     """
