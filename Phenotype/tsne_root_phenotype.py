@@ -146,4 +146,14 @@ if __name__ == "__main__":
             axes.set_ylim([-50, 50])
             plt.savefig(os.path.join(fea_heatmap_dir, "{}_heatmap.png".format(fea_name)), dpi=300)
             plt.close()
+        # draw merge features
+        indices = [antibody_names.index(fea_name) for fea_name in interested_antibodies]
+        max_feas = np.max(norm_feas[:, indices], axis=1)
+        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(7, 5))
+        axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=max_feas, s=0.1, cmap=plt.cm.jet)
+        axes.set_title("Merge Feature {}".format(category))
+        axes.set_xlim([-50, 50])
+        axes.set_ylim([-50, 50])
+        plt.savefig(os.path.join(fea_heatmap_dir, "{}_heatmap.png".format(category)), dpi=300)
+        plt.close()
     print("Finish @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
