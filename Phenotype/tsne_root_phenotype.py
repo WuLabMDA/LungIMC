@@ -142,6 +142,8 @@ if __name__ == "__main__":
             ind = antibody_names.index(fea_name)
             axes.scatter(embed_feas[:, 0], embed_feas[:, 1], c=norm_feas[:, ind], s=0.1, cmap=plt.cm.jet)
             axes.set_title("Feature: {}".format(fea_name))
+            axes.set_xlim([-50, 50])
+            axes.set_ylim([-50, 50])
             plt.savefig(os.path.join(fea_heatmap_dir, "{}_heatmap.png".format(fea_name)), dpi=300)
             plt.close()
     print("Finish @ {}".format(datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")))
