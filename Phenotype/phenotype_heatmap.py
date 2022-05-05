@@ -9,6 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pyreadr
 
+from phenotype_utils import ordered_antibody_names
 
 def set_args():
     parser = argparse.ArgumentParser(description = "IMC Community Detection")
@@ -28,6 +29,7 @@ if __name__ == "__main__":
     if not os.path.exists(phenotype_dir):
         os.makedirs(phenotype_dir)
     cell_feas, communities = None, None
+
     # load communites
     cellfea_dir = os.path.join(args.data_root, args.batchcorrection_dir, "RData")
     community_path = os.path.join(cellfea_dir, args.fea_option + "FeaCommunities.RData")
@@ -38,6 +40,9 @@ if __name__ == "__main__":
     # Obtain cell features
     antibody_names = list(cell_feas)
     cell_feas = cell_feas.to_numpy()
+    # reorder antibodies
+    antibody_orders = [antibody_names.index(cur_antibody) for cur_antibody in ordered_antibody_names]
+    cell_feas = cell_feas[:, antibody_orders]
     # convert communites to list (integer)
     communities = communities.to_numpy().astype(int)
     communities = np.squeeze(communities).tolist()
@@ -60,7 +65,7 @@ if __name__ == "__main__":
     max_antibody = np.max(heat_mat, axis=0)
     range_antibody = max_antibody - min_antibody
     norm_heat = (heat_mat - min_antibody) / range_antibody
-    heat_df = pd.DataFrame(norm_heat, columns=antibody_names)
+    heat_df = pd.DataFrame(norm_heat, columns=ordered_antibody_names)
     heat_df.index = cluster_ids
     # heat_g = sns.clustermap(data=heat_df, figsize=(20, 25), metric="euclidean", method="ward", col_cluster=False, cmap="jet", annot=True, fmt='.3g')
     heat_g = sns.clustermap(data=heat_df, figsize=(20, 28), metric="euclidean", method="ward", col_cluster=False, cmap="jet")
