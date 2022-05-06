@@ -68,7 +68,7 @@ if __name__ == "__main__":
     heat_df = pd.DataFrame(norm_heat, columns=interested_immune_antibodies)
     heat_df.index = cluster_ids
     # heat_g = sns.clustermap(data=heat_df, figsize=(20, 25), metric="euclidean", method="ward", col_cluster=False, cmap="jet", annot=True, fmt='.3g')
-    heat_g = sns.clustermap(data=heat_df, figsize=(12, 28), metric="euclidean", method="ward", col_cluster=False, cmap="jet")
+    heat_g = sns.clustermap(data=heat_df, figsize=(10, 28), metric="euclidean", method="ward", col_cluster=False, cmap="jet")
     # heat_g.cax.set_visible(False)
     heatmap_name = "Heatmap{}Cells{}Communities{}Markers.png".format(cell_num, community_num, fea_num)
     fea_heatmap = os.path.join(phenotype_dir, heatmap_name)
