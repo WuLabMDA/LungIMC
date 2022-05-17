@@ -1,7 +1,7 @@
 ## 1. Docker image preparation
 * Build from Dockerfile
 ```
-$ docker build -t deepcell_imc:cpath .
+$ docker build -t deepcell_imc:lung .
 ```
 
 ## 2. Docker container running
@@ -9,9 +9,9 @@ $ docker build -t deepcell_imc:cpath .
 $ docker run -it --rm --user $(id -u):$(id -g)  \
   -v /rsrch1/ip/pchen6/Codes/LungIMC:/App/LungIMC \
   -v /rsrch1/ip/pchen6/LungIMCData:/Data \
-  --shm-size=128G --gpus '"device=2"' --cpuset-cpus=20-39 \
-  --name imc_seg deepcell_imc:cpath
+  --shm-size=128G --gpus '"device=0"' --cpuset-cpus=0-9 \
+  --name deepcell_imc_lung deepcell_imc:lung
 ```
 ```
-$ docker exec -it imc_seg /bin/bash
+$ docker exec -it deepcell_imc_lung /bin/bash
 ```
