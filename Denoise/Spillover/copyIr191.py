@@ -15,6 +15,7 @@ def set_args():
     parser.add_argument("--merge_dir",              type=str,       default="MergeSeg")
     parser.add_argument("--stain_dir",              type=str,       default="Stains")
     parser.add_argument("--spillover_dir",          type=str,       default="Spillover")
+    parser.add_argument("--denoise_dir",            type=str,       default="Denoise")
     args = parser.parse_args()
     return args
 
@@ -24,7 +25,7 @@ if __name__ == "__main__":
 
     # prepare directory
     root_dir = os.path.join(args.data_root, args.data_type + "Processing")
-    roi_spillover_dir = os.path.join(root_dir, args.merge_dir, args.spillover_dir, "ROIs")
+    roi_spillover_dir = os.path.join(root_dir, args.merge_dir, args.denoise_dir, "ROIs")
     if os.path.exists(roi_spillover_dir):
         shutil.rmtree(roi_spillover_dir)
     os.makedirs(roi_spillover_dir)
