@@ -16,7 +16,7 @@ def set_args():
     parser.add_argument("--data_type",              type=str,       default="Study", choices = ["Study", "Tonsil"])
     parser.add_argument("--merge_dir",              type=str,       default="MergeSeg")
     parser.add_argument("--stain_dir",              type=str,       default="Stains")
-    parser.add_argument("--spillover_dir",          type=str,       default="spillover_dir")
+    parser.add_argument("--spillover_dir",          type=str,       default="Spillover")
     args = parser.parse_args()
     return args
 
