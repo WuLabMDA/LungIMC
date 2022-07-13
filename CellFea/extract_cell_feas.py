@@ -16,7 +16,7 @@ def set_args():
     parser.add_argument("--data_type",              type=str,       default="Study", choices = ["Study", "Tonsil"])
     parser.add_argument("--merge_dir",              type=str,       default="MergeSeg")
     parser.add_argument("--mask_dir",               type=str,       default="Mask")
-    parser.add_argument("--stain_dir",              type=str,       default="Stains")
+    parser.add_argument("--stain_dir",              type=str,       default="DenoiseROIs")
     parser.add_argument("--fea_dir",                type=str,       default="CellFeas")
     args = parser.parse_args()
     return args
@@ -35,8 +35,9 @@ if __name__ == "__main__":
     # Stain list
     stain_list = ['B2M', 'B7_H3', 'CD11b', 'CD11c', 'CD14', 'CD163', 'CD19', 'CD31', 'CD33', 'CD3e',
                   'CD4', 'CD45', 'CD45RO', 'CD68', 'CD73', 'CD8a', 'CD94', 'CK', 'CTLA_4', 'FoxP3',
-                  'GranzymeB', 'HLA_DR', 'ICOS', 'IDO_1', 'Ir191_193', 'Ki67', 'LAG3', 'MPO', 'NaKATPase', 'PD_1',
+                  'GranzymeB', 'HLA_DR', 'ICOS', 'IDO_1', 'Ir191', 'Ki67', 'LAG3', 'MPO', 'NaKATPase', 'PD_1',
                   'PD_L1', 'TIGIT', 'TIM3', 'VISTA', 'aSMA']
+
     # deal with all rois
     roi_list = sorted([os.path.splitext(ele)[0] for ele in os.listdir(mask_root) if ele.endswith(".npy")])
     for ind, cur_roi in enumerate(roi_list):
@@ -51,7 +52,8 @@ if __name__ == "__main__":
         cur_roi_stain_dir = os.path.join(stain_root, cur_roi)
         for sind, cur_stain in enumerate(stain_list):
             cur_stain_path = os.path.join(cur_roi_stain_dir, cur_stain + ".tiff")
-            stain_imgs[:, :, sind] = tifffile.imread(cur_stain_path).astype(np.float32)
+            # stain_imgs[:, :, sind] = tifffile.imread(cur_stain_path).astype(np.float32)
+            stain_imgs[:, :, sind] = io.imread(cur_stain_path, plugin="tifffile").astype(np.float32)
         # extract cell features
         roi_cell_feas = []
         for inst_id in inst_list:
