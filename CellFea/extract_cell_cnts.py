@@ -57,7 +57,3 @@ if __name__ == "__main__":
         # save to json
         roi_cnt_path = os.path.join(cnt_dir_root, cur_roi + ".h5")
         dd.io.save(roi_cnt_path, roi_cnt_dict)
-    # cell_num_dict = {"roi_names": roi_list, "cell_nums": cell_num_list}
-    # roi_cell_num_path = os.path.join(cnt_dir_root, "roi_cell_num.pkl")
-    # with open(roi_cell_num_path, 'wb') as handle:
-    #     pickle.dump(cell_num_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
