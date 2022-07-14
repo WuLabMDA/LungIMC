@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # prepare directory
     root_dir = os.path.join(args.data_root, args.data_type + "Processing")
     correct_spillover_dir = os.path.join(root_dir, args.merge_dir, args.spillover_dir, "Correct")
-    roi_spillover_dir = os.path.join(root_dir, args.merge_dir, args.denoise_dir, "ROIs")
+    roi_spillover_dir = os.path.join(root_dir, args.merge_dir, args.denoise_dir, "SpilloverROIs")
     roi_list = [os.path.splitext(ele)[0] for ele in os.listdir(correct_spillover_dir) if ele.endswith(".tiff")]
     for ind, cur_roi in enumerate(roi_list):
         if (ind + 1) % 10 == 0:
