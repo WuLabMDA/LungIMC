@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     # prepare directory
     root_dir = os.path.join(args.data_root, args.data_type + "Processing")
-    roi_spillover_dir = os.path.join(root_dir, args.merge_dir, args.denoise_dir, "ROIs")
+    roi_spillover_dir = os.path.join(root_dir, args.merge_dir, args.denoise_dir, "SpilloverROIs")
     if os.path.exists(roi_spillover_dir):
         shutil.rmtree(roi_spillover_dir)
     os.makedirs(roi_spillover_dir)
