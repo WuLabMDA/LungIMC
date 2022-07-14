@@ -16,7 +16,7 @@ def set_args():
     parser.add_argument("--data_type",              type=str,       default="Study", choices = ["Study", "Tonsil"])
     parser.add_argument("--merge_dir",              type=str,       default="MergeSeg")
     parser.add_argument("--mask_dir",               type=str,       default="Mask")
-    parser.add_argument("--stain_dir",              type=str,       default="DenoiseROIs")
+    parser.add_argument("--stain_dir",              type=str,       default="Denoise")
     parser.add_argument("--fea_dir",                type=str,       default="CellFeas")
     args = parser.parse_args()
     return args
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # prepare directory
     root_dir = os.path.join(args.data_root, args.data_type + "Processing")
     mask_root = os.path.join(root_dir, args.merge_dir, args.mask_dir)
-    stain_root = os.path.join(root_dir, args.merge_dir, args.stain_dir)
+    stain_root = os.path.join(root_dir, args.merge_dir, args.stain_dir, "DenoisedROIs")
     cellfea_dir = os.path.join(root_dir, args.fea_dir)
     if os.path.exists(cellfea_dir):
         shutil.rmtree(cellfea_dir)
