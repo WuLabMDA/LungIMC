@@ -1,0 +1,43 @@
+library(imcRtools)
+library(cytomapper)
+library(BiocParallel)
+library(tiff)
+
+# load spillover matrix
+meta_sm <- readRDS(file = "SpilloverMatrix.rds")
+# update channel names
+meta_list <- c("La139", "Pr141", "Nd143", "Nd144", "Nd145", "Nd146", "Sm147",
+               "Nd148", "Sm149", "Nd150", "Eu151", "Sm152", "Eu153", "Sm154",
+               "Gd155", "Gd156", "Tb159", "Gd160", "Dy161", "Dy162", "Dy163",
+               "Dy164", "Ho165", "Er166", "Er167", "Er168", "Tm169", "Er170",
+               "Yb171", "Yb172", "Yb173", "Yb174", "Lu175", "Yb176")
+channel_names <- paste0(meta_list, "Di")
+
+# correct all ROIs
+raw_img_dir <- "./LungData/Raw/"
+correct_img_dir <- "./LungData/Correct/"
+if (!dir.exists(correct_img_dir)) {
+    dir.create(correct_img_dir)
+}
+
+file_list <- list.files(path=raw_img_dir, pattern=".tiff", all.files=TRUE, full.names=TRUE)
+for (ind in 1:length(file_list)){
+    start_time <- Sys.time()
+    print(paste0(ind, "/", length(file_list)))
+    # load
+    raw_images <- loadImages(file_list[[ind]], as.is = TRUE)
+    # correct
+    channelNames(raw_images) <- channel_names
+    correct_images <- compImage(raw_images, meta_sm, BPPARAM = SnowParam())
+    # save
+    roi_names <- names(correct_images)
+    for (cur_name in roi_names) {
+        cur_img <- as.array(correct_images[[cur_name]]) / (2^16 - 1)
+        # mode(cur_img) <- "integer"
+        correct_img_path <- paste0(correct_img_dir, cur_name, ".tiff")
+        writeImage(cur_img, correct_img_path, bits.per.sample=16) 
+    }
+    end_time <- Sys.time()
+    time_dif <- difftime(end_time, start_time, units='mins')
+    print(time_dif)    
+}
