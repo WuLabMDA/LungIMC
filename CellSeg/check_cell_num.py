@@ -9,6 +9,7 @@ def set_args():
     parser = argparse.ArgumentParser(description = "Filter Segmented Cells")
     parser.add_argument("--data_root",        type=str,       default="/Data")
     parser.add_argument("--data_type",        type=str,       default="LungROIProcessing")
+    parser.add_argument("--cellseg_dir",      type=str,       default="CellSeg")    
     parser.add_argument("--result_dir",       type=str,       default="SegCellResults")    
     args = parser.parse_args()
     return args
@@ -16,7 +17,7 @@ def set_args():
 
 if __name__ == "__main__":
     args = set_args()
-    seg_root_dir = os.path.join(args.data_root, args.data_type, args.result_dir)
+    seg_root_dir = os.path.join(args.data_root, args.data_type, args.cellseg_dir, args.result_dir)
     slide_list = sorted([ele for ele in os.listdir(seg_root_dir) if os.path.isdir(os.path.join(seg_root_dir, ele))])
 
     ttl_roi_num, ttl_cell_num = 0, 0
