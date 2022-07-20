@@ -8,6 +8,7 @@ def set_args():
     parser = argparse.ArgumentParser(description = "Merge Cell Segmentation")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
+    parser.add_argument("--cellseg_dir",            type=str,       default="CellSeg")        
     parser.add_argument("--result_dir",             type=str,       default="SegCellResults")
     parser.add_argument("--merge_dir",              type=str,       default="MergeCellSeg")
 
@@ -18,7 +19,7 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    roi_dir_root = os.path.join(args.data_root, args.data_type)
+    roi_dir_root = os.path.join(args.data_root, args.data_type, args.cellseg_dir)
     seg_dir_root = os.path.join(roi_dir_root, args.result_dir)
     # prepare folders for merge files
     merge_dir_root = os.path.join(roi_dir_root, args.merge_dir)
@@ -49,10 +50,9 @@ if __name__ == "__main__":
             src_overlay_path = os.path.join(src_p_dir, roi_name + "_seg.png")
             src_mask_path = os.path.join(src_p_dir, roi_name + ".npy")
             # dst filenames
-            dst_roi_name = roi_name[:roi_name.find("_")]
-            dst_raw_path = os.path.join(merge_raw_dir, cur_p_name + dst_roi_name + ".png")
-            dst_overlay_path = os.path.join(merge_overlay_dir, cur_p_name + dst_roi_name + ".png")
-            dst_mask_path = os.path.join(merge_mask_dir, cur_p_name + dst_roi_name + ".npy")
+            dst_raw_path = os.path.join(merge_raw_dir, roi_name + ".png")
+            dst_overlay_path = os.path.join(merge_overlay_dir, roi_name + ".png")
+            dst_mask_path = os.path.join(merge_mask_dir, roi_name + ".npy")
             # copy
             shutil.copyfile(src_raw_path, dst_raw_path)
             shutil.copyfile(src_overlay_path, dst_overlay_path)
