@@ -37,6 +37,7 @@ if __name__ == "__main__":
                   'CD4', 'CD45', 'CD45RO', 'CD68', 'CD73', 'CD8a', 'CD94', 'CK', 'CTLA_4', 'FoxP3',
                   'GranzymeB', 'HLA_DR', 'ICOS', 'IDO_1', 'Ir191', 'Ki67', 'LAG3', 'MPO', 'NaKATPase', 'PD_1',
                   'PD_L1', 'TIGIT', 'TIM3', 'VISTA', 'aSMA']
+
     # deal with all rois
     roi_list = sorted([os.path.splitext(ele)[0] for ele in os.listdir(mask_root) if ele.endswith(".npy")])
     for ind, cur_roi in enumerate(roi_list):
@@ -67,11 +68,11 @@ if __name__ == "__main__":
                 cy = int(cnt_m["m01"] / cnt_m["m00"])
             else:
                 cx, cy = 0, 0
-            scell_fea.extend([cx, cy])
+            cnt_area = cv2.contourArea(cell_cnt)
+            scell_fea.extend([cx, cy, cnt_area])
             cell_stain_pixels = stain_imgs[inst_map==1]
             cell_stain_means = np.mean(cell_stain_pixels, axis=0)
             scell_fea.extend(cell_stain_means.tolist())
             roi_cell_feas.append(scell_fea)
-            import pdb; pdb.set_trace()
         # save roi cell features
         np.save(os.path.join(cellfea_dir, cur_roi + ".npy"), np.asarray(roi_cell_feas))
