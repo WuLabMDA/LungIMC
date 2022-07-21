@@ -1,6 +1,8 @@
 clearvars;
-input_dir = 'E:\LungIMCData\LungROIProcessing\Denoise\SpilloverROIs';
-denoise_dir = 'E:\LungIMCData\LungROIProcessing\Denoise\DenoisedROIs';
+
+roi_root_dir = 'E:\LungIMCData\LungROIProcessing\Denoise';
+spillover_dir = fullfile(roi_root_dir, 'SpilloverROIs');
+denoise_dir = fullfile(roi_root_dir, 'DenoisedROIs');
 
 stain_str_list = {'aSMA', 'B2M', 'B7_H3', 'CD3e', 'CD4', 'CD8a', 'CD11b', 'CD11c', 'CD14', 'CD19',...
     'CD31', 'CD33', 'CD45', 'CD45RO', 'CD68', 'CD73', 'CD94', 'CD163', 'CK', 'CTLA_4', 'FoxP3', 'GranzymeB',...
@@ -11,12 +13,12 @@ stain_pixel_num = [50, 50, 37, 5, 5, 25, 37, 5, 50, 5, ...
 stain_agg_map = containers.Map(stain_str_list, stain_pixel_num);
 quantile_val = 0.05;
 
-roi_list = dir(input_dir);
+roi_list = dir(spillover_dir);
 roi_list = roi_list(3:end);
 
 for sind = 1:length(roi_list)
     roi_name = roi_list(sind).name;
-    input_roi_dir = fullfile(input_dir, roi_name);
+    input_roi_dir = fullfile(spillover_dir, roi_name);
     denoise_roi_dir = fullfile(denoise_dir, roi_name);
     if ~exist(denoise_roi_dir, 'dir')
         mkdir(denoise_roi_dir)
@@ -28,6 +30,9 @@ for sind = 1:length(roi_list)
         stain_name = stain_fullname(1:end-5);
         stain_path = fullfile(input_roi_dir, stain_fullname);
         stain_img = imread(stain_path);
+        % remove top strong signals
+        stain_max = prctile(stain_img(:), 99.5);
+        stain_img(stain_img > stain_max) = stain_max;        
         % smoothing
         denoise_img = medfilt2(stain_img);
         % removal of small regions
