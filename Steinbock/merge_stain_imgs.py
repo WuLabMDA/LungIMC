@@ -12,11 +12,11 @@ import tifffile
 
 
 def set_args():
-    parser = argparse.ArgumentParser(description = "Merge stains for spillover correction")
+    parser = argparse.ArgumentParser(description = "Merge stains for R analysis")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
     parser.add_argument("--denoise_dir",            type=str,       default="Denoise")
-    parser.add_argument("--steinbock_dir",          type=str,       default="Steinbock")    
+    parser.add_argument("--steinbock_dir",          type=str,       default="Steinbock")
 
     args = parser.parse_args()
     return args
@@ -48,8 +48,8 @@ if __name__ == "__main__":
         cur_roi_dir = os.path.join(stain_roi_dir, cur_roi)
         roi_data = []
         roi_data.append([io.imread(os.path.join(cur_roi_dir, ele + ".tiff")) for ele in antibody_list])
-        roi_data = np.stack(roi_data, axis=0).astype(np.float32)
-        # save image
+        roi_data = np.asarray(roi_data)[0].astype(np.float32)
+        # # save image
         tif_img_name = cur_roi + ".tiff"
         tif_img_path = os.path.join(stain_tif_dir, tif_img_name)
         tifffile.imwrite(tif_img_path,
@@ -60,7 +60,7 @@ if __name__ == "__main__":
         width_lst.append(roi_data.shape[2])
         height_lst.append(roi_data.shape[1])
         channel_lst.append(roi_data.shape[0])
-    
+
     # save meta info
     stain_images_path = os.path.join(args.data_root, args.data_type, args.steinbock_dir, "images.csv")
     stain_iamges_df = pd.DataFrame(list(zip(image_lst, width_lst, height_lst, channel_lst, width_lst, height_lst)),
