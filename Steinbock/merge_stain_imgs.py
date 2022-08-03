@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     image_lst, width_lst, height_lst, channel_lst = [], [], [], []
     stain_roi_dir = os.path.join(args.data_root, args.data_type, args.denoise_dir, "DenoisedROIs")
-    roi_list = [ele for ele in os.listdir(stain_roi_dir) if os.path.isdir(os.path.join(stain_roi_dir, ele))]
+    roi_list = sorted([ele for ele in os.listdir(stain_roi_dir) if os.path.isdir(os.path.join(stain_roi_dir, ele))])
     for ind, cur_roi in enumerate(roi_list):
         if (ind + 1) % 10 == 0:
             print("Merge {}/{}".format(ind+1, len(roi_list)))
@@ -49,8 +49,8 @@ if __name__ == "__main__":
         roi_data = []
         roi_data.append([io.imread(os.path.join(cur_roi_dir, ele + ".tiff")) for ele in antibody_list])
         roi_data = np.asarray(roi_data)[0].astype(np.float32)
-        # # save image
         tif_img_name = cur_roi + ".tiff"
+        # save image
         tif_img_path = os.path.join(stain_tif_dir, tif_img_name)
         tifffile.imwrite(tif_img_path,
             data=roi_data[np.newaxis, np.newaxis, :, :, :, np.newaxis],
