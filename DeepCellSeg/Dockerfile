@@ -12,4 +12,6 @@ WORKDIR /App
 RUN chmod 777 /App
 
 # Set working directory
-WORKDIR /App/LungIMC/CellSeg
+WORKDIR /App/LungIMC/DeepCellSeg
+
+CMD ["/bin/bash"]
