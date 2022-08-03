@@ -12,6 +12,3 @@ $ docker run -it --rm --user $(id -u):$(id -g)  \
   --shm-size=224G --gpus '"device=3"' --cpuset-cpus=0-39 \
   --name deepcell_imc_lung deepcell_imc:lung
 ```
-```
-$ docker exec -it deepcell_imc_lung /bin/bash
-```
