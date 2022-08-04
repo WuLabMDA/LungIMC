@@ -29,6 +29,6 @@ RUN R -e "BiocManager::install(c('EBImage', 'SpatialExperiment', 'imcRtools', 'c
 RUN R -e "devtools::install_github('i-cyto/Rphenograph')"
 
 # Set working directory
-WORKDIR /App/MouseIMC
+WORKDIR /App/LungIMC
 
 CMD ["/bin/bash"]
