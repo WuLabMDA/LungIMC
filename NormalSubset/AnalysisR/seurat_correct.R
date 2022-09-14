@@ -8,8 +8,7 @@ library(viridis)
 set.seed(1234)
 
 normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockNormal"
-raw_spe_path = fullfile(normal_root_dir, "steinbock_spe.rds")
-
+raw_spe_path = file.path(normal_root_dir, "steinbock_spe.rds")
 spe <- readRDS(raw_spe_path)
 
 # Convert to Seurat object
@@ -21,7 +20,6 @@ seurat.list <- SplitObject(seurat_obj, split.by = "stain_id")
 features <- rownames(spe)[rowData(spe)$use_channel]
 seurat.list <- lapply(X = seurat.list, FUN = function(x) {
     x <- ScaleData(x, features = features, verbose = FALSE)
-    x <- RunPCA(x, features = features, verbose = FALSE)
     return(x)
 })
 
@@ -29,8 +27,11 @@ seurat.list <- lapply(X = seurat.list, FUN = function(x) {
 print(paste("---Start find integration anchors---"))
 anchors <- FindIntegrationAnchors(object.list = seurat.list,
                                   anchor.features = features,
-                                  reduction = "rpca",
-                                  k.anchor = 20)
+                                  k.anchor = 8,
+                                  k.filter = 64,
+                                  k.score = 16,
+                                  n.trees = 20)
+
 print(paste("---Start integration---"))
 combined <- IntegrateData(anchorset = anchors)
 print(paste("Finish at", format(Sys.time(), "%a %b %d %X %Y")))
@@ -43,5 +44,5 @@ reducedDim(spe, "seurat") <- combined@reductions$pca@cell.embeddings
 
 # Compute the UMAP embeddings based on Seurat integrated results
 spe <- runUMAP(spe, dimred = "seurat", name = "UMAP_seurat")
-seurat_spe_path = fullfile(normal_root_dir, "seurat_spe.rds")
+seurat_spe_path = file.path(normal_root_dir, "seurat_spe.rds")
 saveRDS(spe, seurat_spe_path)
