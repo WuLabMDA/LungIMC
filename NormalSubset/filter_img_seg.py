@@ -43,4 +43,4 @@ if __name__ == "__main__":
         raw_img_path = os.path.join(raw_img_dir, cur_roi + ".tiff")
         raw_seg_path = os.path.join(raw_seg_dir, cur_roi + ".tiff")
         shutil.copy(raw_img_path, dst_img_dir)
-        shutil.copy(raw_seg_dir, dst_seg_dir)
+        shutil.copy(raw_seg_path, dst_seg_dir)
