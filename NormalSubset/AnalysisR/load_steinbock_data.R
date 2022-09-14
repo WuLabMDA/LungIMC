@@ -24,18 +24,15 @@ spe$slide_id <- str_extract_all(spe$sample_id, ".+(?=-ROI)", simplify = TRUE)
 spe$roi_id <- str_extract_all(spe$sample_id, "ROI[0-9]{3}", simplify = TRUE)
 
 # add location & diagnosis information
-roi_info <- read.xlsx("./StudyROI_Info.xlsx")
+roi_info <- read.xlsx(fullfile(normal_root_dir, "StudyROI_Info.xlsx"))
 spe$roi_location <- roi_info$ROI_Location[match(spe$sample_id, roi_info$ROI_ID)]
 spe$roi_diag <- roi_info$ROI_Diag[match(spe$sample_id, roi_info$ROI_ID)]
 
 # add slide-level patient and batch information
-slide_info <- read.xlsx("./StudySlide_Info.xlsx")
+slide_info <- read.xlsx(fullfile(normal_root_dir, "StudySlide_Info.xlsx"))
 spe$slide_diag <- slide_info$Slide_Diag[match(spe$slide_id, slide_info$Slide_ID)]
 spe$patient_id <- slide_info$Patient_ID[match(spe$slide_id, slide_info$Slide_ID)]
 spe$stain_id <- slide_info$Staining_ID[match(spe$slide_id, slide_info$Slide_ID)]
-
-# dittoRidgePlot(spe, var = "CK", group.by = "roi_location", assay = "exprs") +
-#     ggtitle("CK - after transformation")
 
 # Define color schemes
 color_vectors <- list()
@@ -47,5 +44,5 @@ color_vectors$Stain <- setNames(colorRampPalette(brewer.pal(4, "PuOr"))(length(u
 metadata(spe)$color_vectors <- color_vectors
 
 # Save generated SingleCellExperiment object
-spe_path = fullfile(normal_root_dir, "steinbock_spe.rds")
-saveRDS(spe, spe_path)
+raw_spe_path = fullfile(normal_root_dir, "steinbock_spe.rds")
+saveRDS(spe, raw_spe_path)
