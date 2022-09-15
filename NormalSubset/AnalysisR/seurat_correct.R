@@ -27,10 +27,10 @@ seurat.list <- lapply(X = seurat.list, FUN = function(x) {
 print(paste("---Start find integration anchors---"))
 anchors <- FindIntegrationAnchors(object.list = seurat.list,
                                   anchor.features = features,
-                                  k.anchor = 8,
-                                  k.filter = 64,
-                                  k.score = 16,
-                                  n.trees = 20)
+                                  k.anchor = 20,
+                                  k.filter = 100,
+                                  k.score = 30,
+                                  n.trees = 50)
 
 print(paste("---Start integration---"))
 combined <- IntegrateData(anchorset = anchors)
