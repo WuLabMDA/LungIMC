@@ -3,7 +3,7 @@ library(dittoSeq)
 library(viridis)
 library(scater)
 
-normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockNormal"
+normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockDistantNormal"
 seurat_spe_path = file.path(normal_root_dir, "seurat_spe.rds")
 spe <- readRDS("./seurat_spe.rds")
 

@@ -7,7 +7,7 @@ library(Seurat)
 library(SeuratObject)
 
 set.seed(1234)
-normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockNormal"
+normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockDistantNormal"
 
 phenotype_path <- file.path(normal_root_dir, "som_raw_spe.rds")
 spe <- readRDS(phenotype_path)
@@ -20,7 +20,7 @@ if (!dir.exists(fig_dir)){
 }
 
 # Draw dot plot on Raw 
-dotplot_name <- "som_harmony_dotplot"
+dotplot_name <- "som_raw_dotplot"
 plot_path <- file.path(fig_dir, paste(dotplot_name, ".png", sep=""))
 png(file=plot_path, width=1200, height=1000, units = "px")
 interested_feas <- rownames(spe)[rowData(spe)$use_channel]

@@ -6,7 +6,7 @@ library(dittoSeq)
 library(RColorBrewer)
 library(openxlsx)
 
-normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockNormal"
+normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockDistantNormal"
 # Load steinbock generated data
 spe <- read_steinbock(normal_root_dir)
 

@@ -7,7 +7,7 @@ library(dittoSeq)
 library(viridis)
 set.seed(1234)
 
-normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockNormal"
+normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockDistantNormal"
 raw_spe_path = file.path(normal_root_dir, "steinbock_spe.rds")
 spe <- readRDS(raw_spe_path)
 
