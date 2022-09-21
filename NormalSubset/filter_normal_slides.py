@@ -10,7 +10,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
     parser.add_argument("--raw_steinbock_dir",      type=str,       default="Steinbock")
-    parser.add_argument("--dst_steinbock_dir",      type=str,       default="SteinbockNormal")    
+    parser.add_argument("--dst_steinbock_dir",      type=str,       default="SteinbockDistantNormal")    
 
     args = parser.parse_args()
     return args
