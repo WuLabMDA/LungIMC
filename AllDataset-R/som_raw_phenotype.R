@@ -10,9 +10,9 @@ library(viridis)
 set.seed(1234)
 
 
-normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockAll"
+data_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockAll"
 
-raw_spe_path = file.path(normal_root_dir, "all_steinbock_spe.rds")
+raw_spe_path = file.path(data_root_dir, "all_steinbock_spe.rds")
 spe <- readRDS(raw_spe_path)
 
 # Run FlowSOM and ConsensusClusterPlus clustering
@@ -22,6 +22,6 @@ spe <- cluster(spe, features = rownames(spe)[rowData(spe)$use_channel], maxK = 2
 # delta_area(spe)
 
 # save som clustered results
-spe$som_clusters <- cluster_ids(spe, "meta12")
-phenotype_path <- file.path(normal_root_dir, "som_raw_spe.rds")
+spe$som_clusters <- cluster_ids(spe, "meta8")
+phenotype_path <- file.path(data_root_dir, "som_raw_spe.rds")
 saveRDS(spe, phenotype_path)

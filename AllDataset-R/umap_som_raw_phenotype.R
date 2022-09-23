@@ -4,14 +4,14 @@ library(RColorBrewer)
 library(viridis)
 
 set.seed(1234)
-normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockAll"
+data_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockAll"
 
-fig_dir <- file.path(normal_root_dir, "Figs")
+fig_dir <- file.path(data_root_dir, "Figs")
 if (!dir.exists(fig_dir)){
     dir.create(fig_dir)
 }
 
-phenotype_path <- file.path(normal_root_dir, "som_raw_spe.rds")
+phenotype_path <- file.path(data_root_dir, "som_raw_spe.rds")
 spe <- readRDS(phenotype_path)
 
 #  UMAP embedding

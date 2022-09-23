@@ -7,14 +7,14 @@ library(Seurat)
 library(SeuratObject)
 
 set.seed(1234)
-normal_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockAll"
+data_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockAll"
 
-phenotype_path <- file.path(normal_root_dir, "som_raw_spe.rds")
+phenotype_path <- file.path(data_root_dir, "som_raw_spe.rds")
 spe <- readRDS(phenotype_path)
 seurat_obj <- as.Seurat(spe, counts = "counts", data = "exprs")
 seurat_obj <- AddMetaData(seurat_obj, as.data.frame(colData(spe)))
 
-fig_dir <- file.path(normal_root_dir, "Figs")
+fig_dir <- file.path(data_root_dir, "Figs")
 if (!dir.exists(fig_dir)){
     dir.create(fig_dir)
 }
