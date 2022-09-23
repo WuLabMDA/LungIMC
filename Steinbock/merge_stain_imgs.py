@@ -35,7 +35,7 @@ if __name__ == "__main__":
     os.makedirs(stain_tif_dir)
 
     # load stain panel
-    stain_panel_path = os.path.join(args.data_root, args.data_type, args.steinbock_dir, "RawPanel.csv")
+    stain_panel_path = os.path.join(args.data_root, args.data_type, args.denoise_dir, "RawPanel.csv")
     stain_panel = pd.read_csv(stain_panel_path)
     antibody_list = stain_panel["name"].tolist()
 
