@@ -3,8 +3,8 @@ clearvars;
 roi_root_dir = 'E:\LungIMCData\LungROIProcessing\Denoise';
 raw_dir = fullfile(roi_root_dir, 'RawROIs');
 spillover_dir = fullfile(roi_root_dir, 'SpilloverROIs');
-denoise_dir = fullfile(roi_root_dir, 'DenoisedROIs-09-21');
-cmp_dir = fullfile(roi_root_dir, 'CmpRawSpilloverDenoise-09-21');
+denoise_dir = fullfile(roi_root_dir, 'DenoisedROIs-09-22');
+cmp_dir = fullfile(roi_root_dir, 'CmpRawSpilloverDenoise-09-22');
 
 
 stain_str_list = {'aSMA', 'B2M', 'B7_H3', 'CD3e', 'CD4', 'CD8a', 'CD11b', 'CD11c', 'CD14', 'CD19',...
@@ -15,16 +15,20 @@ stain_pixel_num = [50, 50, 37, 5, 5, 25, 37, 5, 50, 5, ...
     50, 5, 5, 25, 50, 25, 35, 50, 35, 30, 5, 5, 35];
 stain_agg_map = containers.Map(stain_str_list, stain_pixel_num);
 
-quantile_val_num = [0.80, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.50, 0.05, ...
-    0.80, 0.05, 0.05, 0.05, 0.05, 0.60, 0.50, 0.05, 0.85, 0.05, 0.05, 0.05, ...
-    0.50, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.50];
+quantile_val_num = [0.90, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.70, 0.05, ...
+    0.80, 0.05, 0.05, 0.05, 0.05, 0.90, 0.85, 0.05, 0.60, 0.05, 0.05, 0.05, ...
+    0.80, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.70];
 quantile_val_map = containers.Map(stain_str_list, quantile_val_num);
 
 roi_list = dir(spillover_dir);
 roi_list = roi_list(3:end);
 
-% for sind = 1:length(roi_list)
-for sind = 1:100
+ro_num = length(roi_list);
+for sind = 1:ro_num
+% for sind = 420:540
+    if mod(sind, 10) == 0
+        disp(['Processing ',num2str(sind),'/',num2str(ro_num)])
+    end
     roi_name = roi_list(sind).name;
     raw_roi_dir = fullfile(raw_dir, roi_name);
     input_roi_dir = fullfile(spillover_dir, roi_name);
@@ -36,7 +40,6 @@ for sind = 1:100
     if ~exist(cmp_roi_dir, 'dir')
         mkdir(cmp_roi_dir)
     end    
-    
     
     img_list = dir(input_roi_dir);
     img_list = img_list(3:end);
