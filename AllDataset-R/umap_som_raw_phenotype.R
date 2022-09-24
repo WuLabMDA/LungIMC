@@ -18,6 +18,7 @@ spe <- readRDS(phenotype_path)
 cluster_plot_name <- "som_raw_umap"
 plot_path <- file.path(fig_dir, paste(cluster_plot_name, ".png", sep=""))
 png(file=plot_path, width=1200, height=1000, units = "px")
-dittoDimPlot(spe, var = "som_clusters",  reduction.use = "UMAP", size = 0.2, do.label = TRUE) +
+cur_cells <- sample(seq_len(ncol(spe)), 100000)
+dittoDimPlot(spe[, cur_cells], var = "som_clusters",  reduction.use = "UMAP", size = 0.2, do.label = TRUE) +
     ggtitle("SOM clusters expression on UMAP")
 dev.off()
