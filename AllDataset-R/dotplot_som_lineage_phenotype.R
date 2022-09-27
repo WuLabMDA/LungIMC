@@ -23,7 +23,7 @@ if (!dir.exists(fig_dir)){
 dotplot_name <- "som_lineage_dotplot"
 plot_path <- file.path(fig_dir, paste(dotplot_name, ".png", sep=""))
 png(file=plot_path, width=1200, height=1000, units = "px")
-interested_feas <- rownames(spe)[rowData(spe)$use_channel]
+interested_feas <- rownames(spe)[rowData(spe)$lineage_markers]
 DotPlot(seurat_obj, features = interested_feas, group.by = 'som_clusters', cols = c("#deebf7", "#08519c"), dot.scale = 9) + 
     RotatedAxis() + theme(legend.position = "bottom") + labs(x = NULL, y = NULL)
 dev.off()
