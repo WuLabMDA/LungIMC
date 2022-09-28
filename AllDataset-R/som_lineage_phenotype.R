@@ -20,7 +20,7 @@ lineage_strings <- "CD45|CD3e|CD4|FoxP3|CD8a|CD19|CD94|CD11b|CD11c|CD14|MPO|CD68
 rowData(spe)$lineage_markers <- grepl(lineage_strings, rownames(spe))
 
 # Run FlowSOM and ConsensusClusterPlus clustering
-spe <- cluster(spe, features = rownames(spe)[rowData(spe)$lineage_markers], maxK = 20, seed = 1234)
+spe <- cluster(spe, features = rownames(spe)[rowData(spe)$lineage_markers], maxK = 30, seed = 1234)
 
 # # Assess cluster stability
 # delta_area(spe)
