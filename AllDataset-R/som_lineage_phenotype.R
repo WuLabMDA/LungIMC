@@ -25,7 +25,7 @@ spe <- cluster(spe, features = rownames(spe)[rowData(spe)$lineage_markers], maxK
 # # Assess cluster stability
 # delta_area(spe)
 
-# # save som clustered results
-# spe$som_clusters <- cluster_ids(spe, "meta10")
-# phenotype_path <- file.path(data_root_dir, "som_raw_spe.rds")
-# saveRDS(spe, phenotype_path)
+# save som clustered results
+spe$som_clusters <- cluster_ids(spe, "meta10")
+phenotype_path <- file.path(data_root_dir, "som_raw_spe.rds")
+saveRDS(spe, phenotype_path)
