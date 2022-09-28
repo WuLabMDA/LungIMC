@@ -41,8 +41,8 @@ color_vectors$ROILoc <- setNames(brewer.pal(length(unique(spe$roi_location)), na
 color_vectors$ROIDiag <- setNames(brewer.pal(length(unique(spe$roi_diag)), name = "Set1"), unique(spe$roi_diag))
 color_vectors$SlideDiag <- setNames(brewer.pal(length(unique(spe$slide_diag)), name = "Set1"), unique(spe$slide_diag))
 color_vectors$PatientID <- setNames(colorRampPalette(brewer.pal(4, "PuOr"))(length(unique(spe$patient_id))), unique(spe$patient_id))
-color_vectors$Stain <- setNames(colorRampPalette(brewer.pal(4, "PuOr"))(length(unique(spe$stain_id))), unique(spe$stain_id))
-color_vectors$Smoke <- setNames(colorRampPalette(brewer.pal(4, "PuOr"))(length(unique(spe$smoke_status))), unique(spe$smoke_status))
+color_vectors$Stain <- setNames(brewer.pal(length(unique(spe$stain_id)), name = "Set1"), unique(spe$stain_id))
+color_vectors$Smoke <- setNames(brewer.pal(length(unique(spe$smoke_status)), name = "Set1"), unique(spe$smoke_status))
 metadata(spe)$color_vectors <- color_vectors
 
 # Save generated SingleCellExperiment object
