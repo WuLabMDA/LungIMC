@@ -8,16 +8,17 @@ library(SeuratObject)
 
 set.seed(1234)
 data_root_dir <- "E:/LungIMCData/LungROIProcessing/SteinbockAll"
-
-phenotype_path <- file.path(data_root_dir, "som_lineage_spe.rds")
-spe <- readRDS(phenotype_path)
-seurat_obj <- as.Seurat(spe, counts = "counts", data = "exprs")
-seurat_obj <- AddMetaData(seurat_obj, as.data.frame(colData(spe)))
-
 fig_dir <- file.path(data_root_dir, "Figs")
 if (!dir.exists(fig_dir)){
     dir.create(fig_dir)
 }
+
+phenotype_path <- file.path(data_root_dir, "som_lineage_spe.rds")
+spe <- readRDS(phenotype_path)
+
+# Convert to Seurat
+seurat_obj <- as.Seurat(spe, counts = "counts", data = "exprs")
+seurat_obj <- AddMetaData(seurat_obj, as.data.frame(colData(spe)))
 
 # Draw dot plot on Raw 
 dotplot_name <- "som_lineage_dotplot"
