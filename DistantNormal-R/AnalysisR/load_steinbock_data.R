@@ -33,6 +33,7 @@ slide_info <- read.xlsx(file.path(normal_root_dir, "StudySlide_Info.xlsx"))
 spe$slide_diag <- slide_info$Slide_Diag[match(spe$slide_id, slide_info$Slide_ID)]
 spe$patient_id <- slide_info$Patient_ID[match(spe$slide_id, slide_info$Slide_ID)]
 spe$stain_id <- slide_info$Staining_ID[match(spe$slide_id, slide_info$Slide_ID)]
+spe$smoke_status <- slide_info$Smoking_Status[match(spe$slide_id, slide_info$Slide_ID)]
 
 # Define color schemes
 color_vectors <- list()
@@ -41,6 +42,7 @@ color_vectors$ROIDiag <- setNames(brewer.pal(length(unique(spe$roi_diag)), name 
 color_vectors$SlideDiag <- setNames(brewer.pal(length(unique(spe$slide_diag)), name = "Set1"), unique(spe$slide_diag))
 color_vectors$PatientID <- setNames(colorRampPalette(brewer.pal(4, "PuOr"))(length(unique(spe$patient_id))), unique(spe$patient_id))
 color_vectors$Stain <- setNames(colorRampPalette(brewer.pal(4, "PuOr"))(length(unique(spe$stain_id))), unique(spe$stain_id))
+color_vectors$Smoke <- setNames(colorRampPalette(brewer.pal(4, "PuOr"))(length(unique(spe$smoke_status))), unique(spe$smoke_status))
 metadata(spe)$color_vectors <- color_vectors
 
 # Save generated SingleCellExperiment object
