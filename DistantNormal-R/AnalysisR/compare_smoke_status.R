@@ -14,7 +14,7 @@ if (!dir.exists(fig_dir)){
 
 # Draw dot plot on Raw 
 normal_smoke_name <- "raw_smoke_status"
-plot_path <- file.path(fig_dir, paste(normal_loc_name, ".png", sep=""))
+plot_path <- file.path(fig_dir, paste(normal_smoke_name, ".png", sep=""))
 png(file=plot_path, width=1200, height=1000, units = "px")
 dittoDimPlot(spe, var = "smoke_status", reduction.use = "UMAP", size = 0.2) + 
     scale_color_manual(values = metadata(spe)$color_vectors$Smoke) +
