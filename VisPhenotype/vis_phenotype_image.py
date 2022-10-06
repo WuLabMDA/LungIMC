@@ -78,6 +78,7 @@ if __name__ == "__main__":
         cell_seg = io.imread(cell_seg_path, plugin="tifffile").astype(np.int32)
         for cell_id in cell_list:
             inst_map = np.array(cell_seg==cell_id, np.uint8)
+            y1, y2, x1, x2  = bounding_box(inst_map)
             y1 = y1 - 2 if y1 - 2 >= 0 else y1
             x1 = x1 - 2 if x1 - 2 >= 0 else x1
             x2 = x2 + 2 if x2 + 2 <= cell_seg.shape[1] - 1 else x2
