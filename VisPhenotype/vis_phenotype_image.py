@@ -87,7 +87,7 @@ if __name__ == "__main__":
             contours, hierarchy = cv2.findContours(inst_cell_crop, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
             img_crop = img_arr[y1:y2, x1:x2]
-            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=(180, 180, 180), thickness=1)
+            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=(255, 128, 0), thickness=2)
             img_arr[y1:y2, x1:x2] = img_crop
         cell_overlay_path = os.path.join(cell_phenotype_dir, roi_name + ".png")
         io.imsave(cell_overlay_path, img_arr)
