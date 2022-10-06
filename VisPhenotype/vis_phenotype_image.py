@@ -58,8 +58,6 @@ if __name__ == "__main__":
     # superimpose cells ontop antibodies
     for ind, (roi_name, cell_list) in enumerate(roi_id_dict.items()):
         print("Superimpose on ROI {} {}/{} ".format(roi_name, ind+1, len(roi_id_dict)))
-        if ind > 20:
-            continue
         img_list = []
         for antibody in antibody_list:
             cur_antibody_path = os.path.join(denoised_img_dir, roi_name, antibody + ".tiff")
