@@ -18,7 +18,7 @@ def set_args():
     parser.add_argument("--denoise_dir",            type=str,       default="Denoise")
     parser.add_argument("--steinbock_dir",          type=str,       default="SteinbockAll")
     parser.add_argument("--phenotype_dir",          type=str,       default="PhenotypeAll")
-    parser.add_argument("--phenotype_id",           type=int,       default=3)
+    parser.add_argument("--phenotype_id",           type=int,       default=6)
 
 
     args = parser.parse_args()
@@ -27,7 +27,8 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    antibody_list = ["CD8a", "CD3e", "CK"]
+    antibody_list = ["CD45", "CD3e", "CK"] # Phenotype 6
+    # antibody_list = ["CD8a", "CD3e", "CK"] # Phenotype 3
     denoised_img_dir = os.path.join(args.data_root, args.data_type, args.denoise_dir, "DenoisedROIs")
 
     steinbock_dir = os.path.join(args.data_root, args.data_type, args.steinbock_dir)
