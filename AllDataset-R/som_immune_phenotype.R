@@ -29,7 +29,7 @@ immnue_spe <- all_spe[, cell_indices]
 
 # Define lineage and function marker list
 # immnue_strings <- "CD45|CD3e|CD4|FoxP3|CD8a|CD19|CD94|CD11b|CD11c|CD14|MPO|CD68|CD33|HLADR|CD45RO|Ki67|CD163|ICOS|GranzymeB|TIM3|LAG3|VISTA|PD1|PDL1|TIGIT|IDO1|B7H3|CTLA4|CD73"
-immnue_strings <- "CD3e|CD4|FoxP3|CD8a|CD19|CD94|CD11b|CD11c|CD14|MPO|CD68|CD33"
+immnue_strings <- "CD3e|^CD4$|FoxP3|CD8a|CD19|CD94|CD11b|CD11c|CD14|MPO|CD68|CD33"
 rowData(immnue_spe)$immnue_markers <- grepl(immnue_strings, rownames(immnue_spe))
 
 # Run FlowSOM and ConsensusClusterPlus clustering
@@ -37,7 +37,7 @@ immnue_spe <- cluster(immnue_spe, features = rownames(immnue_spe)[rowData(immnue
 # # Assess cluster stability
 # delta_area(immnue_spe)
 
-immnue_spe$immnue_clusters <- cluster_ids(immnue_spe, "meta9")
+immnue_spe$immnue_clusters <- cluster_ids(immnue_spe, "meta12")
 # # save som clustered results
 # immnue_phenotype_path <- file.path(data_root_dir, "som_immnue_spe.rds")
 # saveRDS(immnue_spe, immnue_phenotype_path)
