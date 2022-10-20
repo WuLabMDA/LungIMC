@@ -29,11 +29,11 @@ immnue_spe <- all_spe[, cell_indices]
 
 # Define lineage and function marker list
 # immnue_strings <- "CD45|CD3e|CD4|FoxP3|CD8a|CD19|CD94|CD11b|CD11c|CD14|MPO|CD68|CD33|HLADR|CD45RO|Ki67|CD163|ICOS|GranzymeB|TIM3|LAG3|VISTA|PD1|PDL1|TIGIT|IDO1|B7H3|CTLA4|CD73"
-immnue_strings <- "CD3e|^CD4$|FoxP3|CD8a|CD19|CD94|CD11b|CD11c|CD14|MPO|CD68|CD33"
+immnue_strings <- "CD45|CD3e|CD4|FoxP3|CD8a|CD19|CD94|CD11b|CD11c|CD14|MPO|CD68|CD33|HLADR|CD45RO"
 rowData(immnue_spe)$immnue_markers <- grepl(immnue_strings, rownames(immnue_spe))
 
 # Run FlowSOM and ConsensusClusterPlus clustering
-immnue_spe <- cluster(immnue_spe, features = rownames(immnue_spe)[rowData(immnue_spe)$immnue_markers], maxK = 20, seed = 1234)
+immnue_spe <- cluster(immnue_spe, features = rownames(immnue_spe)[rowData(immnue_spe)$immnue_markers], maxK = 50, seed = 1234)
 # # Assess cluster stability
 # delta_area(immnue_spe)
 
