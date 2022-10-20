@@ -31,11 +31,11 @@ l2_antibodies <- "CD45|CD3e|CD4|FoxP3|CD8a|CD19|CD94|CD11b|CD11c|CD14|MPO|CD68|C
 rowData(immnue_spe)$l2_markers <- grepl(l2_antibodies, rownames(immnue_spe))
 
 # Run FlowSOM and ConsensusClusterPlus clustering
-immnue_spe <- cluster(immnue_spe, features = rownames(immnue_spe)[rowData(immnue_spe)$l2_markers], maxK = 80, seed = 1234)
+immnue_spe <- cluster(immnue_spe, features = rownames(immnue_spe)[rowData(immnue_spe)$l2_markers], maxK = 50, seed = 1234)
 # # Assess cluster stability
 # delta_area(immnue_spe)
 
-immnue_spe$l2_clusters <- cluster_ids(immnue_spe, "meta20")
+immnue_spe$l2_clusters <- cluster_ids(immnue_spe, "meta16")
 
 # create figure folders
 fig_dir <- file.path(data_root_dir, "L2Figs")
@@ -44,7 +44,7 @@ if (!dir.exists(fig_dir)){
 }
 
 #  UMAP embedding
-umap_plot_path <- file.path(fig_dir, "som_l2_umap_20.png")
+umap_plot_path <- file.path(fig_dir, "som_l2_umap_16.png")
 png(file=umap_plot_path, width=1200, height=1000, units = "px")
 cur_cells <- sample(seq_len(ncol(immnue_spe)), 100000)
 dittoDimPlot(immnue_spe[, cur_cells], var = "l2_clusters",  reduction.use = "UMAP", size = 0.1, do.label = TRUE) +
@@ -54,7 +54,7 @@ dev.off()
 # dot plot
 seurat_obj <- as.Seurat(immnue_spe, counts = "counts", data = "exprs")
 seurat_obj <- AddMetaData(seurat_obj, as.data.frame(colData(immnue_spe)))
-dot_plot_path <- file.path(fig_dir, "som_l2_dotplot_20.png")
+dot_plot_path <- file.path(fig_dir, "som_l2_dotplot_16.png")
 png(file=dot_plot_path, width=1200, height=1000, units = "px")
 # l2_feas <- rownames(immnue_spe)[rowData(immnue_spe)$l2_markers]
 l2_feas <- c("CD45", "CD3e", "CD4", "FoxP3", "CD8a", "CD19", "CD94", "CD11b", "CD11c", "CD14", "MPO", "CD68", "CD33", "HLADR", "CD45RO")
@@ -63,3 +63,13 @@ DotPlot(seurat_obj, features = l2_feas, group.by = 'l2_clusters', cols = c("#dee
 dev.off()
 
 
+# Heatmap
+heatmap_plot_path <- file.path(fig_dir, "som_l2_heatmap_16.png")
+png(file=heatmap_plot_path, width=1200, height=1000, units = "px")
+l2_feas <- c("CD45", "CD3e", "CD4", "FoxP3", "CD8a", "CD19", "CD94", "CD11b", "CD11c", "CD14", "MPO", "CD68", "CD33", "HLADR", "CD45RO")
+# dittoHeatmap(immnue_spe[, cur_cells], genes = l2_feas, assay = "exprs", scale = "none", 
+#              heatmap.colors = viridis(100), annot.by = "l2_clusters", annot.colors = dittoColors(1)[1:length(unique(immnue_spe$l2_clusters))])
+dittoHeatmap(immnue_spe[, cur_cells], genes = l2_feas, assay = "exprs",
+             scaled.to.max = TRUE, heatmap.colors.max.scaled = colorRampPalette(c("white", "blue"))(50),
+             heatmap.colors = viridis(100), annot.by = "l2_clusters", annot.colors = dittoColors(1)[1:length(unique(immnue_spe$l2_clusters))])
+dev.off()
