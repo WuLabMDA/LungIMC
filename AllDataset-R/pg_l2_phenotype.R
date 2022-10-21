@@ -35,7 +35,7 @@ rowData(immnue_spe)$l2_markers <- grepl(l2_antibodies, rownames(immnue_spe))
 
 # Run Rphenograph
 mat <- t(assay(immnue_spe, "exprs")[rowData(immnue_spe)$l2_markers,])
-out <- Rphenograph(mat, k = 100)
+out <- Rphenograph(mat, k = 300)
 immnue_spe$l2_clusters <- factor(membership(out[[2]]))
 
 # create figure folders
@@ -44,31 +44,30 @@ if (!dir.exists(fig_dir)){
     dir.create(fig_dir)
 }
 
-#  UMAP embedding
-umap_plot_path <- file.path(fig_dir, "pg_l2_umap_20.png")
-png(file=umap_plot_path, width=1200, height=1000, units = "px")
-cur_cells <- sample(seq_len(ncol(immnue_spe)), 100000)
-dittoDimPlot(immnue_spe[, cur_cells], var = "l2_clusters",  reduction.use = "UMAP", size = 0.1, do.label = TRUE) +
-    ggtitle("SOM clusters expression on UMAP")
-dev.off()
-
-# dot plot
-seurat_obj <- as.Seurat(immnue_spe, counts = "counts", data = "exprs")
-seurat_obj <- AddMetaData(seurat_obj, as.data.frame(colData(immnue_spe)))
-dot_plot_path <- file.path(fig_dir, "pg_l2_dotplot_20.png")
-png(file=dot_plot_path, width=1200, height=1000, units = "px")
-# l2_feas <- rownames(immnue_spe)[rowData(immnue_spe)$l2_markers]
-l2_feas <- c("CD45", "CD3e", "CD4", "FoxP3", "CD8a", "CD19", "CD94", "CD11b", "CD11c", "CD14", "MPO", "CD68", "CD33", "HLADR", "CD45RO")
-DotPlot(seurat_obj, features = l2_feas, group.by = 'l2_clusters', cols = c("#deebf7", "#08519c"), dot.scale = 9) + 
-    RotatedAxis() + theme(legend.position = "bottom") + labs(x = NULL, y = NULL)
-dev.off()
-
-
 # Heatmap
-heatmap_plot_path <- file.path(fig_dir, "pg_l2_heatmap_20.png")
+heatmap_plot_path <- file.path(fig_dir, "pg_l2_heatmap_300.png")
 png(file=heatmap_plot_path, width=1200, height=1000, units = "px")
 l2_feas <- c("CD45", "CD3e", "CD4", "FoxP3", "CD8a", "CD19", "CD94", "CD11b", "CD11c", "CD14", "MPO", "CD68", "CD33", "HLADR", "CD45RO")
 dittoHeatmap(immnue_spe, genes = l2_feas, assay = "exprs",
              scaled.to.max = TRUE, heatmap.colors.max.scaled = colorRampPalette(c("white", "blue"))(50),
              heatmap.colors = viridis(100), annot.by = "l2_clusters", annot.colors = dittoColors(1)[1:length(unique(immnue_spe$l2_clusters))])
 dev.off()
+
+#  UMAP embedding
+umap_plot_path <- file.path(fig_dir, "pg_l2_umap_300.png")
+png(file=umap_plot_path, width=1200, height=1000, units = "px")
+cur_cells <- sample(seq_len(ncol(immnue_spe)), 100000)
+dittoDimPlot(immnue_spe[, cur_cells], var = "l2_clusters",  reduction.use = "UMAP", size = 0.1, do.label = TRUE) +
+    ggtitle("SOM clusters expression on UMAP")
+dev.off()
+
+# # dot plot
+# seurat_obj <- as.Seurat(immnue_spe, counts = "counts", data = "exprs")
+# seurat_obj <- AddMetaData(seurat_obj, as.data.frame(colData(immnue_spe)))
+# dot_plot_path <- file.path(fig_dir, "pg_l2_dotplot_100.png")
+# png(file=dot_plot_path, width=1200, height=1000, units = "px")
+# # l2_feas <- rownames(immnue_spe)[rowData(immnue_spe)$l2_markers]
+# l2_feas <- c("CD45", "CD3e", "CD4", "FoxP3", "CD8a", "CD19", "CD94", "CD11b", "CD11c", "CD14", "MPO", "CD68", "CD33", "HLADR", "CD45RO")
+# DotPlot(seurat_obj, features = l2_feas, group.by = 'l2_clusters', cols = c("#deebf7", "#08519c"), dot.scale = 9) + 
+#     RotatedAxis() + theme(legend.position = "bottom") + labs(x = NULL, y = NULL)
+# dev.off()
