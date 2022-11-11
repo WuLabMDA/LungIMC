@@ -3,8 +3,12 @@ library(cytomapper)
 library(BiocParallel)
 library(tiff)
 
+
+spillover_root <- "E:/LungIMCData/LungROIProcessing/Denoise/SpilloverCorrection"
+spillover_matrix_path <- file.path(spillover_root, "SpilloverMatrix", "SpilloverMatrix.rds")
 # load spillover matrix
-meta_sm <- readRDS(file = "SpilloverMatrix.rds")
+meta_sm <- readRDS(file = spillover_matrix_path)
+
 # update channel names
 meta_list <- c("La139", "Pr141", "Nd143", "Nd144", "Nd145", "Nd146", "Sm147",
                "Nd148", "Sm149", "Nd150", "Eu151", "Sm152", "Eu153", "Sm154",
@@ -14,8 +18,8 @@ meta_list <- c("La139", "Pr141", "Nd143", "Nd144", "Nd145", "Nd146", "Sm147",
 channel_names <- paste0(meta_list, "Di")
 
 # correct all ROIs
-raw_img_dir <- "./LungData/Raw/"
-correct_img_dir <- "./LungData/Correct/"
+raw_img_dir <- file.path(spillover_root, "Raw")
+correct_img_dir <- file.path(spillover_root, "Correct")
 if (!dir.exists(correct_img_dir)) {
     dir.create(correct_img_dir)
 }

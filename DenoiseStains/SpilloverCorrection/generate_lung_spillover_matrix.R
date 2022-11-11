@@ -3,9 +3,11 @@ library(CATALYST)
 library(pheatmap)
 
 
+spillover_root <- "E:/LungIMCData/LungROIProcessing/Denoise/SpilloverCorrection"
+
 # load spots data
 dset <- "LungIMC"
-spots_path <- file.path("./", dset)
+spots_path <- file.path(spillover_root, "SpilloverMatrix", dset)
 sce <- readSCEfromTXT(spots_path) 
 # plotSpotHeatmap(sce)
 
@@ -37,7 +39,9 @@ meta_list <- c("La139", "Pr141", "Nd143", "Nd144", "Nd145", "Nd146", "Sm147",
 channel_names <- paste0(meta_list, "Di")
 sm <- metadata(sce)$spillover_matrix
 meta_sm <- adaptSpillmat(sm, out_chs = channel_names)
-saveRDS(meta_sm, file = "LungSpilloverMatrix.rds")
+
+spillover_matrix_path <- file.path(spillover_root, "SpilloverMatrix", "SpilloverMatrix.rds")
+saveRDS(meta_sm, file = spillover_matrix_path)
 
 # rowData(sce)$is_bc <- TRUE # to make sure all antibodies show up
 # plotSpillmat(sce, sm=meta_sm)
