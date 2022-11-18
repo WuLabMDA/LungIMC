@@ -1,6 +1,7 @@
 clearvars;
 
-roi_root_dir = 'E:\LungIMCData\LungROIProcessing\Denoise';
+% roi_root_dir = 'E:\LungIMCData\LungROIProcessing\Denoise';
+roi_root_dir = 'E:\LungIMCData\HumanSampling41\LungROIProcessing\Denoise';
 spillover_dir = fullfile(roi_root_dir, 'SpilloverROIs');
 denoise_dir = fullfile(roi_root_dir, 'DenoisedROIs');
 
