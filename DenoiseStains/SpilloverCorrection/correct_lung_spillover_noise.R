@@ -4,9 +4,18 @@ library(BiocParallel)
 library(tiff)
 
 
-spillover_root <- "E:/LungIMCData/LungROIProcessing/Denoise/SpilloverCorrection"
-spillover_matrix_path <- file.path(spillover_root, "SpilloverMatrix", "SpilloverMatrix.rds")
+# correct all ROIs
+spillover_roi_root <- "E:/LungIMCData/HumanSampling41/LungROIProcessing/Denoise/SpilloverCorrection"
+raw_img_dir <- file.path(spillover_roi_root, "Raw")
+correct_img_dir <- file.path(spillover_roi_root, "Correct")
+if (!dir.exists(correct_img_dir)) {
+    dir.create(correct_img_dir)
+}
+
 # load spillover matrix
+spillover_root <- "E:/LungIMCData"
+spillover_matrix_path <- file.path(spillover_root, "SpilloverMatrix", "SpilloverMatrix.rds")
+
 meta_sm <- readRDS(file = spillover_matrix_path)
 
 # update channel names
@@ -16,13 +25,6 @@ meta_list <- c("La139", "Pr141", "Nd143", "Nd144", "Nd145", "Nd146", "Sm147",
                "Dy164", "Ho165", "Er166", "Er167", "Er168", "Tm169", "Er170",
                "Yb171", "Yb172", "Yb173", "Yb174", "Lu175", "Yb176")
 channel_names <- paste0(meta_list, "Di")
-
-# correct all ROIs
-raw_img_dir <- file.path(spillover_root, "Raw")
-correct_img_dir <- file.path(spillover_root, "Correct")
-if (!dir.exists(correct_img_dir)) {
-    dir.create(correct_img_dir)
-}
 
 file_list <- list.files(path=raw_img_dir, pattern=".tiff", all.files=TRUE, full.names=TRUE)
 for (ind in 1:length(file_list)){

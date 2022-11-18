@@ -3,7 +3,7 @@ library(CATALYST)
 library(pheatmap)
 
 
-spillover_root <- "E:/LungIMCData/LungROIProcessing/Denoise/SpilloverCorrection"
+spillover_root <- "E:/LungIMCData"
 
 # load spots data
 dset <- "LungIMC"
