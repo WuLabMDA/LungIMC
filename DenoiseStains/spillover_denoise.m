@@ -31,7 +31,7 @@ for sind = 1:length(roi_list)
         stain_path = fullfile(input_roi_dir, stain_fullname);
         stain_img = imread(stain_path);
         % remove top strong signals
-        stain_max = prctile(stain_img(:), 99.5);
+        stain_max = prctile(stain_img(:), 99.95);
         stain_img(stain_img > stain_max) = stain_max;        
         % smoothing
         denoise_img = medfilt2(stain_img);
