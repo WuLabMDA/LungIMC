@@ -27,15 +27,13 @@ if __name__ == "__main__":
     args = set_args()
 
     steinbock_dir = os.path.join(args.data_root, args.data_type, args.steinbock_dir)
-    if not os.path.exists(steinbock_dir):
-        os.makedirs(steinbock_dir)
     stain_tif_dir = os.path.join(args.data_root, args.data_type, args.steinbock_dir, "img")
     if os.path.exists(stain_tif_dir):
         shutil.rmtree(stain_tif_dir)
     os.makedirs(stain_tif_dir)
 
     # load stain panel
-    stain_panel_path = os.path.join(args.data_root, args.data_type, args.denoise_dir, "RawPanel.csv")
+    stain_panel_path = os.path.join(args.data_root, args.data_type, args.steinbock_dir, "RawPanel.csv")
     stain_panel = pd.read_csv(stain_panel_path)
     antibody_list = stain_panel["name"].tolist()
 
