@@ -40,6 +40,8 @@ if __name__ == "__main__":
         correct_img = io.imread(cur_roi_path, plugin="tifffile")
         # save images to ROI
         dst_roi_dir = os.path.join(roi_spillover_dir, cur_roi)
+        if not os.path.exists(dst_roi_dir):
+            os.makedirs(dst_roi_dir)        
         for ii, antibody in enumerate(antibody_list):
             cur_antibody = correct_img[ii, :, :]
             cur_antibody_path = os.path.join(dst_roi_dir, antibody + ".tiff")
