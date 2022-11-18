@@ -40,7 +40,7 @@ for (ind in 1:length(file_list)){
     for (cur_name in roi_names) {
         cur_img <- as.array(correct_images[[cur_name]]) / (2^16 - 1)
         # mode(cur_img) <- "integer"
-        correct_img_path <- paste0(correct_img_dir, cur_name, ".tiff")
+        correct_img_path <- file.path(correct_img_dir, paste0(cur_name, ".tiff"))
         writeImage(cur_img, correct_img_path, bits.per.sample=16) 
     }
     end_time <- Sys.time()

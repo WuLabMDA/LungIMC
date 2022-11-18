@@ -14,7 +14,7 @@ def set_args():
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
     parser.add_argument("--mat_dir",                type=str,       default="GroupROI")
     parser.add_argument("--denoise_dir",            type=str,       default="Denoise")
-    parser.add_argument("--dst_dir",                type=str,       default="RawROIs", choices=["RawROIs", "SpilloverROIs"])
+    parser.add_argument("--dst_dir",                type=str,       default="SpilloverROIs")
 
     args = parser.parse_args()
     return args
