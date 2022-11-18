@@ -12,7 +12,11 @@ stain_pixel_num = [50, 50, 37, 5, 5, 25, 37, 5, 50, 5, ...
     37, 5, 50, 37, 50, 50, 37, 37, 50, 35, 5, 5, ...
     50, 5, 5, 25, 50, 25, 35, 50, 35, 30, 5, 5, 35];
 stain_agg_map = containers.Map(stain_str_list, stain_pixel_num);
-quantile_val = 0.05;
+% quantile_val = 0.05;
+quantile_val_num = [0.95, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.70, 0.05, ...
+    0.80, 0.05, 0.05, 0.05, 0.05, 0.90, 0.85, 0.05, 0.60, 0.05, 0.05, 0.05...
+    0.80, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.70];
+quantile_val_map = containers.Map(stain_str_list, quantile_val_num);
 
 roi_list = dir(spillover_dir);
 roi_list = roi_list(3:end);
@@ -41,7 +45,8 @@ for sind = 1:length(roi_list)
         img_mask = bwareaopen(bw_img, stain_agg_map(stain_name));
         denoise_img(~img_mask) = 0;
         % remove weak signal
-        d_thresh = quantile(denoise_img(denoise_img > 0.0), quantile_val);
+        d_thresh = quantile(denoise_img(denoise_img > 0.0), quantile_val_map(stain_name));
+        % d_thresh = quantile(denoise_img(denoise_img > 0.0), quantile_val);
         denoise_img(denoise_img < d_thresh) = 0; 
         denoise_path = fullfile(denoise_roi_dir, stain_fullname);
         imwrite(denoise_img, denoise_path);
