@@ -18,7 +18,7 @@ def set_args():
     parser.add_argument("--denoise_dir",            type=str,       default="Denoise")    
     parser.add_argument("--steinbock_dir",          type=str,       default="Steinbock")
     parser.add_argument("--phenotype_dir",          type=str,       default="CellPhenotype")
-    parser.add_argument('--divide_ratio',           type=float,     default=20.0)
+    parser.add_argument('--divide_ratio',           type=float,     default=1.2)
 
     args = parser.parse_args()
     return args
@@ -26,7 +26,7 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    antibody_list = ["MPO", "FoxP3", "CK"]
+    antibody_list = ["CD8a", "NaKATPase", "Ir191"]
     # steinbock dir
     steinbock_dir = os.path.join(args.data_root, args.data_type, args.steinbock_dir)
     # image dir 
@@ -42,26 +42,11 @@ if __name__ == "__main__":
     cell_ids = cell_phenotype_df["ids"].tolist()
     cell_phenotypes = cell_phenotype_df["celltypes"].tolist()
 
-    # # check cell numbers
-    # roi_cell_id_dict = {}
-    # for cur_cell in cell_ids:
-    #     cur_roi = cur_cell[:cur_cell.find("_")]
-    #     cell_id = int(cur_cell[cur_cell.find("_")+1:])
-    #     if cur_roi in roi_cell_id_dict.keys():
-    #         roi_cell_id_dict[cur_roi].append(cell_id)
-    #     else:
-    #         roi_cell_id_dict[cur_roi] = [cell_id, ]
-    # for cur_roi in roi_cell_id_dict.keys():
-    #     cell_seg_path = os.path.join(cell_seg_dir, cur_roi + ".tiff")
-    #     cell_seg = io.imread(cell_seg_path, plugin="tifffile").astype(np.int32)
-    #     if np.max(cell_seg) != len(roi_cell_id_dict[cur_roi]):
-    #         print("Cell number not matched in ROI {}".format(cur_roi))
-
     # accumulate cell ids
     roi_id_dict = {}
     for cur_cell, cur_phenotype in zip(cell_ids, cell_phenotypes):
-        if not cur_phenotype.startswith("Neutrophils"):
-            continue
+        # if not cur_phenotype.startswith("Dendritic"):
+        #     continue
         roi_name = cur_cell[:cur_cell.find("_")]
         roi_id = int(cur_cell[cur_cell.find("_")+1:])
         if roi_name not in roi_id_dict.keys():
@@ -69,13 +54,15 @@ if __name__ == "__main__":
         else:
             roi_id_dict[roi_name].append(roi_id)
 
-    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "MPO")
+    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "CD8a")
     if os.path.exists(cell_phenotype_dir):
         shutil.rmtree(cell_phenotype_dir)
     os.makedirs(cell_phenotype_dir)    
 
     # superimpose cells ontop antibodies
     for ind, (roi_name, cell_list) in enumerate(roi_id_dict.items()):
+        if roi_name != "2538-11M-ROI002":
+            continue
         print("Superimpose on ROI {} {}/{} ".format(roi_name, ind+1, len(roi_id_dict)))
         img_list = []
         for antibody in antibody_list:
@@ -105,9 +92,13 @@ if __name__ == "__main__":
             inst_cell_crop = inst_map[y1:y2, x1:x2]
             contours, hierarchy = cv2.findContours(inst_cell_crop, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
+            img_crop_cd8a = img_arr[y1:y2, x1:x2, 0]
+            if np.mean(img_crop_cd8a) < 80:
+                continue
             img_crop = img_arr[y1:y2, x1:x2]
-            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=(255, 128, 0), thickness=2)
+            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=(255, 128, 0), thickness=1)
             img_arr[y1:y2, x1:x2] = img_crop
+            img_arr = cv2.putText(img_arr, str(cell_id), (int((x1+x2)/2), int((y1+y2)/2)), cv2.FONT_HERSHEY_SIMPLEX, 0.2, (255, 0, 0), 1, cv2.LINE_AA)
         cell_overlay_path = os.path.join(cell_phenotype_dir, roi_name + ".png")
         io.imsave(cell_overlay_path, img_arr)
         
