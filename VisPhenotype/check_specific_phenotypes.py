@@ -26,7 +26,9 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    antibody_list = ["MPO", "FoxP3", "CK"]
+    # antibody_list = ["MPO", "FoxP3", "CK"]
+    antibody_list = ["CD8a", "FoxP3", "CK"]
+
     # steinbock dir
     steinbock_dir = os.path.join(args.data_root, args.data_type, args.steinbock_dir)
     # image dir 
@@ -60,7 +62,9 @@ if __name__ == "__main__":
     # accumulate cell ids
     roi_id_dict = {}
     for cur_cell, cur_phenotype in zip(cell_ids, cell_phenotypes):
-        if not cur_phenotype.startswith("Neutrophils"):
+        # if not cur_phenotype.startswith("Neutrophils"):
+        # if not cur_phenotype.startswith("CD8 T"):
+        if not cur_phenotype.startswith("Epithelial 4"):
             continue
         roi_name = cur_cell[:cur_cell.find("_")]
         roi_id = int(cur_cell[cur_cell.find("_")+1:])
@@ -69,7 +73,9 @@ if __name__ == "__main__":
         else:
             roi_id_dict[roi_name].append(roi_id)
 
-    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "MPO")
+    # cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "MPO")
+    # cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "CD8a")
+    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "Epithelial4")
     if os.path.exists(cell_phenotype_dir):
         shutil.rmtree(cell_phenotype_dir)
     os.makedirs(cell_phenotype_dir)    
