@@ -52,7 +52,7 @@ if __name__ == "__main__":
         if cur_phenotype == "CD8 T cell 1":
             cur_color = (0, 128, 128)
         elif cur_phenotype == "CD8 T cell 2":
-            cur_color = (0, 0, 128)
+            cur_color = (255, 225, 25)
         else:
             print("unknow cell type: {}".format(cur_phenotype))
             sys.exit()
@@ -105,7 +105,7 @@ if __name__ == "__main__":
             contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
             img_crop = img_arr[y1:y2, x1:x2]
             # cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=(255, 128, 0), thickness=2)
-            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=color_list[cind], thickness=1)
+            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=color_list[cind], thickness=2)
             img_arr[y1:y2, x1:x2] = img_crop
         cell_overlay_path = os.path.join(cell_phenotype_dir, roi_name + ".png")
         io.imsave(cell_overlay_path, img_arr)
