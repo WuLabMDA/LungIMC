@@ -46,16 +46,19 @@ if __name__ == "__main__":
     # accumulate cell ids
     roi_id_dict, roi_color_dict = {}, {}
     for cur_cell, cur_phenotype in zip(cell_ids, cell_phenotypes):
-        if not cur_phenotype.startswith("CD8 T"):
-            continue
+        # if not cur_phenotype.startswith("CD8 T"):
+        #     continue
         cur_color = None
         if cur_phenotype == "CD8 T cell 1":
             cur_color = (0, 128, 128)
         elif cur_phenotype == "CD8 T cell 2":
             cur_color = (255, 225, 25)
+        elif cur_phenotype == "Epithelial 4":
+            cur_color = (145, 30, 180)       
         else:
-            print("unknow cell type: {}".format(cur_phenotype))
-            sys.exit()
+            continue
+            # print("unknow cell type: {}".format(cur_phenotype))
+            # sys.exit()
         roi_name = cur_cell[:cur_cell.find("_")]
         roi_id = int(cur_cell[cur_cell.find("_")+1:])
         if roi_name not in roi_id_dict.keys():
