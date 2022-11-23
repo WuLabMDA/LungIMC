@@ -26,7 +26,7 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    antibody_list = ["CD8a", "FoxP3", "CK"]
+    antibody_list = ["CD33", "FoxP3", "CK"]
 
     cell_phenotypes = ["B cell", "CD3e", "CD4", "CD8", "Dendritic", 
         "Endothelial", "Epithelial", "Macrophage", "MDSC", "Monocytes", 
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             roi_id_dict[roi_name].append(roi_id)
             roi_color_dict[roi_name].append(cur_color)
 
-    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "EntireCells")
+    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "EntireMDSC")
     if os.path.exists(cell_phenotype_dir):
         shutil.rmtree(cell_phenotype_dir)
     os.makedirs(cell_phenotype_dir)    
