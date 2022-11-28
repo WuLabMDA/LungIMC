@@ -5,7 +5,9 @@ clearvars;
 % roi_root_dir = 'E:\LungIMCData\HumanSampling41\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-0\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-1\LungROIProcessing\Denoise';
-roi_root_dir = 'E:\LungIMCData\HumanSampling35-2\LungROIProcessing\Denoise';
+% roi_root_dir = 'E:\LungIMCData\HumanSampling35-2\LungROIProcessing\Denoise';
+% roi_root_dir = 'E:\LungIMCData\HumanSampling35-3\LungROIProcessing\Denoise';
+roi_root_dir = 'E:\LungIMCData\HumanSampling35-4\LungROIProcessing\Denoise';
 
 spillover_dir = fullfile(roi_root_dir, 'SpilloverROIs');
 denoise_dir = fullfile(roi_root_dir, 'DenoisedROIs');
@@ -19,7 +21,7 @@ stain_pixel_num = [50, 50, 37, 5, 5, 25, 37, 5, 50, 5, ...
 stain_agg_map = containers.Map(stain_str_list, stain_pixel_num);
 % quantile_val = 0.05;
 quantile_val_num = [0.95, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.85, 0.05, ...
-    0.80, 0.05, 0.05, 0.05, 0.05, 0.90, 0.90, 0.05, 0.80, 0.05, 0.05, 0.05, ...
+    0.80, 0.05, 0.05, 0.05, 0.05, 0.90, 0.90, 0.05, 0.90, 0.05, 0.05, 0.05, ...
     0.80, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.70];
 quantile_val_map = containers.Map(stain_str_list, quantile_val_num);
 
