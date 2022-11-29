@@ -27,7 +27,8 @@ if __name__ == "__main__":
     args = set_args()
 
     # antibody_list = ["MPO", "FoxP3", "CK"]
-    antibody_list = ["CD8a", "FoxP3", "CK"]
+    # antibody_list = ["CD8a", "FoxP3", "CK"]
+    antibody_list = ["CD3e", "FoxP3", "CK"]
 
     # steinbock dir
     steinbock_dir = os.path.join(args.data_root, args.data_type, args.steinbock_dir)
@@ -41,30 +42,15 @@ if __name__ == "__main__":
     # load cell id & phenotype information
     cell_phenotype_path = os.path.join(phenotype_dir, "ReferenceIDS.xlsx")
     cell_phenotype_df = pd.read_excel(cell_phenotype_path)
-    cell_ids = cell_phenotype_df["ids"].tolist()
+    cell_ids = cell_phenotype_df["IDS"].tolist()
     cell_phenotypes = cell_phenotype_df["celltypes"].tolist()
-
-    # # check cell numbers
-    # roi_cell_id_dict = {}
-    # for cur_cell in cell_ids:
-    #     cur_roi = cur_cell[:cur_cell.find("_")]
-    #     cell_id = int(cur_cell[cur_cell.find("_")+1:])
-    #     if cur_roi in roi_cell_id_dict.keys():
-    #         roi_cell_id_dict[cur_roi].append(cell_id)
-    #     else:
-    #         roi_cell_id_dict[cur_roi] = [cell_id, ]
-    # for cur_roi in roi_cell_id_dict.keys():
-    #     cell_seg_path = os.path.join(cell_seg_dir, cur_roi + ".tiff")
-    #     cell_seg = io.imread(cell_seg_path, plugin="tifffile").astype(np.int32)
-    #     if np.max(cell_seg) != len(roi_cell_id_dict[cur_roi]):
-    #         print("Cell number not matched in ROI {}".format(cur_roi))
 
     # accumulate cell ids
     roi_id_dict = {}
     for cur_cell, cur_phenotype in zip(cell_ids, cell_phenotypes):
         # if not cur_phenotype.startswith("Neutrophils"):
         # if not cur_phenotype.startswith("CD8 T"):
-        if not cur_phenotype.startswith("Epithelial 4"):
+        if not cur_phenotype.startswith("CD3 T"):       
             continue
         roi_name = cur_cell[:cur_cell.find("_")]
         roi_id = int(cur_cell[cur_cell.find("_")+1:])
@@ -73,9 +59,7 @@ if __name__ == "__main__":
         else:
             roi_id_dict[roi_name].append(roi_id)
 
-    # cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "MPO")
-    # cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "CD8a")
-    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "Epithelial4")
+    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "CD3e")
     if os.path.exists(cell_phenotype_dir):
         shutil.rmtree(cell_phenotype_dir)
     os.makedirs(cell_phenotype_dir)    
