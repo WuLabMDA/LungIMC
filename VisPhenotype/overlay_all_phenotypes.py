@@ -18,7 +18,7 @@ def set_args():
     parser.add_argument("--denoise_dir",            type=str,       default="Denoise")    
     parser.add_argument("--steinbock_dir",          type=str,       default="Steinbock")
     parser.add_argument("--phenotype_dir",          type=str,       default="CellPhenotype")
-    parser.add_argument('--divide_ratio',           type=float,     default=20.0)
+    parser.add_argument('--divide_ratio',           type=float,     default=2.0)
 
     args = parser.parse_args()
     return args
@@ -81,7 +81,8 @@ if __name__ == "__main__":
         for antibody in antibody_list:
             cur_antibody_path = os.path.join(roi_img_dir, roi_name, antibody + ".tiff")
             cur_antibody = io.imread(cur_antibody_path, plugin="tifffile").astype(np.float32)
-            high_thresh = np.max(cur_antibody) * 1.0 / args.divide_ratio     
+            high_thresh = np.max(cur_antibody) * 1.0 / args.divide_ratio  
+
             if high_thresh < 0.01:
                 cur_antibody = np.zeros_like(cur_antibody)
             else:

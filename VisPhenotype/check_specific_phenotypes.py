@@ -18,7 +18,7 @@ def set_args():
     parser.add_argument("--denoise_dir",            type=str,       default="Denoise")    
     parser.add_argument("--steinbock_dir",          type=str,       default="Steinbock")
     parser.add_argument("--phenotype_dir",          type=str,       default="CellPhenotype")
-    parser.add_argument('--divide_ratio',           type=float,     default=20.0)
+    parser.add_argument('--divide_ratio',           type=float,     default=2.0)
 
     args = parser.parse_args()
     return args
