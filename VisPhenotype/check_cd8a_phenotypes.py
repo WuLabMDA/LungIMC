@@ -40,25 +40,15 @@ if __name__ == "__main__":
     # load cell id & phenotype information
     cell_phenotype_path = os.path.join(phenotype_dir, "ReferenceIDS.xlsx")
     cell_phenotype_df = pd.read_excel(cell_phenotype_path)
-    cell_ids = cell_phenotype_df["ids"].tolist()
+    cell_ids = cell_phenotype_df["IDS"].tolist()
     cell_phenotypes = cell_phenotype_df["celltypes"].tolist()
 
     # accumulate cell ids
     roi_id_dict, roi_color_dict = {}, {}
     for cur_cell, cur_phenotype in zip(cell_ids, cell_phenotypes):
-        # if not cur_phenotype.startswith("CD8 T"):
-        #     continue
-        cur_color = None
-        if cur_phenotype == "CD8 T cell 1":
-            cur_color = (0, 128, 128)
-        elif cur_phenotype == "CD8 T cell 2":
-            cur_color = (255, 225, 25)
-        elif cur_phenotype == "Epithelial 4":
-            cur_color = (145, 30, 180)       
-        else:
+        if not cur_phenotype.startswith("CD8 T"):
             continue
-            # print("unknow cell type: {}".format(cur_phenotype))
-            # sys.exit()
+        cur_color = (0, 128, 128)
         roi_name = cur_cell[:cur_cell.find("_")]
         roi_id = int(cur_cell[cur_cell.find("_")+1:])
         if roi_name not in roi_id_dict.keys():
