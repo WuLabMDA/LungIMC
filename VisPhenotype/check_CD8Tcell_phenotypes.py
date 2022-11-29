@@ -26,11 +26,7 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    # antibody_list = ["MPO", "FoxP3", "CK"]
-    # antibody_list = ["CD8a", "FoxP3", "CK"]
-    # antibody_list = ["CD3e", "FoxP3", "CK"]
-    # antibody_list = ["CD19", "FoxP3", "CK"]
-    antibody_list = ["CD94", "FoxP3", "CK"]
+    antibody_list = ["CD8a", "FoxP3", "CK"]
 
     # steinbock dir
     steinbock_dir = os.path.join(args.data_root, args.data_type, args.steinbock_dir)
@@ -48,21 +44,21 @@ if __name__ == "__main__":
     cell_phenotypes = cell_phenotype_df["celltypes"].tolist()
 
     # accumulate cell ids
-    roi_id_dict = {}
+    roi_id_dict, roi_color_dict = {}, {}
     for cur_cell, cur_phenotype in zip(cell_ids, cell_phenotypes):
-        # if not cur_phenotype.startswith("Neutrophils"):
-        # if not cur_phenotype.startswith("CD8T"):
-        # if not cur_phenotype.startswith("CD3T"):
-        if not cur_phenotype.startswith("NK"):
+        if not cur_phenotype.startswith("CD8T"):
             continue
+        cur_color = (0, 128, 128)
         roi_name = cur_cell[:cur_cell.find("_")]
         roi_id = int(cur_cell[cur_cell.find("_")+1:])
         if roi_name not in roi_id_dict.keys():
             roi_id_dict[roi_name] = [roi_id, ]
+            roi_color_dict[roi_name] = [cur_color, ]
         else:
             roi_id_dict[roi_name].append(roi_id)
+            roi_color_dict[roi_name].append(cur_color)
 
-    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "CD94")
+    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "CD8T-cell")
     if os.path.exists(cell_phenotype_dir):
         shutil.rmtree(cell_phenotype_dir)
     os.makedirs(cell_phenotype_dir)    
@@ -75,6 +71,7 @@ if __name__ == "__main__":
             cur_antibody_path = os.path.join(roi_img_dir, roi_name, antibody + ".tiff")
             cur_antibody = io.imread(cur_antibody_path, plugin="tifffile").astype(np.float32)
             high_thresh = np.max(cur_antibody) * 1.0 / args.divide_ratio     
+            # cur_antibody[cur_antibody > high_thresh] = high_thresh
             if high_thresh < 0.01:
                 cur_antibody = np.zeros_like(cur_antibody)
             else:
@@ -84,10 +81,12 @@ if __name__ == "__main__":
             img_list.append(cur_antibody)
         img_arr = (np.dstack(img_list) * 255).astype(np.uint8)
 
+        color_list = roi_color_dict[roi_name]
+        assert len(cell_list) == len(color_list), "On ROI {}, cell and color number not matched"
         # overlay cell onto image
         cell_seg_path = os.path.join(cell_seg_dir, roi_name + ".tiff")
         cell_seg = io.imread(cell_seg_path, plugin="tifffile").astype(np.int32)
-        for cell_id in cell_list:
+        for cind, cell_id in enumerate(cell_list):
             inst_map = np.array(cell_seg==cell_id, np.uint8)
             y1, y2, x1, x2  = bounding_box(inst_map)
             y1 = y1 - 2 if y1 - 2 >= 0 else y1
@@ -98,7 +97,8 @@ if __name__ == "__main__":
             contours, hierarchy = cv2.findContours(inst_cell_crop, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
             img_crop = img_arr[y1:y2, x1:x2]
-            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=(255, 128, 0), thickness=2)
+            # cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=(255, 128, 0), thickness=2)
+            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=color_list[cind], thickness=2)
             img_arr[y1:y2, x1:x2] = img_crop
         cell_overlay_path = os.path.join(cell_phenotype_dir, roi_name + ".png")
         io.imsave(cell_overlay_path, img_arr)
