@@ -26,11 +26,11 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    antibody_list = ["CD33", "FoxP3", "CK"]
+    antibody_list = ["CD8a", "FoxP3", "CK"]
 
-    cell_phenotypes = ["B cell", "CD3e", "CD4", "CD8", "Dendritic", 
+    cell_phenotypes = ["B-cell", "CD3T-cell", "CD4T-cell", "CD8T-cell", "Dendritic", 
         "Endothelial", "Epithelial", "Macrophage", "MDSC", "Monocytes", 
-        "Neutrophils", "NK", "Smooth", "T-reg", "Undefined"]
+        "Neutrophils", "NK", "SmoothMuscle-Stromal", "T-reg", "Unknown"]
     phenotype_colors = [(128, 0, 0), (170, 110, 40), (128, 128, 0), (0, 128, 128), (0, 0, 128),
         (245, 130, 48), (255, 225, 25), (210, 245, 60), (70, 240, 240), (145, 30, 180),
         (250, 190, 212), (255, 215, 180), (255, 250, 200), (170, 255, 195), (220, 190, 255)]
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     # load cell id & phenotype information
     cell_phenotype_path = os.path.join(phenotype_dir, "ReferenceIDS.xlsx")
     cell_phenotype_df = pd.read_excel(cell_phenotype_path)
-    cell_ids = cell_phenotype_df["ids"].tolist()
+    cell_ids = cell_phenotype_df["IDS"].tolist()
     cell_types = cell_phenotype_df["celltypes"].tolist()
     cell_colors = []
     for cur_phenotype in cell_types:
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             roi_id_dict[roi_name].append(roi_id)
             roi_color_dict[roi_name].append(cur_color)
 
-    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "EntireMDSC")
+    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "EntireCD8a")
     if os.path.exists(cell_phenotype_dir):
         shutil.rmtree(cell_phenotype_dir)
     os.makedirs(cell_phenotype_dir)    
