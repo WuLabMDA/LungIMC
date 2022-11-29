@@ -58,7 +58,7 @@ if __name__ == "__main__":
             roi_id_dict[roi_name].append(roi_id)
             roi_color_dict[roi_name].append(cur_color)
 
-    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "CD8a")
+    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "CD8Tcell")
     if os.path.exists(cell_phenotype_dir):
         shutil.rmtree(cell_phenotype_dir)
     os.makedirs(cell_phenotype_dir)    
