@@ -89,7 +89,7 @@ if __name__ == "__main__":
             cx = int(cnt_m["m10"] / cnt_m["m00"])
             cy = int(cnt_m["m01"] / cnt_m["m00"])            
             cnt_area = cv2.contourArea(cell_cnt)
-            if cnt_area < 5.0 or cnt_area > 160.0:
+            if cnt_area < 10.0 or cnt_area > 160.0:                
                 continue
             # cell feature
             scell_fea.extend([cx, cy, cnt_area])
