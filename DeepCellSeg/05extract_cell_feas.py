@@ -18,10 +18,10 @@ def set_args():
     parser.add_argument("--cellseg_dir",            type=str,       default="CellSeg")        
     parser.add_argument("--merge_dir",              type=str,       default="MergeCellSeg")
     parser.add_argument("--denoise_dir",            type=str,       default="Denoise")
-    parser.add_argument("--cellinfo_dir",           type=str,       default="CellInfo")        
+    parser.add_argument("--steinbock_dir",          type=str,       default="Steinbock")
     parser.add_argument("--fea_dir",                type=str,       default="CellFeas")
     parser.add_argument("--cnt_dir",                type=str,       default="Contour")
-    parser.add_argument("--tif_dir",                type=str,       default="SegTIF16")
+    parser.add_argument("--tif_dir",                type=str,       default="masks_deepcell")
     args = parser.parse_args()
     return args
 
@@ -33,17 +33,17 @@ if __name__ == "__main__":
     mask_root = os.path.join(root_dir, args.cellseg_dir, args.merge_dir, "Mask")
     stain_root = os.path.join(root_dir, args.denoise_dir, "DenoisedROIs")
     # cell feature directory
-    cellfea_dir = os.path.join(root_dir, args.cellinfo_dir, args.fea_dir)
+    cellfea_dir = os.path.join(root_dir, args.cellseg_dir, args.merge_dir, args.fea_dir)
     if os.path.exists(cellfea_dir):
         shutil.rmtree(cellfea_dir)
     os.makedirs(cellfea_dir)
     # cell contour directory
-    cnt_dir_root = os.path.join(root_dir, args.cellinfo_dir, args.cnt_dir)
+    cnt_dir_root = os.path.join(root_dir, args.cellseg_dir, args.merge_dir, args.cnt_dir)
     if os.path.exists(cnt_dir_root):
         shutil.rmtree(cnt_dir_root)
     os.makedirs(cnt_dir_root)
     # cell tif mask directory
-    tifmask_root = os.path.join(root_dir, args.cellinfo_dir, args.tif_dir)
+    tifmask_root = os.path.join(root_dir, args.steinbock_dir, args.tif_dir)
     if os.path.exists(tifmask_root):
         shutil.rmtree(tifmask_root)
     os.makedirs(tifmask_root)    
