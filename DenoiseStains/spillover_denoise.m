@@ -1,8 +1,8 @@
 clearvars;
 
 % roi_root_dir = 'E:\LungIMCData\LungROIProcessing\Denoise';
-% roi_root_dir = 'E:\LungIMCData\HumanWholeIMC\LungROIProcessing\Denoise';
-roi_root_dir = 'E:\LungIMCData\HumanSampling35-0\LungROIProcessing\Denoise';
+roi_root_dir = 'E:\LungIMCData\HumanWholeIMC\LungROIProcessing\Denoise';
+% roi_root_dir = 'E:\LungIMCData\HumanSampling35-0\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-1\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-2\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-3\LungROIProcessing\Denoise';
