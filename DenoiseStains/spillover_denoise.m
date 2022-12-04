@@ -1,12 +1,12 @@
 clearvars;
 
-% roi_root_dir = 'E:\LungIMCData\LungROIProcessing\Denoise';
 roi_root_dir = 'E:\LungIMCData\HumanWholeIMC\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-0\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-1\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-2\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-3\LungROIProcessing\Denoise';
 % roi_root_dir = 'E:\LungIMCData\HumanSampling35-4\LungROIProcessing\Denoise';
+% roi_root_dir = 'E:\LungIMCData\TonsilIMC\TonsilROIProcessing\Denoise';
 
 spillover_dir = fullfile(roi_root_dir, 'SpilloverROIs');
 denoise_dir = fullfile(roi_root_dir, 'DenoisedROIs');

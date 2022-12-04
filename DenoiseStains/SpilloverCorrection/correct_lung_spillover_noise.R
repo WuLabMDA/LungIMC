@@ -5,8 +5,8 @@ library(tiff)
 
 
 # correct all ROIs
-# spillover_roi_root <- "E:/LungIMCData/HumanWholeIMC/LungROIProcessing/Denoise/SpilloverCorrection"
-spillover_roi_root <- "E:/LungIMCData/TonsilIMC/TonsilROIProcessing/Denoise/SpilloverCorrection"
+spillover_roi_root <- "E:/LungIMCData/HumanWholeIMC/LungROIProcessing/Denoise/SpilloverCorrection"
+# spillover_roi_root <- "E:/LungIMCData/TonsilIMC/TonsilROIProcessing/Denoise/SpilloverCorrection"
 
 
 raw_img_dir <- file.path(spillover_roi_root, "Raw")
