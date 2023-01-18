@@ -54,8 +54,6 @@ if __name__ == "__main__":
         for ind, cell_type in enumerate(cell_phenotypes):
             if cur_phenotype.startswith(cell_type):
                 cell_colors.append(phenotype_colors[ind])
-    # print("Number of cells: {}".format(len(cell_ids)))
-    # print("Number of colors: {}".format(len(cell_colors)))
 
     # accumulate cell ids
     roi_id_dict, roi_color_dict = {}, {}

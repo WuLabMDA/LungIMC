@@ -7,6 +7,8 @@ import numpy as np
 from skimage import io
 import tifffile
 import cv2
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from seg_utils import bounding_box
 
@@ -14,11 +16,12 @@ from seg_utils import bounding_box
 def set_args():
     parser = argparse.ArgumentParser(description = "Check Cell Phenotype on Raw Image")
     parser.add_argument("--data_root",              type=str,       default="/Data")
+    parser.add_argument("--data_set",               type=str,       default="HumanSampling35", choices=["HumanWholeIMC", "HumanSampling35"])
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
     parser.add_argument("--denoise_dir",            type=str,       default="Denoise")    
     parser.add_argument("--steinbock_dir",          type=str,       default="Steinbock")
     parser.add_argument("--phenotype_dir",          type=str,       default="CellPhenotype")
-    parser.add_argument('--divide_ratio',           type=float,     default=2.0)
+    parser.add_argument('--divide_ratio',           type=float,     default=10.0)
 
     args = parser.parse_args()
     return args
@@ -26,39 +29,33 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    # antibody_list = ["MPO", "FoxP3", "CK"]
-    # antibody_list = ["CD8a", "FoxP3", "CK"]
-    # antibody_list = ["CD3e", "FoxP3", "CK"]
-    antibody_list = ["CD19", "FoxP3", "CK"]
-    # antibody_list = ["CD94", "FoxP3", "CK"]
-    # antibody_list = ["CD11c", "FoxP3", "CK"]
-    antibody_list = ["CD11c", "FoxP3", "CK"]
+    antibody_list = ['B2M', 'B7_H3', 'CD11b', 'CD11c', 'CD14', 'CD163', 'CD19', 
+        'CD31', 'CD33', 'CD3e', 'CD4', 'CD45', 'CD45RO', 'CD68', 
+        'CD73', 'CD8a', 'CD94', 'CK', 'CTLA_4', 'FoxP3', 'GranzymeB', 
+        'HLA_DR', 'ICOS', 'IDO_1', 'Ir191', 'Ki67', 'LAG3', 'MPO', 
+        'NaKATPase', 'PD_1', 'PD_L1', 'TIGIT', 'TIM3', 'VISTA', 'aSMA']
 
     # steinbock dir
-    steinbock_dir = os.path.join(args.data_root, args.data_type, args.steinbock_dir)
+    steinbock_dir = os.path.join(args.data_root, args.data_set, args.data_type, args.steinbock_dir)
+
     # image dir 
-    roi_img_dir = os.path.join(args.data_root, args.data_type, args.denoise_dir, "DenoisedROIs")
+    roi_img_dir = os.path.join(args.data_root, args.data_set, args.data_type, args.denoise_dir, "DenoisedROIs")
     # segmentation dir
     cell_seg_dir = os.path.join(steinbock_dir, "masks_deepcell")
+    seg_roi_lst = [os.path.splitext(ele)[0] for ele in os.listdir(cell_seg_dir) if ele.endswith(".tiff")]
 
     # cell phenotype dir
-    phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir)
+    phenotype_dir = os.path.join(args.data_root, args.data_set, args.data_type, args.phenotype_dir)
     # load cell id & phenotype information
-    cell_phenotype_path = os.path.join(phenotype_dir, "ReferenceIDS.xlsx")
+    cell_phenotype_path = os.path.join(phenotype_dir, "ReferenceIDS41ROIs.xlsx")
     cell_phenotype_df = pd.read_excel(cell_phenotype_path)
-    cell_ids = cell_phenotype_df["IDS"].tolist()
+    cell_ids = cell_phenotype_df["cell ids"].tolist()
     cell_phenotypes = cell_phenotype_df["celltypes"].tolist()
 
     # accumulate cell ids
     roi_id_dict = {}
     for cur_cell, cur_phenotype in zip(cell_ids, cell_phenotypes):
-        # if not cur_phenotype.startswith("Neutrophils"):
-        # if not cur_phenotype.startswith("CD8T"):
-        # if not cur_phenotype.startswith("CD3T"):
-        # if not cur_phenotype.startswith("NK"):
-        # if not cur_phenotype.startswith("Dendritic"):
-        # if not cur_phenotype.startswith("B-cell"):
-        if not cur_phenotype.startswith("T-reg"):
+        if cur_phenotype != "Unknown":
             continue
         roi_name = cur_cell[:cur_cell.find("_")]
         roi_id = int(cur_cell[cur_cell.find("_")+1:])
@@ -67,17 +64,16 @@ if __name__ == "__main__":
         else:
             roi_id_dict[roi_name].append(roi_id)
 
-    cell_phenotype_dir = os.path.join(args.data_root, args.data_type, args.phenotype_dir, "FoxP3")
-    if os.path.exists(cell_phenotype_dir):
-        shutil.rmtree(cell_phenotype_dir)
-    os.makedirs(cell_phenotype_dir)    
-
-    # superimpose cells ontop antibodies
+    cell_intensity_dict = {ele: [] for ele in antibody_list}
+    # collect all information
     for ind, (roi_name, cell_list) in enumerate(roi_id_dict.items()):
-        print("Superimpose on ROI {} {}/{} ".format(roi_name, ind+1, len(roi_id_dict)))
+        if roi_name not in seg_roi_lst:
+            continue      
+        
+        cur_roi_img_dir = os.path.join(roi_img_dir, roi_name)
         img_list = []
         for antibody in antibody_list:
-            cur_antibody_path = os.path.join(roi_img_dir, roi_name, antibody + ".tiff")
+            cur_antibody_path = os.path.join(cur_roi_img_dir, antibody + ".tiff")
             cur_antibody = io.imread(cur_antibody_path, plugin="tifffile").astype(np.float32)
             high_thresh = np.max(cur_antibody) * 1.0 / args.divide_ratio     
             if high_thresh < 0.01:
@@ -89,7 +85,7 @@ if __name__ == "__main__":
             img_list.append(cur_antibody)
         img_arr = (np.dstack(img_list) * 255).astype(np.uint8)
 
-        # overlay cell onto image
+        # load cell segmentation
         cell_seg_path = os.path.join(cell_seg_dir, roi_name + ".tiff")
         cell_seg = io.imread(cell_seg_path, plugin="tifffile").astype(np.int32)
         for cell_id in cell_list:
@@ -103,9 +99,11 @@ if __name__ == "__main__":
             contours, hierarchy = cv2.findContours(inst_cell_crop, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
             contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
             img_crop = img_arr[y1:y2, x1:x2]
-            cv2.drawContours(img_crop, contours=contours, contourIdx=0, color=(255, 128, 0), thickness=2)
-            img_arr[y1:y2, x1:x2] = img_crop
-        cell_overlay_path = os.path.join(cell_phenotype_dir, roi_name + ".png")
-        io.imsave(cell_overlay_path, img_arr)
-        
-
+            cell_mask = np.zeros((inst_cell_crop.shape[0], inst_cell_crop.shape[1]), dtype=np.uint8)
+            cv2.drawContours(cell_mask, contours=contours, contourIdx=0, color=1, thickness=-1)
+            for aa, antibody in enumerate(antibody_list):
+                cell_intensity_dict[antibody].append(cv2.mean(img_crop[:,:,aa], mask=cell_mask))
+    
+    # print mean values
+    for antibody in cell_intensity_dict.keys():
+        print("{}: {}".format(antibody, np.mean(cell_intensity_dict[antibody])))
