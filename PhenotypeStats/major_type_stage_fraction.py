@@ -29,3 +29,10 @@ if __name__ == "__main__":
     if not os.path.exists(stat_result_dir):
         os.makedirs(stat_result_dir)
     
+    # load roi stage information
+    roi_info_path = os.path.join(metadata_dir, "StudyROI_Info.xlsx")
+    study_roi_df = pd.read_excel(roi_info_path)
+    study_roi_lst = study_roi_df["ROI_ID"].tolist()
+    roi_diag_lst = study_roi_df["ROI_Diag"].tolist()
+    import pdb; pdb.set_trace()
+
