@@ -38,7 +38,6 @@ if __name__ == "__main__":
     study_roi_df = study_roi_df[study_roi_df["ROI_Location"] == "Tumor"]
     roi_id_lst = study_roi_df["ROI_ID"].tolist()
     roi_diag_lst = study_roi_df["ROI_Diag"].tolist()
-
     # collect stage lesion list
     stage_lst = ["AAH", "AIS", "MIA", "ADC"]
     stage_lesion_dict = {}
@@ -50,7 +49,22 @@ if __name__ == "__main__":
                 if lesion_name not in lesion_lst:
                     lesion_lst.append(lesion_name)
         stage_lesion_dict[cur_stage] = lesion_lst
+    # # print lesion statistics
+    # for key in stage_lesion_dict.keys():
+    #     print("{} has {} lesions.".format(key, len(stage_lesion_dict[key])))
     
-    # print lesion statistics
-    for key in stage_lesion_dict.keys():
-        print("{} has {} lesions.".format(key, len(stage_lesion_dict[key])))
+    # filter ADC lesions
+    adc_lesion_lst = stage_lesion_dict["ADC"]
+    adc_lesion_dict = {}
+    for roi_id, roi_diag in zip(roi_id_lst, roi_diag_lst):
+        lesion_name = roi_id[:roi_id.rfind("-ROI")]
+        if lesion_name not in adc_lesion_lst:
+            continue
+        if roi_diag != "ADC":
+            continue
+        if lesion_name not in adc_lesion_dict:
+            adc_lesion_dict[lesion_name] = [roi_id, ]
+        else:
+            adc_lesion_dict[lesion_name].append(roi_id)
+    import pdb; pdb.set_trace()
+    
