@@ -31,26 +31,19 @@ if __name__ == "__main__":
     if not os.path.exists(stat_result_dir):
         os.makedirs(stat_result_dir)    
 
-    # load roi stage information
-    roi_info_path = os.path.join(metadata_dir, "StudyROI_Info.xlsx")
-    study_roi_df = pd.read_excel(roi_info_path)
-    # Filter Tumor ROIs
-    study_roi_df = study_roi_df[study_roi_df["ROI_Location"] == "Tumor"]
-    roi_id_lst = study_roi_df["ROI_ID"].tolist()
-    roi_diag_lst = study_roi_df["ROI_Diag"].tolist()
-    # collect stage lesion list
-    stage_lst = ["AAH", "AIS", "MIA", "ADC"]
-    stage_lesion_dict = {}
-    for cur_stage in stage_lst:
-        lesion_lst = []
-        for roi_id, roi_diag in zip(roi_id_lst, roi_diag_lst):
-            if roi_diag == cur_stage:
-                lesion_name = roi_id[:roi_id.rfind("-ROI")]
-                if lesion_name not in lesion_lst:
-                    lesion_lst.append(lesion_name)
-        stage_lesion_dict[cur_stage] = lesion_lst
-    lesion_merge_lst = stage_lesion_dict["AAH"] + stage_lesion_dict["AIS"] + stage_lesion_dict["MIA"] + stage_lesion_dict["ADC"]
-
+    lesion_merge_lst = ['2493-6M', '2513-1G', 'H18-0130-6', '2571-4B', 'H09-0054-3', 'H11-0383-6', 'H12-0235-10', 'H14-0599-8', 'H11-0383-2', 'H12-0330-4', 
+                        'H18-0130-2', '2538-11O', 'H12-0330-1', '2318-1I', 'H17-0285-8', 'H16-0685-1', '2608-I9', 'H16-0223-4', 'H12-0235-9', '2241-5C', 
+                        '2608-I5', '2166-1E', '2538-11M', '2571-1D', 'H13-0307-6', 'H11-0330-3', 'H17-0458-11', 'H16-0588-13', 'H17-0221-7', 'H08-0377-6', 
+                        '2017-1B', '2017-1C', 'H09-0259-3', 'H12-0305-4', '2166-1F', 'H09-0259-1', 'H11-0330-4', '2323-5G', '2420-1H', '2405-1D', 
+                        '2325-1F', '2513-1H', 'H14-0608-3', 'H17-0221-1', 'H16-0206-3', 'H18-0130-7', 'H18-0360-7', 'H18-0052-2', 'H18-0518-10', 'H17-0179-9', 
+                        'H18-0454-5', '2571-1D', 'H10-0526-3', 'H14-0290-14', 'H13-0307-1', 'H10-0271-3', 'H18-0201-9', 'H15-0129-1', 'H18-0712-3', 'H18-0656-2', 
+                        'H18-0255-6', 'H18-0331-10', 'H17-0285-1', 'H10-0702-2', '2513-1C', 'H13-0583-8', '2571-1C', 'H18-0255-9', 'H16-0223-6', 'H18-0130-5', 
+                        'H18-0165-2', 'H15-0519-4', 'H10-0526-4', 'H18-0271-8', 'H17-0221-5', '2618-E2', 'H10-0553-3', 'H18-0455-4', 'H13-0583-3', 'H18-0201-15', 
+                        '2241-1C', '2248-4E', 'H16-0588-10', 'H18-0271-3', 'H18-0331-11', 'H14-0599-3', '2420-1D', '2318-1A', 'H16-0206-12', 'H16-0223-9', 
+                        '2532-9C', 'H17-0179-7', '2538-11P', '2621-D5', '2248-1E', 'H12-0330-2', 'H12-0235-6', '2582-1B', 'H17-0458-5', '2166-1B', 
+                        'H18-0205-2', '2621-D3', 'H13-0307-7', '2538-11B', '2493-1F', '2323-1D', 'H13-0583-5', '2017-1G', 'H14-0290-12', 'H18-0254-2', 
+                        'H18-0518-7', '2405-2E', '2485-1F', '697s-1H']
+    
    # load adjacent normal rois
     normal_info_path = os.path.join(metadata_dir, "Normal", "ROIs_AdjacentNormal.xlsx")
     normal_info_df = pd.read_excel(normal_info_path)
@@ -152,6 +145,6 @@ if __name__ == "__main__":
     
     lesion_ratio_df.plot(x="Lesion", kind="bar", stacked=True, title="Cell Type Fraction", figsize=(25, 12))
     plt.legend(bbox_to_anchor=(1.04, 0.5), loc="center left", borderaxespad=0)
-    plot_name = "AdjacentNormal_lesion_fraction"
+    plot_name = "AdjacentNormalCellFraction"
     plot_path = os.path.join(stat_result_dir, plot_name + args.plot_format)
     plt.savefig(plot_path, transparent=False, dpi=300)

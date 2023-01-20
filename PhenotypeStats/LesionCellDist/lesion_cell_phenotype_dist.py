@@ -53,75 +53,80 @@ if __name__ == "__main__":
     # for key in stage_lesion_dict.keys():
     #     print("{} has {} lesions.".format(key, len(stage_lesion_dict[key])))
     
-    
-    # filter ADC lesions
-    adc_lesion_lst = stage_lesion_dict["ADC"]
-    adc_lesion_dict = {}
-    for roi_id, roi_diag in zip(roi_id_lst, roi_diag_lst):
-        lesion_name = roi_id[:roi_id.rfind("-ROI")]
-        if lesion_name not in adc_lesion_lst:
-            continue
-        if roi_diag != "ADC":
-            continue
-        if lesion_name not in adc_lesion_dict:
-            adc_lesion_dict[lesion_name] = [roi_id, ]
-        else:
-            adc_lesion_dict[lesion_name].append(roi_id)
-    
     # collect cell numbers
     major_cell_types = ["Epithelial-Cell", "Endothelial-Cell", "Fibroblast", "CD4-T-Cell", "CD8-T-Cell", "T-Reg-Cell", "B-Cell",  
-                       "Macrophage", "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC", "NK-Cell", "Other-Immune"]
+                       "Macrophage", "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC", "NK-Cell", "Other-Immune"]    
     # load cell phenotype information
     cell_phenotype_path = os.path.join(roi_root_dir, "CellPhenotypes.json")
     cell_phenotype_dict = None
     with open(cell_phenotype_path) as fp:
         cell_phenotype_dict = json.load(fp)
-    lesion_cell_dict = {}
-    for cell_id, cell_type in cell_phenotype_dict.items():
-        roi_id = cell_id[:cell_id.rfind("_")]
-        lesion_id = roi_id[:roi_id.rfind("-ROI")]
-        if lesion_id not in adc_lesion_dict:
-            continue
-        if roi_id not in adc_lesion_dict[lesion_id]:
-            continue
-        if lesion_id not in lesion_cell_dict:
-            lesion_cell_dict[lesion_id] = [cell_type, ]
-        else:
-            lesion_cell_dict[lesion_id].append(cell_type)
+
+    # filter ADC lesions
+    lesion_df_lst = []
+    for cur_stage in stage_lst:
+        lesion_lst = stage_lesion_dict[cur_stage]
+        lesion_dict = {}
+        for roi_id, roi_diag in zip(roi_id_lst, roi_diag_lst):
+            lesion_name = roi_id[:roi_id.rfind("-ROI")]
+            if lesion_name not in lesion_lst:
+                continue
+            if roi_diag != cur_stage:
+                continue
+            if lesion_name not in lesion_dict:
+                lesion_dict[lesion_name] = [roi_id, ]
+            else:
+                lesion_dict[lesion_name].append(roi_id)
+        lesion_cell_dict = {}
+        for cell_id, cell_type in cell_phenotype_dict.items():
+            roi_id = cell_id[:cell_id.rfind("_")]
+            lesion_id = roi_id[:roi_id.rfind("-ROI")]
+            if lesion_id not in lesion_dict:
+                continue
+            if roi_id not in lesion_dict[lesion_id]:
+                continue
+            if lesion_id not in lesion_cell_dict:
+                lesion_cell_dict[lesion_id] = [cell_type, ]
+            else:
+                lesion_cell_dict[lesion_id].append(cell_type)
+        # Organize cell 
+        lesion_id_lst = []
+        epithelial_lst, endothelial_lst, fibroblast_lst, cd4t_lst, cd8t_lst, treg_lst, bcell_lst = [], [], [], [], [], [], []
+        macrophage_lst, monocyte_lst, dendrtic_lst, neutrophil_lst, mdsc_lst, nk_lst, other_immnue_lst = [], [], [], [], [], [], []
+        for lesion_id, cell_lst in lesion_cell_dict.items():
+            lesion_id_lst.append(lesion_id)
+            ttl_cell_num = len(cell_lst)
+            epithelial_lst.append(len([ele for ele in cell_lst if  ele == "Epithelial-Cell"]) * 1.0 / ttl_cell_num)
+            endothelial_lst.append(len([ele for ele in cell_lst if  ele == "Endothelial-Cell"]) * 1.0 / ttl_cell_num)
+            fibroblast_lst.append(len([ele for ele in cell_lst if  ele == "Fibroblast"]) * 1.0 / ttl_cell_num)
+            cd4t_lst.append(len([ele for ele in cell_lst if  ele == "CD4-T-Cell"]) * 1.0 / ttl_cell_num)
+            cd8t_lst.append(len([ele for ele in cell_lst if  ele == "CD8-T-Cell"]) * 1.0 / ttl_cell_num)
+            treg_lst.append(len([ele for ele in cell_lst if  ele == "T-Reg-Cell"]) * 1.0 / ttl_cell_num)
+            bcell_lst.append(len([ele for ele in cell_lst if  ele == "B-Cell"]) * 1.0 / ttl_cell_num)
+            macrophage_lst.append(len([ele for ele in cell_lst if  ele == "Macrophage"]) * 1.0 / ttl_cell_num)
+            monocyte_lst.append(len([ele for ele in cell_lst if  ele == "Monocyte"]) * 1.0 / ttl_cell_num)
+            dendrtic_lst.append(len([ele for ele in cell_lst if  ele == "Dendritic-Cell"]) * 1.0 / ttl_cell_num)
+            neutrophil_lst.append(len([ele for ele in cell_lst if  ele == "Neutrophil"]) * 1.0 / ttl_cell_num)
+            mdsc_lst.append(len([ele for ele in cell_lst if  ele == "MDSC"]) * 1.0 / ttl_cell_num)
+            nk_lst.append(len([ele for ele in cell_lst if  ele == "NK-Cell"]) * 1.0 / ttl_cell_num)
+            other_immnue_lst.append(len([ele for ele in cell_lst if  ele == "Other-Immune"]) * 1.0 / ttl_cell_num)
+
+        df_zip_lst = list(zip(lesion_id_lst, epithelial_lst, endothelial_lst, fibroblast_lst, cd4t_lst, cd8t_lst, treg_lst, bcell_lst,
+                            macrophage_lst, monocyte_lst, dendrtic_lst, neutrophil_lst, mdsc_lst, nk_lst, other_immnue_lst))
+        df_col_lst = ["Lesion", "Epithelial-Cell", "Endothelial-Cell", "Fibroblast", "CD4-T-Cell", "CD8-T-Cell", "T-Reg-Cell", "B-Cell", 
+                    "Macrophage", "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC", "NK-Cell", "Other-Immune"]
+        lesion_ratio_df = pd.DataFrame(df_zip_lst, columns = df_col_lst)
+        lesion_ratio_df = lesion_ratio_df.sort_values(by = ["Epithelial-Cell"], ascending=False)
+        lesion_df_lst.append(lesion_ratio_df)
     
-    # Organize cell 
-    lesion_id_lst = []
-    epithelial_lst, endothelial_lst, fibroblast_lst, cd4t_lst, cd8t_lst, treg_lst, bcell_lst = [], [], [], [], [], [], []
-    macrophage_lst, monocyte_lst, dendrtic_lst, neutrophil_lst, mdsc_lst, nk_lst, other_immnue_lst = [], [], [], [], [], [], []
-    for lesion_id, cell_lst in lesion_cell_dict.items():
-        lesion_id_lst.append(lesion_id)
-        ttl_cell_num = len(cell_lst)
-        epithelial_lst.append(len([ele for ele in cell_lst if  ele == "Epithelial-Cell"]) * 1.0 / ttl_cell_num)
-        endothelial_lst.append(len([ele for ele in cell_lst if  ele == "Endothelial-Cell"]) * 1.0 / ttl_cell_num)
-        fibroblast_lst.append(len([ele for ele in cell_lst if  ele == "Fibroblast"]) * 1.0 / ttl_cell_num)
-        cd4t_lst.append(len([ele for ele in cell_lst if  ele == "CD4-T-Cell"]) * 1.0 / ttl_cell_num)
-        cd8t_lst.append(len([ele for ele in cell_lst if  ele == "CD8-T-Cell"]) * 1.0 / ttl_cell_num)
-        treg_lst.append(len([ele for ele in cell_lst if  ele == "T-Reg-Cell"]) * 1.0 / ttl_cell_num)
-        bcell_lst.append(len([ele for ele in cell_lst if  ele == "B-Cell"]) * 1.0 / ttl_cell_num)
-        macrophage_lst.append(len([ele for ele in cell_lst if  ele == "Macrophage"]) * 1.0 / ttl_cell_num)
-        monocyte_lst.append(len([ele for ele in cell_lst if  ele == "Monocyte"]) * 1.0 / ttl_cell_num)
-        dendrtic_lst.append(len([ele for ele in cell_lst if  ele == "Dendritic-Cell"]) * 1.0 / ttl_cell_num)
-        neutrophil_lst.append(len([ele for ele in cell_lst if  ele == "Neutrophil"]) * 1.0 / ttl_cell_num)
-        mdsc_lst.append(len([ele for ele in cell_lst if  ele == "MDSC"]) * 1.0 / ttl_cell_num)
-        nk_lst.append(len([ele for ele in cell_lst if  ele == "NK-Cell"]) * 1.0 / ttl_cell_num)
-        other_immnue_lst.append(len([ele for ele in cell_lst if  ele == "Other-Immune"]) * 1.0 / ttl_cell_num)
-
-    df_zip_lst = list(zip(lesion_id_lst, epithelial_lst, endothelial_lst, fibroblast_lst, cd4t_lst, cd8t_lst, treg_lst, bcell_lst,
-                          macrophage_lst, monocyte_lst, dendrtic_lst, neutrophil_lst, mdsc_lst, nk_lst, other_immnue_lst))
-    df_col_lst = ["Lesion", "Epithelial-Cell", "Endothelial-Cell", "Fibroblast", "CD4-T-Cell", "CD8-T-Cell", "T-Reg-Cell", "B-Cell", 
-                  "Macrophage", "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC", "NK-Cell", "Other-Immune"]
-    lesion_ratio_df = pd.DataFrame(df_zip_lst, columns = df_col_lst)
-    lesion_sort_df = lesion_ratio_df.sort_values(by = ["Epithelial-Cell"], ascending=False)
-
+    # merge multiple dataframes
+    lesion_df = pd.concat(lesion_df_lst, axis=0)
+    # print(lesion_df["Lesion"].tolist())
+    
     # plot a Stacked Bar Chart using matplotlib
-    lesion_sort_df.plot(x="Lesion", kind="bar", stacked=True, title="Cell Type Fraction")
-    plot_name = "ADC_lesion_fraction"
+    lesion_df.plot(x="Lesion", kind="bar", stacked=True, title="Cell Type Fraction", figsize=(25, 12))
+    plt.legend(bbox_to_anchor=(1.04, 0.5), loc="center left", borderaxespad=0)
+    plot_name = "LesionCellFraction"
     plot_path = os.path.join(stat_result_dir, plot_name + args.plot_format)
     plt.savefig(plot_path, transparent=False, dpi=300)     
-
     
