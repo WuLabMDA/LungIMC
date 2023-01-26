@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 def set_args():
-    parser = argparse.ArgumentParser(description = "Assess the cell fraction of 4 major types")
+    parser = argparse.ArgumentParser(description = "Assess the cell fraction of 3 major types")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
     parser.add_argument("--meta_dir",               type=str,       default="Metadata")

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 
 
 def set_args():
-    parser = argparse.ArgumentParser(description = "Assess the cell fraction of 4 major types")
+    parser = argparse.ArgumentParser(description = "Assess the cell numbers of 3 major types")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
     parser.add_argument("--meta_dir",               type=str,       default="Metadata")
@@ -63,12 +63,12 @@ if __name__ == "__main__":
     for cur_stage in stage_lst:
         cur_cell_types = [cell_type for cell_type, cell_stage in zip(cell_types, cell_stages) if cell_stage == cur_stage]
         # print("{} has {} cells".format(cur_stage, len(cur_cell_types)))
-        stromal_ratio = len([ele for ele in cur_cell_types if  ele == "Stromal"]) 
-        stromal_lst.append(stromal_ratio)
-        immune_ratio = len([ele for ele in cur_cell_types if  ele == "Immune"]) 
-        immune_lst.append(immune_ratio)
-        epithelial_ratio = len([ele for ele in cur_cell_types if ele == "Epithelial"])
-        epithelial_lst.append(epithelial_ratio)
+        stromal_num = len([ele for ele in cur_cell_types if  ele == "Stromal"]) 
+        stromal_lst.append(stromal_num)
+        immune_num = len([ele for ele in cur_cell_types if  ele == "Immune"]) 
+        immune_lst.append(immune_num)
+        epithelial_num = len([ele for ele in cur_cell_types if ele == "Epithelial"])
+        epithelial_lst.append(epithelial_num)
     type_stage_df = pd.DataFrame(list(zip(stage_lst, epithelial_lst, stromal_lst, immune_lst)), 
                                           columns =["Stage", "Epithelial", "Stromal", "Immune"])
     
