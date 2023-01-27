@@ -70,7 +70,6 @@ if __name__ == "__main__":
             continue
         stage_area_dict[roi_stage] += (roi_width_lst[ind] / 1000.0) * (roi_height_lst[ind] / 1000.0)
 
-    import pdb; pdb.set_trace()
     # collect information
     stage_lst = ["AAH", "AIS", "MIA", "ADC"]
     ratio_dict = {}
