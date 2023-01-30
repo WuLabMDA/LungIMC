@@ -35,8 +35,27 @@ if __name__ == "__main__":
     with open(cell_phenotype_path) as fp:
         cell_phenotype_dict = json.load(fp)
     cell_ids = [ele for ele in cell_phenotype_dict.keys()]
-    cell_phenotypes = [ele for ele in cell_phenotype_dict.values()]     
+    # collect roi list
+    roi_lst = []
+    for cell_id in cell_ids:
+        roi_name = cell_id[:cell_id.rfind("_")]
+        if roi_name not in roi_lst:
+            roi_lst.append(roi_name)
+    # collect roi cell numbers
+    roi_cell_dict = {}
+    for cell_id in cell_ids:
+        roi_name = cell_id[:cell_id.rfind("_")]
+        if roi_name not in roi_cell_dict:
+            roi_cell_dict[roi_name] = 1
+        else:   
+            roi_cell_dict[roi_name] += 1
+    # collect ordered cell_phenotypes
+    cell_phenotypes = []
+    for roi_name in roi_lst:
+        cell_num = roi_cell_dict[roi_name]
+        cell_phenotypes.extend([cell_phenotype_dict[roi_name + "_" + str(num)] for num in range(1, cell_num + 1)])
 
+    # load AnnData and add cell type
     steinbock_dir = os.path.join(roi_root_dir, args.steinbock_dir)
     anndata_path = os.path.join(steinbock_dir, args.object_name)
     imc_adata = sc.read_h5ad(anndata_path)
