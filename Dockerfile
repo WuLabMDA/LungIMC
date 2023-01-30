@@ -47,4 +47,5 @@ RUN pip install anndata==0.8.0
 RUN pip install scanpy==1.9.1
 RUN pip install napari==0.4.17
 RUN pip install squidpy==1.2.3
+ENV NUMBA_CACHE_DIR /tmp
 
