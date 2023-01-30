@@ -4,6 +4,7 @@ MAINTAINER pingjunchen <pingjunchen@ieee.org>
 # Setting environment variables
 ENV DEBIAN_FRONTEND noninteractive
 ENV HDF5_USE_FILE_LOCKING FALSE
+ENV NUMBA_CACHE_DIR /tmp
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   build-essential libgl1-mesa-glx libglib2.0-0 libgeos-dev libvips-tools \
@@ -29,12 +30,6 @@ ENV CONDA_DEFAULT_ENV=py383
 ENV CONDA_PREFIX=/App/miniconda/envs/$CONDA_DEFAULT_ENV
 ENV PATH=$CONDA_PREFIX/bin:$PATH
 
-# Create some folders for python packages
-WORKDIR /.local
-RUN chmod 777 /.local
-# Set working directory
-WORKDIR /App/LungIMC
-
 # Install python packages
 RUN pip install gpustat==0.6.0 setuptools==45 pytz==2021.1
 RUN pip install tqdm==4.62.0 numba==0.54.1 ipython==8.0.0 seaborn==0.11.2
@@ -47,5 +42,9 @@ RUN pip install anndata==0.8.0
 RUN pip install scanpy==1.9.1
 RUN pip install napari==0.4.17
 RUN pip install squidpy==1.2.3
-ENV NUMBA_CACHE_DIR /tmp
 
+# Create some folders for python packages
+WORKDIR /.local
+RUN chmod 777 /.local
+# Set working directory
+WORKDIR /App/LungIMC
