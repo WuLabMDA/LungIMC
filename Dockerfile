@@ -43,3 +43,8 @@ RUN pip install opencv-python==4.5.4.60 scikit-image==0.18.0
 RUN pip install pyreadr==0.4.4 openpyxl==3.0.6
 RUN pip install deepdish==0.3.6 pandas==1.2.0
 RUN pip install xtiff==0.7.8
+RUN pip install anndata==0.8.0
+RUN pip install scanpy==1.9.1
+RUN pip install napari==0.4.17
+RUN pip install squidpy==1.2.3
+
