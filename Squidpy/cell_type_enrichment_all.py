@@ -36,7 +36,8 @@ if __name__ == "__main__":
         os.makedirs(enrich_result_dir)
 
     # load steinbock exported data
-    print("----Load steinbock data")
+    cur_time_str = datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")
+    print("----Load steinbock data @ {}".format(cur_time_str))
     rois_h5ad_path = os.path.join(steinbock_root_dir, "rois.h5ad")
     rois_adata = sc.read_h5ad(rois_h5ad_path)
     # add spatial coordinates
@@ -50,7 +51,8 @@ if __name__ == "__main__":
             roi_list.append(cur_roi_name)
 
     # load cell phenotype & library ids information
-    print("----Load cell type & library id")
+    cur_time_str = datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")
+    print("----Load cell phenotypes @ {}".format(cur_time_str))
     cell_phenotype_dict = None
     cell_phenotype_path = os.path.join(steinbock_root_dir, "cell_phenotypes.json")
     with open(cell_phenotype_path) as fp:
@@ -85,13 +87,15 @@ if __name__ == "__main__":
     rois_adata.obs["cell_type"] = rois_cell_phenotypes
     rois_adata.obs["library_id"] = rois_library_ids
     rois_adata.obs["cell_id"] = cell_nums
-    
 
     # spaital cell type enrichment analysis
-    print("----Spaital cell type enrichment analysis")
+    cur_time_str = datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")
+    print("----Spaital cell type enrichment analysis @ {}".format(cur_time_str))
     sq.gr.spatial_neighbors(rois_adata, spatial_key="spatial", library_key="library_id", coord_type="generic", radius=16.0)
     sq.gr.nhood_enrichment(rois_adata, cluster_key="cell_type")
     sq.pl.nhood_enrichment(rois_adata, cluster_key="cell_type")    
     plot_name = "cell_type_enrichment_all"
     plot_path = os.path.join(enrich_result_dir, plot_name + args.plot_format)
-    plt.savefig(plot_path, transparent=False, dpi=300)        
+    plt.savefig(plot_path, transparent=False, dpi=300, bbox_inches="tight")  
+    cur_time_str = datetime.now(pytz.timezone('America/Chicago')).strftime("%m/%d/%Y, %H:%M:%S")
+    print("----Finish @ {}".format(cur_time_str))
