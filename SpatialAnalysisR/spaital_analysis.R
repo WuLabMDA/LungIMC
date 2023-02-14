@@ -28,9 +28,12 @@ plotSpatial(spe[, spe$sample_id == test_roi_name],
             edge_color_fix = "grey") +
     ggtitle("steinbock interaction graph")
 
+
 interaction_out <- testInteractions(spe, group_by = "sample_id",
                                     label = "celltype", 
                                     colPairName = "neighborhood", 
+                                    method = "patch",
+                                    patch_size = 3,
                                     iter = 200)
-cell_type_spatial_path <- file.path(data_root_dir, paste0("InteractionAnalysisIter200", ".RData"))
+cell_type_spatial_path <- file.path(phenotype_dir, paste0("InteractionAnalysisIter200", ".RData"))
 save(spe, interaction_out, file = cell_type_spatial_path)
