@@ -18,7 +18,7 @@ roi_meta_info <- read.xlsx(roi_info_path)
 
 
 # Normal/AAH/AIS/MIA/ADC
-path_stage <- "Normal"
+path_stage <- "ADC"
 if (path_stage == "Normal") {
     subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage)
 } else {
@@ -36,12 +36,13 @@ to_order <- c("Unknown", "Smooth muscle/Stromal", "MDSC", "Monocytes", "Macropha
 
 subset_out %>% as_tibble() %>%
     group_by(from_label, to_label) %>%
-    summarize(sum_sigval = sum(sigval, na.rm = TRUE) / length(subset_roi_lst)) %>%
-    mutate(from_label=factor(from_label, levels=from_order)) %>% 
-    mutate(to_label=factor(to_label, levels=to_order)) %>% 
+    summarize(per_sigval = sum(sigval, na.rm = TRUE) / length(subset_roi_lst),
+              sum_sigval = sum(sigval, na.rm = TRUE)) %>%
+    mutate(from_label=factor(from_label, levels=from_order)) %>%
+    mutate(to_label=factor(to_label, levels=to_order)) %>%
     ggplot() +
-    geom_tile(aes(from_label, to_label, fill = sum_sigval)) +
-    scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+    geom_point(aes(from_label, to_label, colour=per_sigval, size=sum_sigval)) +
+    scale_color_gradient2(low = "blue", mid = "white", high = "red") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     labs(title = path_stage)
 

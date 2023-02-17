@@ -18,31 +18,44 @@ roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
 
+# Normal/AAH/AIS/MIA/ADC
+path_stage <- "ADC"
+if (path_stage == "Normal") {
+    subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage)
+} else {
+    subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
+}
+
 celltype_order <- c("Epithelial", "B cells", "Neutrophils", "NK cell", "Dendritic cell", 
                     "Endothelial cells", "CD8 T cells", "CD4 T cell", "T-reg cells", "Macrophage", 
                     "Monocytes", "MDSC", "Smooth muscle/Stromal", "Unknown")
-## find all unique sample ids
-unique_roi_lst <-unique(spe$sample_id)
-uniuqe_roi_num <- length(unique_roi_lst)
+
+subset_roi_lst <- subset_roi_info$ROI_ID
+subset_roi_num <- length(subset_roi_lst)
 cell_id_lst <- rownames(colData(spe))
 cell_type_lst <- spe$celltype
-roi_cell_ratios <- matrix(nrow=uniuqe_roi_num, ncol=length(celltype_order))
+roi_cell_ratios <- matrix(nrow=subset_roi_num, ncol=length(celltype_order))
 
-ttl_cell_num <- 0
-for (ir in 1:uniuqe_roi_num) {
-    cur_roi = unique_roi_lst[ir]
+
+for (ir in 1:subset_roi_num) {
+    cur_roi = subset_roi_lst[ir]
     cell_indices <- which(startsWith(cell_id_lst, cur_roi))
     roi_celltypes <- cell_type_lst[cell_indices]
     roi_cell_num <- length(roi_celltypes)
-    ttl_cell_num <- ttl_cell_num + roi_cell_num
     for (ic in 1:length(celltype_order)) {
         roi_cell_ratios[ir, ic] <- sum(roi_celltypes == celltype_order[ic]) * 1.0 / roi_cell_num
     }
 }
 
-cell_ratio_df <- as.data.frame(roi_cell_ratios, row.names = unique_roi_lst)
+cell_ratio_df <- as.data.frame(roi_cell_ratios, row.names = subset_roi_lst)
 colnames(cell_ratio_df) <- celltype_order
 cell_type_corr <- round(cor(cell_ratio_df), 2)
-ggcorrplot(cell_type_corr, method = "circle")
+
+
+to_order <- c("Unknown", "Smooth muscle/Stromal", "MDSC", "Monocytes", "Macrophage", "T-reg cells", 
+              "CD4 T cell", "CD8 T cells", "Endothelial cells", "Dendritic cell", "NK cell", "Neutrophils", 
+              "B cells", "Epithelial")
+cell_type_corr <- cell_type_corr[, to_order]
+ggcorrplot(cell_type_corr)
 
 
