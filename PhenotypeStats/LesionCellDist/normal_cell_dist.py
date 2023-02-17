@@ -14,6 +14,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
     parser.add_argument("--meta_dir",               type=str,       default="Metadata")
+    parser.add_argument("--cellphenotype_dir",      type=str,       default="CellPhenotyping")    
     parser.add_argument("--result_dir",             type=str,       default="Results")
     parser.add_argument("--plot_format",            type=str,       default=".png", choices=[".png", ".pdf"])        
 
@@ -27,6 +28,7 @@ if __name__ == "__main__":
     # directory setting
     roi_root_dir = os.path.join(args.data_root, args.data_type)
     metadata_dir = os.path.join(args.data_root, args.meta_dir)
+    cellphenotype_dir = os.path.join(args.data_root, args.cellphenotype_dir)
     stat_result_dir = os.path.join(args.data_root, args.result_dir, "Stats")
     if not os.path.exists(stat_result_dir):
         os.makedirs(stat_result_dir)    
@@ -60,10 +62,14 @@ if __name__ == "__main__":
             roi_slide_map[roi_id].append(slide_id)
             
     # load cell phenotype information
-    cell_phenotype_path = os.path.join(roi_root_dir, "CellPhenotypes.json")
-    cell_phenotype_dict = None
-    with open(cell_phenotype_path) as fp:
-        cell_phenotype_dict = json.load(fp)
+    cell_phenotype_path = os.path.join(cellphenotype_dir, "cell_phenotypes.csv")
+    cell_phenotype_df = pd.read_csv(cell_phenotype_path)
+    cell_id_lst = cell_phenotype_df["cell_id"]
+    celltype_lst = cell_phenotype_df["celltype"]
+    cell_phenotype_dict = {}
+    for cell_id, celltype in zip(cell_id_lst, celltype_lst):
+        cell_phenotype_dict[cell_id] = celltype
+
     lesion_cell_dict = {}
     cell_roi_lst = []
     for cell_id, cell_type in cell_phenotype_dict.items():
@@ -80,8 +86,9 @@ if __name__ == "__main__":
                 
     # Organize cell 
     lesion_id_lst = []
-    epithelial_lst, endothelial_lst, fibroblast_lst, cd4t_lst, cd8t_lst, treg_lst, bcell_lst = [], [], [], [], [], [], []
-    macrophage_lst, monocyte_lst, dendrtic_lst, neutrophil_lst, mdsc_lst, nk_lst, other_immnue_lst = [], [], [], [], [], [], []
+    epithelial_lst, endothelial_lst, fibroblast_lst, cd4t_lst, cd8t_lst = [], [], [], [], []
+    treg_lst, bcell_lst, macrophage_lst, monocyte_lst, dendrtic_lst = [], [], [], [], []
+    neutrophil_lst, mdsc_lst, nk_lst, proliferating_lst, undefined_lst = [], [], [], [], []
     for lesion_id in lesion_merge_lst:
         lesion_id_lst.append(lesion_id)
         cell_lst = lesion_cell_dict[lesion_id]
@@ -91,7 +98,7 @@ if __name__ == "__main__":
         fibroblast_lst.append(len([ele for ele in cell_lst if  ele == "Fibroblast"]) * 1.0 / ttl_cell_num)
         cd4t_lst.append(len([ele for ele in cell_lst if  ele == "CD4-T-Cell"]) * 1.0 / ttl_cell_num)
         cd8t_lst.append(len([ele for ele in cell_lst if  ele == "CD8-T-Cell"]) * 1.0 / ttl_cell_num)
-        treg_lst.append(len([ele for ele in cell_lst if  ele == "T-Reg-Cell"]) * 1.0 / ttl_cell_num)
+        treg_lst.append(len([ele for ele in cell_lst if  ele == "T-reg-Cell"]) * 1.0 / ttl_cell_num)
         bcell_lst.append(len([ele for ele in cell_lst if  ele == "B-Cell"]) * 1.0 / ttl_cell_num)
         macrophage_lst.append(len([ele for ele in cell_lst if  ele == "Macrophage"]) * 1.0 / ttl_cell_num)
         monocyte_lst.append(len([ele for ele in cell_lst if  ele == "Monocyte"]) * 1.0 / ttl_cell_num)
@@ -99,16 +106,17 @@ if __name__ == "__main__":
         neutrophil_lst.append(len([ele for ele in cell_lst if  ele == "Neutrophil"]) * 1.0 / ttl_cell_num)
         mdsc_lst.append(len([ele for ele in cell_lst if  ele == "MDSC"]) * 1.0 / ttl_cell_num)
         nk_lst.append(len([ele for ele in cell_lst if  ele == "NK-Cell"]) * 1.0 / ttl_cell_num)
-        other_immnue_lst.append(len([ele for ele in cell_lst if  ele == "Other-Immune"]) * 1.0 / ttl_cell_num)
+        proliferating_lst.append(len([ele for ele in cell_lst if  ele == "Proliferating-Cell"]) * 1.0 / ttl_cell_num)
+        undefined_lst.append(len([ele for ele in cell_lst if  ele == "Undefined"]) * 1.0 / ttl_cell_num)
 
     df_zip_lst = list(zip(lesion_id_lst, epithelial_lst, endothelial_lst, fibroblast_lst, cd4t_lst, cd8t_lst, treg_lst, bcell_lst,
-                          macrophage_lst, monocyte_lst, dendrtic_lst, neutrophil_lst, mdsc_lst, nk_lst, other_immnue_lst))
+                          macrophage_lst, monocyte_lst, dendrtic_lst, neutrophil_lst, mdsc_lst, nk_lst, proliferating_lst, undefined_lst))
     df_col_lst = ["Lesion", "Epithelial-Cell", "Endothelial-Cell", "Fibroblast", "CD4-T-Cell", "CD8-T-Cell", "T-Reg-Cell", "B-Cell", 
-                  "Macrophage", "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC", "NK-Cell", "Other-Immune"]
+                  "Macrophage", "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC", "NK-Cell", "Proliferating-Cell", "Undefined"]
     lesion_ratio_df = pd.DataFrame(df_zip_lst, columns = df_col_lst)
-    # lesion_ratio_df = lesion_ratio_df.sort_values(by = ["Epithelial-Cell"], ascending=False)
+
     # plot a Stacked Bar Chart using matplotlib
-    lesion_ratio_df.plot(x="Lesion", kind="bar", stacked=True, title="Cell Type Fraction", figsize=(25, 12))
+    lesion_ratio_df.plot(x="Lesion", kind="bar", stacked=True, title="Cell Type Fraction", colormap=plt.get_cmap("tab20"), figsize=(25, 12))
     plt.legend(bbox_to_anchor=(1.04, 0.5), loc="center left", borderaxespad=0)
     plot_name = "NormalCellFraction"
     plot_path = os.path.join(stat_result_dir, plot_name + args.plot_format)
