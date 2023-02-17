@@ -42,7 +42,14 @@ for (ir in 1:length(roi_vec)) {
     }
 }
 
-
+celltype_mean_ratio_lst <- list()
+for (cell_type in immune_lst) {
+    cell_indices <- which(all_type_lst == cell_type)
+    cell_ratio <- mean(all_ratio_lst[cell_indices])
+    celltype_mean_ratio_lst <- append(celltype_mean_ratio_lst, cell_ratio)
+}
+names(celltype_mean_ratio_lst) <- immune_lst
+celltype_mean_ratio_lst <- celltype_mean_ratio_lst[order(unlist(celltype_mean_ratio_lst), decreasing=TRUE)]
 
 # Construct data frame
 cell_type_ratio_df <- data.frame(Type=all_type_lst, Ratio=all_ratio_lst)
@@ -53,7 +60,7 @@ MinMeanSEMMax <- function(x) {
     v
 }
 
-ggplot(cell_type_ratio_df, aes(x = Type, y=Ratio)) + 
+ggplot(cell_type_ratio_df, aes(x = factor(Type, level=names(celltype_mean_ratio_lst)), y=Ratio)) + 
     theme(axis.text.x=element_text(angle=90, hjust=1)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
     geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.4)
