@@ -6,16 +6,14 @@ library(dittoSeq)
 library(ggplot2)
 library(viridis)
 
-## load all interactions
+## set directory
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
-## load SpatialExperiment data
-steinbock_spe_name <- "steinbock_spe_2023_02_10"
-spe_file_path <- file.path(phenotype_dir, paste0(steinbock_spe_name, ".rds"))
-load(spe_file_path)
-data$celltype <- data@metadata$celltypes # reorganize cell type information
-spe <- data
+spe_celltype_name <-"lung_spe_15_celltypes_final"
+spe_celltype_path <- file.path(phenotype_dir, paste0(spe_celltype_name, ".rds"))
+spe <- readRDS(spe_celltype_path)
+
 
 # steinbock interaction graph
 test_roi_name <- "H17-0458-5-ROI016"
@@ -27,6 +25,7 @@ plotSpatial(spe[, spe$sample_id == test_roi_name],
             nodes_first = FALSE,
             edge_color_fix = "grey") +
     ggtitle("steinbock interaction graph")
+
 
 
 interaction_out <- testInteractions(spe, group_by = "sample_id",
