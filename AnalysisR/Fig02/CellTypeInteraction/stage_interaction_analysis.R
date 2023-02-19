@@ -41,7 +41,6 @@ subset_out %>% as_tibble() %>%
     mutate(to_label=factor(to_label, levels=to_order)) %>%
     ggplot() +
     geom_point(aes(from_label, to_label, colour=per_sigval, size=sum_sigval)) +
-    scale_color_gradient2(low = "blue", mid = "white", high = "red") +
+    scale_color_gradient2(low = "blue2", mid = "white", high = "red2") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     labs(title = path_stage)
-
