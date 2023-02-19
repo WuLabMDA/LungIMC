@@ -8,7 +8,7 @@ library(stringr)
 ## load all interactions
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
-cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionAnalysisIter200", ".RData"))
+cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200", ".RData"))
 load(cell_spatial_path)
 
 ## load ROI diagnosis information
@@ -27,12 +27,11 @@ if (path_stage == "Normal") {
 subset_roi_lst <- subset_roi_info$ROI_ID
 subset_out <- interaction_out[interaction_out$group_by %in% subset_roi_lst, ]
 
-from_order <- c("Epithelial", "B cells", "Neutrophils", "NK cell", "Dendritic cell", "Endothelial cells", 
-                "CD8 T cells", "CD4 T cell", "T-reg cells", "Macrophage", "Monocytes", "MDSC", 
-                "Smooth muscle/Stromal", "Unknown")
-to_order <- c("Unknown", "Smooth muscle/Stromal", "MDSC", "Monocytes", "Macrophage", "T-reg cells", 
-              "CD4 T cell", "CD8 T cells", "Endothelial cells", "Dendritic cell", "NK cell", "Neutrophils", 
-              "B cells", "Epithelial")
+from_order <- c("Epithelial-Cell", "B-Cell", "Neutrophil", "NK-Cell", "Dendritic-Cell", "Endothelial-Cell", "CD8-T-Cell", "CD4-T-Cell", 
+                "T-Reg-Cell", "Proliferating-Cell", "Macrophage", "Monocyte", "MDSC", "Fibroblast", "Undefined")
+
+to_order <- c("Undefined", "Fibroblast", "MDSC", "Monocyte", "Macrophage", "Proliferating-Cell", "T-Reg-Cell", "CD4-T-Cell", "CD8-T-Cell", 
+              "Endothelial-Cell", "Dendritic-Cell", "NK-Cell", "Neutrophil", "B-Cell", "Epithelial-Cell")
 
 subset_out %>% as_tibble() %>%
     group_by(from_label, to_label) %>%

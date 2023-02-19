@@ -44,7 +44,7 @@ MinMeanSEMMax <- function(x) {
 }
 
 # set the cell-type
-cell_type <- "CD8-T-Cell"
+cell_type <- "Proliferating-Cell"
 
 ratio_lst <- c()
 gender_lst <- c()
@@ -105,3 +105,11 @@ p_smoke <- ggplot(cell_ratio_df, aes(x = factor(Smoke, level=c("Non-Smoker", "Sm
 
 # cowplot::plot_grid(p_gender, p_race, p_recurrent)
 grid.arrange(p_gender, p_race, p_recurrent, p_age, p_smoke, ncol=5)
+
+# # Welch Two Sample t-test p-value
+# recur_pval <- t.test(cell_ratio_df$Ratio[cell_ratio_df$Recurrent=="Non-Recur"], 
+#                      cell_ratio_df$Ratio[cell_ratio_df$Recurrent=="Recur"])
+# print(paste("Recurrance p-val:", recur_pval$p.value))
+
+
+

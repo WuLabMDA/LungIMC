@@ -26,9 +26,8 @@ if (path_stage == "Normal") {
     subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
 }
 
-celltype_order <- c("Epithelial", "B cells", "Neutrophils", "NK cell", "Dendritic cell", 
-                    "Endothelial cells", "CD8 T cells", "CD4 T cell", "T-reg cells", "Macrophage", 
-                    "Monocytes", "MDSC", "Smooth muscle/Stromal", "Unknown")
+celltype_order <- c("Epithelial-Cell", "B-Cell", "Neutrophil", "NK-Cell", "Dendritic-Cell", "Endothelial-Cell", "CD8-T-Cell", "CD4-T-Cell", 
+                    "T-Reg-Cell", "Proliferating-Cell", "Macrophage", "Monocyte", "MDSC", "Fibroblast", "Undefined")
 
 subset_roi_lst <- subset_roi_info$ROI_ID
 subset_roi_num <- length(subset_roi_lst)
@@ -52,9 +51,9 @@ colnames(cell_ratio_df) <- celltype_order
 cell_type_corr <- round(cor(cell_ratio_df), 2)
 
 
-to_order <- c("Unknown", "Smooth muscle/Stromal", "MDSC", "Monocytes", "Macrophage", "T-reg cells", 
-              "CD4 T cell", "CD8 T cells", "Endothelial cells", "Dendritic cell", "NK cell", "Neutrophils", 
-              "B cells", "Epithelial")
+to_order <- c("Undefined", "Fibroblast", "MDSC", "Monocyte", "Macrophage", "Proliferating-Cell", "T-Reg-Cell", "CD4-T-Cell", "CD8-T-Cell", 
+              "Endothelial-Cell", "Dendritic-Cell", "NK-Cell", "Neutrophil", "B-Cell", "Epithelial-Cell")
+
 cell_type_corr <- cell_type_corr[, to_order]
 ggcorrplot(cell_type_corr)
 
