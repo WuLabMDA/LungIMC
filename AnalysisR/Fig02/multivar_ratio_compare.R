@@ -31,12 +31,20 @@ for (ind in 1:nrow(roi_df)) {
 cell_id_lst <- rownames(colData(spe))
 celtype_lst <- spe$celltype
 
-cell_type <- "CD8-T-Cell"
-
 # load patient information
 patient_info_name <- "Patient_Info"
 patient_info_path <- file.path(metadata_dir, paste0(patient_info_name, ".xlsx"))
 patient_df <- read_excel(patient_info_path)
+
+# MinMeanSEMMax
+MinMeanSEMMax <- function(x) {
+    v <- c(min(x), mean(x) - sd(x)/sqrt(length(x)), mean(x), mean(x) + sd(x)/sqrt(length(x)), max(x))
+    names(v) <- c("ymin", "lower", "middle", "upper", "ymax")
+    v
+}
+
+# set the cell-type
+cell_type <- "CD8-T-Cell"
 
 ratio_lst <- c()
 gender_lst <- c()
@@ -45,7 +53,6 @@ recurrent_lst <- c()
 median_age <- 71.3
 age_lst <- c()
 smoke_lst <- c()
-
 
 for (ir in 1:length(roi_vec)) {
     cur_roi = roi_vec[ir]
@@ -60,7 +67,11 @@ for (ir in 1:length(roi_vec)) {
     df_index <- which(patient_df$PatientID == pat_id)
     gender_lst <- append(gender_lst, patient_df$Gender[df_index])
     race_lst <- append(race_lst, patient_df$Race[df_index])
-    recurrent_lst <- append(recurrent_lst, patient_df$RecurrentStatus[df_index])
+    if (patient_df$RecurrentStatus[df_index] == "RECURRENT")
+        recurrent_lst <- append(recurrent_lst, "Recur")
+    else
+        recurrent_lst <- append(recurrent_lst, "Non-Recur")
+    
     if (patient_df$Age[df_index] <= median_age) 
         age_lst <- append(age_lst, "<=71")
     else
@@ -68,30 +79,29 @@ for (ir in 1:length(roi_vec)) {
     smoke_lst <- append(smoke_lst, patient_df$SmokeStatus[df_index])
 }
 
-# Construct data frame
+## Construct data frame
 cell_ratio_df <- data.frame(Ratio=ratio_lst, Gender=gender_lst, Race=race_lst,
                             Recurrent=recurrent_lst, Age=age_lst, Smoke=smoke_lst)
-
+## Plotting
 p_gender <- ggplot(cell_ratio_df, aes(x = factor(Gender, level=c("M", "F")), y=Ratio)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.6)
+    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
 
 p_race <- ggplot(cell_ratio_df, aes(x = factor(Race, level=c("Asian", "White")), y=Ratio)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.6)
+    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
 
-p_recurrent <- ggplot(cell_ratio_df, aes(x = factor(Recurrent, level=c("NO RECURRENT", "RECURRENT")), y=Ratio)) + 
+p_recurrent <- ggplot(cell_ratio_df, aes(x = factor(Recurrent, level=c("Non-Recur", "Recur")), y=Ratio)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.6)
+    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
 
 p_age <- ggplot(cell_ratio_df, aes(x = factor(Age, level=c("<=71", ">71")), y=Ratio)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.6)
+    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
 
 p_smoke <- ggplot(cell_ratio_df, aes(x = factor(Smoke, level=c("Non-Smoker", "Smoker")), y=Ratio)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.6)
+    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
 
 # cowplot::plot_grid(p_gender, p_race, p_recurrent)
 grid.arrange(p_gender, p_race, p_recurrent, p_age, p_smoke, ncol=5)
-
