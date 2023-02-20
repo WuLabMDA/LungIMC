@@ -53,15 +53,27 @@ updated_spe_name <- "lung_imc_spe"
 updated_spe_path <- file.path(spatial_dir, paste0(updated_spe_name, ".rds"))
 saveRDS(spe, file = updated_spe_path)
 
-# load image and mask
 steinbock_dir <- file.path(data_root_dir, "LungROIProcessing", "Steinbock")
+# load images
 imc_img_dir <- file.path(steinbock_dir, "img")
 images <- loadImages(imc_img_dir)
+channelNames(images) <- rownames(spe)
+# load masks
 imc_mask_dir <- file.path(steinbock_dir, "masks_deepcell")
 masks <- loadImages(imc_mask_dir, as.is = TRUE)
-channelNames(images) <- rownames(spe)
+# all.equal(names(images), names(masks))
 
-
-
+img_slide_ids <- str_extract_all(names(masks), ".+(?=-ROI)", simplify = TRUE)
+img_pat_id <- str_extract_all(img_slide_ids, patient_match_regex, simplify = TRUE)
+img_stages <- roi_df$ROI_Diag[match(names(masks), roi_df$ROI_ID)]
+img_info_df <- DataFrame(sample_id = names(masks), patient_id = img_pat_id, stage = img_stages)
+mcols(images) <- img_info_df
+mcols(masks) <- img_info_df
+# save images
+lung_imc_img_path <- file.path(spatial_dir, "lung_imc_images.rds")
+saveRDS(images, lung_imc_img_path)
+# save masks
+lung_imc_mask_path <- file.path(spatial_dir, "lung_imc_masks.rds")
+saveRDS(masks, lung_imc_mask_path)
 
 
