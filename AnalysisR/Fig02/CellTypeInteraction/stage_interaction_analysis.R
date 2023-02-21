@@ -16,7 +16,6 @@ metadata_dir <- file.path(data_root_dir, "Metadata")
 roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
-
 # Normal/AAH/AIS/MIA/ADC
 path_stage <- "ADC"
 if (path_stage == "Normal") {
@@ -33,9 +32,10 @@ from_order <- c("Epithelial-Cell", "B-Cell", "Neutrophil", "NK-Cell", "Dendritic
 to_order <- c("Undefined", "Fibroblast", "MDSC", "Monocyte", "Macrophage", "Proliferating-Cell", "T-Reg-Cell", "CD4-T-Cell", "CD8-T-Cell", 
               "Endothelial-Cell", "Dendritic-Cell", "NK-Cell", "Neutrophil", "B-Cell", "Epithelial-Cell")
 
+
 subset_out %>% as_tibble() %>%
     group_by(from_label, to_label) %>%
-    summarize(per_sigval = sum(sigval, na.rm = TRUE) / length(subset_roi_lst),
+    summarize(per_sigval = sum(sigval, na.rm = TRUE)/length(subset_roi_lst),
               sum_sigval = sum(sigval, na.rm = TRUE)) %>%
     mutate(from_label=factor(from_label, levels=from_order)) %>%
     mutate(to_label=factor(to_label, levels=to_order)) %>%
