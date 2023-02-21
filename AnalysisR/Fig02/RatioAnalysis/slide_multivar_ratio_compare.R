@@ -1,6 +1,7 @@
 library(imcRtools)
 library(readxl)
 library(stringr)
+library(tidyverse)
 library(ggplot2)
 library(ggbeeswarm)
 library(cowplot)
@@ -22,7 +23,7 @@ roi_df <- read_excel(roi_info_path)
 # load lesion information
 slide_info_name <- "Lesion_Info"
 slide_info_path <- file.path(metadata_dir, paste0(slide_info_name, ".xlsx"))
-slide_df <- read_excel(slide_info_path)
+slide_info_df <- read_excel(slide_info_path)
 # load patient information
 patient_info_name <- "Patient_Info"
 patient_info_path <- file.path(metadata_dir, paste0(patient_info_name, ".xlsx"))
@@ -44,13 +45,13 @@ cell_id_lst <- cell_id_lst[lesion_indices]
 celltype_lst <- spe$celltype
 celltype_lst <- celltype_lst[lesion_indices]
 
+
 # set pathological stages (AAH/AIS/MIA/ADC)
 path_stage <- "ADC"
-# set the cell-type
 cell_type <- "Proliferating-Cell"
 
 # filtering stages
-stage_slide_df <- filter(slide_df, Slide_Diag == path_stage)
+stage_slide_df <- filter(slide_info_df, Slide_Diag==path_stage)
 stage_slide_lst <- stage_slide_df$Slide_ID
 
 
@@ -64,6 +65,8 @@ smoke_lst <- c()
 
 for (ir in 1:length(stage_slide_lst)) {
     cur_slide <- stage_slide_lst[ir]
+    if (cur_slide == "H12-0330-2")
+        next
     slide_cell_indices <- which(startsWith(cell_id_lst, cur_slide))
     slide_celltypes <- celltype_lst[slide_cell_indices]
     slide_cell_ratio <- sum(slide_celltypes == cell_type) / length(slide_celltypes)
@@ -84,37 +87,18 @@ for (ir in 1:length(stage_slide_lst)) {
     smoke_lst <- append(smoke_lst, patient_df$SmokeStatus[df_index])
 }
 
-## Construct data frame
-cell_ratio_df <- data.frame(Slide=stage_slide_lst, Ratio=ratio_lst, Gender=gender_lst, Race=race_lst,
-                            Recurrent=recurrent_lst, Age=age_lst, Smoke=smoke_lst)
-## Plotting
 # MinMeanSEMMax
 MinMeanSEMMax <- function(x) {
     v <- c(min(x), mean(x) - sd(x)/sqrt(length(x)), mean(x), mean(x) + sd(x)/sqrt(length(x)), max(x))
     names(v) <- c("ymin", "lower", "middle", "upper", "ymax")
     v
 }
-p_gender <- ggplot(cell_ratio_df, aes(x = factor(Gender, level=c("M", "F")), y=Ratio)) + 
-    stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
-p_race <- ggplot(cell_ratio_df, aes(x = factor(Race, level=c("Asian", "White")), y=Ratio)) + 
-    stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
-p_recurrent <- ggplot(cell_ratio_df, aes(x = factor(Recurrent, level=c("Non-Recur", "Recur")), y=Ratio)) + 
-    stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
-p_age <- ggplot(cell_ratio_df, aes(x = factor(Age, level=c("<=71", ">71")), y=Ratio)) + 
-    stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
-p_smoke <- ggplot(cell_ratio_df, aes(x = factor(Smoke, level=c("Non-Smoker", "Smoker")), y=Ratio)) + 
-    stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
-# cowplot::plot_grid(p_gender, p_race, p_recurrent)
-grid.arrange(p_gender, p_race, p_recurrent, p_age, p_smoke, ncol=5)
 
 
-# # Welch Two Sample t-test p-value
-# recur_pval <- t.test(cell_ratio_df$Ratio[cell_ratio_df$Recurrent=="Non-Recur"], 
-#                      cell_ratio_df$Ratio[cell_ratio_df$Recurrent=="Recur"])
-# print(paste("Recurrance p-val:", recur_pval$p.value))
-
+cell_ratio_df <- data.frame(Ratio=ratio_lst, Gender=gender_lst, Race=race_lst,
+                            Recurrent=recurrent_lst, Age=age_lst, Smoke=smoke_lst)
+long_ratio_df <- gather(cell_ratio_df, key = "variable", value = "value", -Ratio)
+ggplot(long_ratio_df, aes(x = value, y = Ratio) ) +
+    stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
+    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5) +
+    facet_wrap(~variable, scales = "free_x", ncol = 5)
