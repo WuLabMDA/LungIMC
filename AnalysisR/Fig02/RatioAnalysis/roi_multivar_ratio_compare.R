@@ -1,5 +1,6 @@
 library(imcRtools)
 library(readxl)
+library(stringr)
 library(ggplot2)
 library(ggbeeswarm)
 library(cowplot)
@@ -26,6 +27,16 @@ for (ind in 1:nrow(roi_df)) {
     if (roi_df$ROI_Location[ind] == "Tumor" ) 
         roi_vec <- append(roi_vec, roi_df$ROI_ID[ind])
 }
+roi_slide_lst <- str_extract_all(roi_vec, ".+(?=-ROI)", simplify = TRUE)
+
+slide_info_name <- "Lesion_Info"
+slide_info_path <- file.path(metadata_dir, paste0(slide_info_name, ".xlsx"))
+slide_df <- read_excel(slide_info_path)
+# pathological stages
+# AAH/AIS/MIA/ADC
+path_stage <- "ADC"
+stage_slide_df <- filter(slide_df, Slide_Diag == path_stage)
+stage_slide_lst <- stage_slide_df$Slide_ID
 
 ## obtain lymphoid ratio
 cell_id_lst <- rownames(colData(spe))
@@ -46,6 +57,7 @@ MinMeanSEMMax <- function(x) {
 # set the cell-type
 cell_type <- "Proliferating-Cell"
 
+roi_lst <- c()
 ratio_lst <- c()
 gender_lst <- c()
 race_lst <- c()
@@ -55,11 +67,15 @@ age_lst <- c()
 smoke_lst <- c()
 
 for (ir in 1:length(roi_vec)) {
-    cur_roi = roi_vec[ir]
+    cur_roi <- roi_vec[ir]
+    cur_slide <- roi_slide_lst[ir]
+    if (!(cur_slide %in% stage_slide_lst))
+        next
+    roi_lst <- append(roi_lst, cur_roi)
     cell_indices <- which(startsWith(cell_id_lst, cur_roi))
     roi_celltypes <- celtype_lst[cell_indices]
-    ttl_num = length(roi_celltypes)
-    cell_num = sum(roi_celltypes == cell_type)
+    ttl_num <- length(roi_celltypes)
+    cell_num <- sum(roi_celltypes == cell_type)
     cell_ratio <- cell_num * 1.0 / ttl_num
     ratio_lst <- append(ratio_lst, cell_ratio)
     underline_pos <- unlist(gregexpr("-", cur_roi))
@@ -80,7 +96,7 @@ for (ir in 1:length(roi_vec)) {
 }
 
 ## Construct data frame
-cell_ratio_df <- data.frame(Ratio=ratio_lst, Gender=gender_lst, Race=race_lst,
+cell_ratio_df <- data.frame(ROI=roi_lst, Ratio=ratio_lst, Gender=gender_lst, Race=race_lst,
                             Recurrent=recurrent_lst, Age=age_lst, Smoke=smoke_lst)
 ## Plotting
 p_gender <- ggplot(cell_ratio_df, aes(x = factor(Gender, level=c("M", "F")), y=Ratio)) + 
@@ -105,11 +121,4 @@ p_smoke <- ggplot(cell_ratio_df, aes(x = factor(Smoke, level=c("Non-Smoker", "Sm
 
 # cowplot::plot_grid(p_gender, p_race, p_recurrent)
 grid.arrange(p_gender, p_race, p_recurrent, p_age, p_smoke, ncol=5)
-
-# # Welch Two Sample t-test p-value
-# recur_pval <- t.test(cell_ratio_df$Ratio[cell_ratio_df$Recurrent=="Non-Recur"], 
-#                      cell_ratio_df$Ratio[cell_ratio_df$Recurrent=="Recur"])
-# print(paste("Recurrance p-val:", recur_pval$p.value))
-
-
 
