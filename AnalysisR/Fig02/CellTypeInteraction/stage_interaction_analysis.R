@@ -28,15 +28,11 @@ subset_out <- interaction_out[interaction_out$group_by %in% subset_roi_lst, ]
 
 from_order <- c("Epithelial-Cell", "B-Cell", "Neutrophil", "NK-Cell", "Dendritic-Cell", "Endothelial-Cell", "CD8-T-Cell", "CD4-T-Cell", 
                 "T-Reg-Cell", "Proliferating-Cell", "Macrophage", "Monocyte", "MDSC", "Fibroblast", "Undefined")
-
 to_order <- c("Undefined", "Fibroblast", "MDSC", "Monocyte", "Macrophage", "Proliferating-Cell", "T-Reg-Cell", "CD4-T-Cell", "CD8-T-Cell", 
               "Endothelial-Cell", "Dendritic-Cell", "NK-Cell", "Neutrophil", "B-Cell", "Epithelial-Cell")
-
-
-subset_out %>% as_tibble() %>%
-    group_by(from_label, to_label) %>%
-    summarize(per_sigval = sum(sigval, na.rm = TRUE)/length(subset_roi_lst),
-              sum_sigval = sum(sigval, na.rm = TRUE)) %>%
+subset_out %>% as_tibble() %>% group_by(from_label, to_label) %>%
+    summarize(per_sigval = sum(sigval, na.rm = TRUE)/length(subset_roi_lst), sum_sigval = sum(sigval, na.rm = TRUE)) %>%
+    mutate(across(starts_with("per"), ~case_when(.x >= 0 ~ .x / max(.x), TRUE ~ - .x / min(.x)))) %>%
     mutate(from_label=factor(from_label, levels=from_order)) %>%
     mutate(to_label=factor(to_label, levels=to_order)) %>%
     ggplot() +
