@@ -17,7 +17,8 @@ spe <- readRDS(spe_celltype_path)
 
 spe <- aggregateNeighbors(spe, colPairName = "neighborhood", 
                           aggregate_by = "metadata", count_by = "celltype")
-cn_kmeans <- kmeans(spe$aggregatedNeighbors, centers = 20)
+cn_kmeans <- kmeans(spe$aggregatedNeighbors, centers = 22)
+spe$cn_celltypes <- as.factor(cn_kmeans$cluster)
 
 for_plot <- prop.table(table(spe$cn_celltypes, spe$celltype), margin = 1)
 pheatmap(for_plot, color = colorRampPalette(c("dark blue", "white", "dark red"))(100), scale = "column")
