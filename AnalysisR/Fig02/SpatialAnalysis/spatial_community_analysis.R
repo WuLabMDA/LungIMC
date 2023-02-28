@@ -28,6 +28,7 @@ cl_comm <- cluster_louvain(gr)
 comm_tumor <- paste0("Tumor_", membership(cl_comm))
 comm_tumor[membership(cl_comm) %in% which(sizes(cl_comm) < 10)] <- NA
 names(comm_tumor) <- colnames(tumor_spe)
+
 # Spatial community detection - non-tumor
 stroma_spe <- spe[,spe$celltype != "Epithelial-Cell"]
 gr <- graph_from_data_frame(as.data.frame(colPair(stroma_spe, "neighborhood")), directed = FALSE, 
@@ -40,24 +41,22 @@ comm <- c(comm_tumor, comm_stroma)
 spe$spatial_community <- comm[colnames(spe)]
 
 
-## extract the front 6
-unique_roi_lst <-unique(spe$sample_id)
-uniuqe_roi_num <- length(unique_roi_lst)
-cell_id_lst <- rownames(colData(spe))
-roi_num <- 6
-ttl_cell_num <- 0
-for (ir in 1:roi_num) {
-    cur_roi = unique_roi_lst[ir]
-    cell_indices <- which(startsWith(cell_id_lst, cur_roi))
-    roi_cell_num <- length(cell_indices)
-    ttl_cell_num <- ttl_cell_num + roi_cell_num
+continuity_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "ROIsContinuity")
+continuity_file_path <-file.path(continuity_dir, "ROIsContinuty.xlsx")
+continuity_data <- read_excel(continuity_file_path)
+continuity_roi_lst <- continuity_data$ROI_ID
+
+for (continuity_roi in continuity_roi_lst) {
+    file_continuity_path <- file.path(continuity_dir, "EpithelialCommunity", paste0(continuity_roi, ".pdf"))
+    roi_spe <- spe[, spe$sample_id == continuity_roi]
+    
+    plotSpatial(roi_spe[, roi_spe$celltype == "Epithelial-Cell"], 
+                node_color_by = "spatial_community", 
+                img_id = "sample_id", node_size_fix = 1.0) +
+                theme(legend.position = "none")
+    ggsave(filename = file_continuity_path, device='pdf', width=10, height=9, dpi=300)
+    while (!is.null(dev.list()))  
+        dev.off()    
 }
-display_spe <- spe[, 1:ttl_cell_num]
-
-# display
-plotSpatial(display_spe[, display_spe$celltype == "Epithelial-Cell"], 
-            node_color_by = "spatial_community", 
-            img_id = "sample_id", node_size_fix = 1.0)
-
 
 
