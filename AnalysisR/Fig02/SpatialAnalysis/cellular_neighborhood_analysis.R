@@ -23,9 +23,15 @@ spe <- aggregateNeighbors(spe, colPairName = "neighborhood",
                           aggregate_by = "metadata", count_by = "celltype")
 cn_kmeans <- kmeans(spe$aggregatedNeighbors, centers = 24)
 spe$cn_celltypes <- as.factor(cn_kmeans$cluster)
+
+# # save the spe with cellular neighborhood information
+# spe_cn_path <- file.path(data_root_dir, "SpatialAnalysis", "spe_cn24.rds")
+# saveRDS(spe, spe_cn_path)
+
 # Cellular neighborhood analysis heatmap
 for_plot <- prop.table(table(spe$cn_celltypes, spe$celltype), margin = 1)
 pheatmap(for_plot, color = colorRampPalette(c("dark blue", "white", "dark red"))(100), scale = "column")
+
 
 # plotting image cell type information
 numCN <- length(unique(spe$cn_celltypes))
