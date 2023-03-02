@@ -50,17 +50,10 @@ celltype_lst <- spe$celltype
 celltype_lst <- celltype_lst[lesion_indices]
 
 
-# set pathological stages (AAH/AIS/MIA/ADC)
-# path_stage <- "ADC"
-# cell_type <- "Proliferating-Cell"
-cell_type <- "CD8-T-Cell"
+# set cell type
+cell_type <- "B-Cell"
 
-# # filtering stages
-# stage_slide_df <- filter(slide_info_df, Slide_Diag==path_stage)
-# stage_slide_lst <- stage_slide_df$Slide_ID
-stage_slide_lst <- slide_info_df$Slide_ID
-
-
+# collect information
 ratio_lst <- c()
 gender_lst <- c()
 race_lst <- c()
@@ -70,6 +63,8 @@ age_lst <- c()
 smoke_lst <- c()
 stage_lst <- c()
 
+# iterate by slide
+stage_slide_lst <- slide_info_df$Slide_ID
 for (ir in 1:length(stage_slide_lst)) {
     cur_slide <- stage_slide_lst[ir]
     if (cur_slide == "2571-1D")
@@ -99,7 +94,6 @@ for (ir in 1:length(stage_slide_lst)) {
     #     print(cur_slide)
     stage_lst <- append(stage_lst, slide_info_df$Slide_Diag[slide_index])
 }
-
 
 # MinMeanSEMMax
 MinMeanSEMMax <- function(x) {
