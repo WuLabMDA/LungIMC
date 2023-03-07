@@ -173,20 +173,26 @@ p_val_df <- data.frame(Age=age_pvals, Gender=gender_pvals, Race=race_pvals, Recu
                        Normal_AAH=normal_aah_pvals, Normal_AIS=normal_ais_pvals, Normal_MIA=normal_mia_pvals, Normal_ADC=normal_adc_pvals,
                        AAH_AIS=aah_ais_pvals, AAH_MIA=aah_mia_pvals, AAH_ADC=aah_adc_pvals, AIS_MIA=ais_mia_pvals,
                        AIS_ADC=ais_adc_pvals, MIA_ADC=mia_adc_pvals, row.names = all_cell_lst)
-# heat_val_mat <- p.to.Z(data.matrix(p_val_df))
+
+# p_val_df[p_val_df > 0.05] <- "1"
+# p_val_df[p_val_df > 0.01 & p_val_df <= 0.05] <- "2"
+# p_val_df[p_val_df > 0.001 & p_val_df <= 0.01] <- "3"
+# p_val_df[p_val_df > 0.0001 & p_val_df <= 0.001] <- "4"
+# p_val_df[p_val_df <= 0.0001] <- "5"
 
 
 var_order <- c("Age", "Gender", "Race", "Recur", "Smoke", "Normal_AAH", "Normal_AIS", "Normal_MIA",
                "Normal_ADC", "AAH_AIS", "AAH_MIA", "AAH_ADC", "AIS_MIA", "AIS_ADC", "MIA_ADC")
 
-p_val_df %>%
-    rownames_to_column(var = "CellType") %>%
-    gather(Vars, Pvals, -CellType) %>%
-    ggplot() +
-    geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
-                   size = p.to.Z(Pvals), colour = p.to.Z(Pvals))) +
-    scale_fill_viridis(discrete=FALSE) + theme_ipsum() + 
-    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+group_df <- p_val_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Pvals, -CellType) %>%
+    mutate(gGroup = case_when(Pvals > 0.05 ~ 'NS', Pvals > 0.01 ~ '*', Pvals > 0.001 ~ '**', .default = "***"))
+
+
+
+group_df %>% ggplot() +
+    geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)), 
+                   size = p.to.Z(Pvals), col = factor(gGroup, level=c("NS", "*", "**", "***")))) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 
 
 
