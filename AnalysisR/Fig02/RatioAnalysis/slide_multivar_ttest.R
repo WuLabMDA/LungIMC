@@ -119,20 +119,20 @@ for (cell_type in all_cell_lst) {
         stage_lst <- append(stage_lst, slide_info_df$Slide_Diag[slide_index])
     }
     
-    # MinMeanSEMMax
-    MinMeanSEMMax <- function(x) {
-        v <- c(min(x), mean(x) - sd(x)/sqrt(length(x)), mean(x), mean(x) + sd(x)/sqrt(length(x)), max(x))
-        names(v) <- c("ymin", "lower", "middle", "upper", "ymax")
-        v
-    }
-    
     cell_ratio_df <- data.frame(Ratio=ratio_lst, Gender=gender_lst, Race=race_lst,
                                 Recurrent=recurrent_lst, Age=age_lst, Smoke=smoke_lst, Stage=stage_lst)
     long_ratio_df <- gather(cell_ratio_df, key = "variable", value = "value", -Ratio)
+
     
     # variable_names <- c("<=71", ">71", "F", "M", "White", "Asian", "Non-Recur", "Recur", "Non-Smoker", "Smoker", "Normal", "AAH", "AIS", "MIA", "ADC")
+    # # MinMeanSEMMax
+    # MinMeanSEMMax <- function(x) {
+    #     v <- c(min(x), mean(x) - sd(x)/sqrt(length(x)), mean(x), mean(x) + sd(x)/sqrt(length(x)), max(x))
+    #     names(v) <- c("ymin", "lower", "middle", "upper", "ymax")
+    #     v
+    # }
     # ggplot(long_ratio_df, aes(x = factor(value, level=variable_names), y = Ratio)) +
-    #     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
+    #     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") +
     #     geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.3)
     
     # Welch Two Sample t-test p-value
@@ -173,12 +173,6 @@ p_val_df <- data.frame(Age=age_pvals, Gender=gender_pvals, Race=race_pvals, Recu
                        Normal_AAH=normal_aah_pvals, Normal_AIS=normal_ais_pvals, Normal_MIA=normal_mia_pvals, Normal_ADC=normal_adc_pvals,
                        AAH_AIS=aah_ais_pvals, AAH_MIA=aah_mia_pvals, AAH_ADC=aah_adc_pvals, AIS_MIA=ais_mia_pvals,
                        AIS_ADC=ais_adc_pvals, MIA_ADC=mia_adc_pvals, row.names = all_cell_lst)
-
-# p_val_df[p_val_df > 0.05] <- "1"
-# p_val_df[p_val_df > 0.01 & p_val_df <= 0.05] <- "2"
-# p_val_df[p_val_df > 0.001 & p_val_df <= 0.01] <- "3"
-# p_val_df[p_val_df > 0.0001 & p_val_df <= 0.001] <- "4"
-# p_val_df[p_val_df <= 0.0001] <- "5"
 
 
 var_order <- c("Age", "Gender", "Race", "Recur", "Smoke", "Normal_AAH", "Normal_AIS", "Normal_MIA",
