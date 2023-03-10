@@ -8,7 +8,7 @@ library(stringr)
 ## load all interactions
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
-cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200", ".RData"))
+cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200Expansion", ".RData"))
 load(cell_spatial_path)
 
 ## load ROI diagnosis information
@@ -21,8 +21,15 @@ from_order <- c("Epithelial-Cell", "B-Cell", "Neutrophil", "NK-Cell", "Dendritic
                 "T-Reg-Cell", "Proliferating-Cell", "Macrophage", "Monocyte", "MDSC", "Fibroblast", "Undefined")
 to_order <- c("Undefined", "Fibroblast", "MDSC", "Monocyte", "Macrophage", "Proliferating-Cell", "T-Reg-Cell", "CD4-T-Cell", "CD8-T-Cell", 
               "Endothelial-Cell", "Dendritic-Cell", "NK-Cell", "Neutrophil", "B-Cell", "Epithelial-Cell")
-max_per_val <- 1.000
-min_per_val <- -0.428
+
+# # boundary-4
+# max_per_val <- 1.000
+# min_per_val <- -0.428
+
+
+# centroid-24
+max_per_val <- 0.980
+min_per_val <- -0.812
 
 # subset roi information
 normal_roi_info <- subset(roi_meta_info, ROI_Diag=="Normal")
