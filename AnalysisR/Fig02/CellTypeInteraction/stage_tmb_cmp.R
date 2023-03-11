@@ -21,7 +21,7 @@ tmb_info_path <- file.path(metadata_dir, "TMB", "LungSlideTMB2.csv")
 roi_tmb_info <- read.csv(tmb_info_path)
 
 # AAH/AIS/MIA/ADC
-path_stage <- "MIA"
+path_stage <- "AAH"
 subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
 roi_slides <- str_extract_all(subset_roi_info$ROI_ID, ".+(?=-ROI)", simplify = TRUE)
 subset_roi_info <- cbind(subset_roi_info, roi_slides)

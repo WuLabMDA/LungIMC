@@ -21,7 +21,7 @@ tmb_info_path <- file.path(metadata_dir, "TMB", "LungSlideTMB2.csv")
 roi_tmb_info <- read.csv(tmb_info_path)
 
 # AAH/AIS/MIA/ADC
-path_stage <- "ADC"
+path_stage <- "MIA"
 subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
 roi_slides <- str_extract_all(subset_roi_info$ROI_ID, ".+(?=-ROI)", simplify = TRUE)
 subset_roi_info <- cbind(subset_roi_info, roi_slides)
@@ -44,19 +44,41 @@ to_order <- c("Undefined", "Fibroblast", "MDSC", "Monocyte", "Macrophage", "Prol
 low_subset_out <- interaction_out[interaction_out$group_by %in% low_sub_roi_lst, ]
 high_subset_out <- interaction_out[interaction_out$group_by %in% high_sub_roi_lst, ]
 
-max_per_val <- 1.0
-min_per_val <- -1.0
+
+low_subset <- low_subset_out %>% as_tibble() %>% group_by(from_label, to_label)
+high_subset <- high_subset_out %>% as_tibble() %>% group_by(from_label, to_label)
 
 
-low_subset <- low_subset_out %>% as_tibble() %>% group_by(from_label, to_label) %>%
-    summarize(sum_sigval = sum(sigval, na.rm = TRUE) / length(low_sub_roi_lst)) %>%
-    mutate(across(starts_with("sum"), ~case_when(.x >= 0 ~ .x / max_per_val, TRUE ~ - .x / min_per_val)))
-low_subset$from_label <- paste0(low_subset$from_label, "-Low")
+pval_df <- data.frame(matrix(nrow = length(from_order), ncol = length(from_order)))
+rownames(pval_df) <- from_order
+colnames(pval_df) <- from_order
 
-high_subset <- high_subset_out %>% as_tibble() %>% group_by(from_label, to_label) %>%
-    summarize(sum_sigval = sum(sigval, na.rm = TRUE) / length(high_sub_roi_lst)) %>%
-    mutate(across(starts_with("sum"), ~case_when(.x >= 0 ~ .x / max_per_val, TRUE ~ - .x / min_per_val)))
-high_subset$from_label <- paste0(high_subset$from_label, "-High")
+group_pvals <- data.frame(matrix(nrow = length(from_order) * length(from_order), ncol = 3))
+colnames(group_pvals) <- c("FromType", "ToType", "pVal")
+
+p_from_order <- from_order
+p_to_order <- from_order
+
+group_ind <- 1
+for (p_from_label in p_from_order) {
+    for (p_to_label in p_to_order) {
+        low_pair <- low_subset[low_subset$from_label == p_from_label & low_subset$to_label == p_to_label,] %>% drop_na(sigval)
+        high_pair <- high_subset[high_subset$from_label == p_from_label & high_subset$to_label == p_to_label,] %>% drop_na(sigval)
+        test_pval <- t.test(high_pair$sigval, low_pair$sigval)
+        pval_df[p_to_label, p_from_label] <- test_pval$p.value
+        group_pvals[group_ind, ] <- c(p_to_label, p_from_label, test_pval$p.value)
+        group_ind <- group_ind + 1
+    }
+}
 
 
+adjust_group <- group_pvals %>% 
+    mutate(pVal = as.numeric(pVal)) %>%
+    mutate(gGroup = case_when(pVal > 0.05 ~ 'NS', pVal > 0.01 ~ '*', pVal > 0.001 ~ '**', .default = "***"))
+
+
+adjust_group %>% ggplot() +
+    geom_point(aes(x = factor(ToType, level=from_order), y = factor(FromType, level=to_order), 
+                   size = p.to.Z(pVal), col = factor(gGroup, level=c("NS", "*", "**", "***")))) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 
