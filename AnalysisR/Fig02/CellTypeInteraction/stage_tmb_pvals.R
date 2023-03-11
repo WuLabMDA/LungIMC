@@ -21,7 +21,7 @@ tmb_info_path <- file.path(metadata_dir, "TMB", "LungSlideTMB2.csv")
 roi_tmb_info <- read.csv(tmb_info_path)
 
 # AAH/AIS/MIA/ADC
-path_stage <- "MIA"
+path_stage <- "ADC"
 subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
 roi_slides <- str_extract_all(subset_roi_info$ROI_ID, ".+(?=-ROI)", simplify = TRUE)
 subset_roi_info <- cbind(subset_roi_info, roi_slides)
@@ -58,22 +58,5 @@ high_subset <- high_subset_out %>% as_tibble() %>% group_by(from_label, to_label
     mutate(across(starts_with("sum"), ~case_when(.x >= 0 ~ .x / max_per_val, TRUE ~ - .x / min_per_val)))
 high_subset$from_label <- paste0(high_subset$from_label, "-High")
 
-merge_subset <- rbind(low_subset, high_subset)
 
-merge_from_order <- c()
-for (cell_type in from_order) 
-    for (tmb_type in c("Low", "High")) 
-        merge_from_order <- append(merge_from_order, paste(cell_type, tmb_type, sep="-"))
-
-
-order_merge_set <- merge_subset %>% as_tibble() %>% 
-    mutate(from_label=factor(from_label, levels=merge_from_order)) %>%
-    mutate(to_label=factor(to_label, levels=to_order))
-    
-
-order_merge_set %>%
-    ggplot() +
-    geom_tile(aes(from_label, to_label, fill=sum_sigval)) +
-    scale_fill_gradient2(low = "blue", mid = "white", high = "red") + 
-    theme(axis.text.x=element_text(angle=45, hjust=1)) 
 
