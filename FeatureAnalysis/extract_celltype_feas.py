@@ -65,12 +65,12 @@ if __name__ == "__main__":
         for cell_type in celltype_lst:
             fea_lst.append(cell_type_lst.count(cell_type) * 1.0 / roi_cell_num)
         for cell_cn in cellcn_lst:
-            fea_lst.append(cell_cn_lst.count(cell_type) * 1.0 / roi_cell_num)        
+            fea_lst.append(cell_cn_lst.count(cell_cn) * 1.0 / roi_cell_num)        
         for cell_type in celltype_lst:
             fea_lst.append(cell_type_lst.count(cell_type) * 1.0 / roi_area)
         for cell_cn in cellcn_lst:
-            fea_lst.append(cell_cn_lst.count(cell_type) * 1.0 / roi_area)
+            fea_lst.append(cell_cn_lst.count(cell_cn) * 1.0 / roi_area)
         fea_df.loc[len(fea_df)] = fea_lst
 
-    cell_fea_path = os.path.join(feature_root_dir, "CellProportionDensity")
+    cell_fea_path = os.path.join(feature_root_dir, "CellProportionDensity.csv")
     fea_df.to_csv(cell_fea_path, index=False)
