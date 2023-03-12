@@ -17,8 +17,7 @@ def set_args():
     parser.add_argument("--data_type",              type=str,       default="LungROIProcessing")
     parser.add_argument("--cellphenotype_dir",      type=str,       default="CellPhenotyping")    
     parser.add_argument("--steinbock_dir",          type=str,       default="Steinbock")
-    parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")
-    parser.add_argument("--plot_format",            type=str,       default=".png", choices=[".png", ".pdf"])        
+    parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")    
 
     args = parser.parse_args()
     return args
