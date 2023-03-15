@@ -18,8 +18,8 @@ roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
 ## load tbm information
-tmb_info_path <- file.path(metadata_dir, "TMB", "LungSlideTMB2.csv")
-roi_tmb_info <- read.csv(tmb_info_path)
+slide_info_path <- file.path(metadata_dir, "TMB", "LungSlideTMB2.csv")
+roi_slide_info <- read.csv(slide_info_path)
 
 # AAH/AIS/MIA/ADC
 path_stage <- "ADC"
@@ -27,15 +27,16 @@ subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="T
 roi_slides <- str_extract_all(subset_roi_info$ROI_ID, ".+(?=-ROI)", simplify = TRUE)
 subset_roi_info <- cbind(subset_roi_info, roi_slides)
 
-subset_tmb_info <- filter(roi_tmb_info, Stages==path_stage)
-low_subset_tmb <- filter(subset_tmb_info, TMB.Cat2=="Low")
-high_subset_tmb <- filter(subset_tmb_info, TMB.Cat2=="High")
+subset_smoke_info <- filter(roi_slide_info, Stages==path_stage)
+low_subset_smoke <- filter(subset_smoke_info, Smoke=="Non-smoker")
+high_subset_smoke <- filter(subset_smoke_info, Smoke=="Smoker")
 
 
-low_sub_roi_info <- filter(subset_roi_info, roi_slides %in% low_subset_tmb$Slides)
-high_sub_roi_info <- filter(subset_roi_info, roi_slides %in% high_subset_tmb$Slides)
+low_sub_roi_info <- filter(subset_roi_info, roi_slides %in% low_subset_smoke$Slides)
+high_sub_roi_info <- filter(subset_roi_info, roi_slides %in% high_subset_smoke$Slides)
 low_sub_roi_lst <- low_sub_roi_info$ROI_ID
 high_sub_roi_lst <- high_sub_roi_info$ROI_ID
+
 
 from_order <- c("Epithelial-Cell", "B-Cell", "Neutrophil", "NK-Cell", "Dendritic-Cell", "Endothelial-Cell", "CD8-T-Cell", "CD4-T-Cell", 
                 "T-Reg-Cell", "Proliferating-Cell", "Macrophage", "Monocyte", "MDSC", "Fibroblast", "Undefined")

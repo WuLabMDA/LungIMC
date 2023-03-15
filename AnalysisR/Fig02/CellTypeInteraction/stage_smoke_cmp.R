@@ -17,8 +17,8 @@ roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
 ## load tbm information
-tmb_info_path <- file.path(metadata_dir, "TMB", "LungSlideTMB2.csv")
-roi_tmb_info <- read.csv(tmb_info_path)
+slide_info_path <- file.path(metadata_dir, "TMB", "LungSlideTMB2.csv")
+roi_slide_info <- read.csv(slide_info_path)
 
 # AAH/AIS/MIA/ADC
 path_stage <- "ADC"
@@ -26,13 +26,13 @@ subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="T
 roi_slides <- str_extract_all(subset_roi_info$ROI_ID, ".+(?=-ROI)", simplify = TRUE)
 subset_roi_info <- cbind(subset_roi_info, roi_slides)
 
-subset_tmb_info <- filter(roi_tmb_info, Stages==path_stage)
-low_subset_tmb <- filter(subset_tmb_info, TMB.Cat2=="Low")
-high_subset_tmb <- filter(subset_tmb_info, TMB.Cat2=="High")
+subset_smoke_info <- filter(roi_slide_info, Stages==path_stage)
+low_subset_smoke <- filter(subset_smoke_info, Smoke=="Non-smoker")
+high_subset_smoke <- filter(subset_smoke_info, Smoke=="Smoker")
 
 
-low_sub_roi_info <- filter(subset_roi_info, roi_slides %in% low_subset_tmb$Slides)
-high_sub_roi_info <- filter(subset_roi_info, roi_slides %in% high_subset_tmb$Slides)
+low_sub_roi_info <- filter(subset_roi_info, roi_slides %in% low_subset_smoke$Slides)
+high_sub_roi_info <- filter(subset_roi_info, roi_slides %in% high_subset_smoke$Slides)
 low_sub_roi_lst <- low_sub_roi_info$ROI_ID
 high_sub_roi_lst <- high_sub_roi_info$ROI_ID
 
@@ -51,25 +51,25 @@ min_per_val <- -0.6
 low_subset <- low_subset_out %>% as_tibble() %>% group_by(from_label, to_label) %>%
     summarize(sum_sigval = sum(sigval, na.rm = TRUE) / length(low_sub_roi_lst)) %>%
     mutate(across(starts_with("sum"), ~case_when(.x >= 0 ~ .x / max_per_val, TRUE ~ - .x / min_per_val)))
-low_subset$from_label <- paste0(low_subset$from_label, "-Low")
+low_subset$from_label <- paste0(low_subset$from_label, "-Non-smoker")
 
 high_subset <- high_subset_out %>% as_tibble() %>% group_by(from_label, to_label) %>%
     summarize(sum_sigval = sum(sigval, na.rm = TRUE) / length(high_sub_roi_lst)) %>%
     mutate(across(starts_with("sum"), ~case_when(.x >= 0 ~ .x / max_per_val, TRUE ~ - .x / min_per_val)))
-high_subset$from_label <- paste0(high_subset$from_label, "-High")
+high_subset$from_label <- paste0(high_subset$from_label, "-Smoker")
 
 merge_subset <- rbind(low_subset, high_subset)
 
 merge_from_order <- c()
 for (cell_type in from_order) 
-    for (tmb_type in c("Low", "High")) 
+    for (tmb_type in c("Non-smoker", "Smoker")) 
         merge_from_order <- append(merge_from_order, paste(cell_type, tmb_type, sep="-"))
 
 
 order_merge_set <- merge_subset %>% as_tibble() %>% 
     mutate(from_label=factor(from_label, levels=merge_from_order)) %>%
     mutate(to_label=factor(to_label, levels=to_order))
-    
+
 
 order_merge_set %>%
     ggplot() +
