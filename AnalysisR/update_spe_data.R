@@ -19,7 +19,7 @@ updated_spe_name <- "lung_spe_15_celltypes_final"
 updated_spe_path <- file.path(phenotype_dir, paste0(updated_spe_name, ".rds"))
 saveRDS(spe, file = updated_spe_path)
 
-# ## save to json
+# ## save to csv
 # cell_id_lst <- rownames(colData(spe))
 # celltype_lst <- spe$celltype
 # cell_df <- data.frame(
