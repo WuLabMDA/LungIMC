@@ -22,10 +22,10 @@ phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 # cell_spatial_path <- file.path(cell_type_interaction_path)
 # load(cell_spatial_path)
 
-celltype_expansion_dir <- file.path(phenotype_dir, "DelaunayInteraction")
+celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
 threshold_val <- 30
 cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_val, ".RData")
-cell_type_interaction_path <- file.path(celltype_expansion_dir, cell_type_interaction_name)
+cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interaction_name)
 load(cell_type_interaction_path)
 
 
