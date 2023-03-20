@@ -15,16 +15,22 @@ library(knitr)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
-celltype_expansion_dir <- file.path(phenotype_dir, "ExpansionInteraction")
-threshold_val <- 24
-cell_type_interaction_name <- paste0("ExpansionInteractionThreshold", threshold_val, ".RData")
+# celltype_expansion_dir <- file.path(phenotype_dir, "ExpansionInteraction")
+# threshold_val <- 24
+# cell_type_interaction_name <- paste0("ExpansionInteractionThreshold", threshold_val, ".RData")
+# cell_type_interaction_path <- file.path(celltype_expansion_dir, cell_type_interaction_name)
+# cell_spatial_path <- file.path(cell_type_interaction_path)
+# load(cell_spatial_path)
+
+celltype_expansion_dir <- file.path(phenotype_dir, "DelaunayInteraction")
+threshold_val <- 30
+cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_val, ".RData")
 cell_type_interaction_path <- file.path(celltype_expansion_dir, cell_type_interaction_name)
-cell_spatial_path <- file.path(cell_type_interaction_path)
-load(cell_spatial_path)
+load(cell_type_interaction_path)
 
 
 set.seed(1234)
-spe <- aggregateNeighbors(spe, colPairName = "expansion_interaction_graph", 
+spe <- aggregateNeighbors(spe, colPairName = "delaunay_interaction_graph", 
                           aggregate_by = "metadata", count_by = "celltype")
 cn_kmeans <- kmeans(spe$aggregatedNeighbors, centers = 10)
 spe$cn_celltypes <- as.factor(cn_kmeans$cluster)
