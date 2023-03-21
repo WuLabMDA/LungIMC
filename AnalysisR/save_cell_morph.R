@@ -29,11 +29,14 @@ spe <- aggregateNeighbors(spe, colPairName = interaction_graph_name,
 cn_kmeans <- kmeans(spe$aggregatedNeighbors, centers = 10)
 spe$cn_celltypes <- as.factor(cn_kmeans$cluster)
 
-
 # save cn
 cell_df <- data.frame(cell_id = rownames(spe@colData),
                       cell_type = spe$celltype,
-                      cell_cn = spe$cn_celltypes)
+                      cell_cn = spe$cn_celltypes,
+                      cell_area = spe$area,
+                      cell_maj_ax_len = spe$major_axis_length,
+                      cell_min_ax_len = spe$minor_axis_length,
+                      cell_eccentricity = spe$eccentricity)
 cell_type_path <- file.path(phenotype_dir, "cell_cn_types.csv")
 write.csv(cell_df, cell_type_path, row.names=FALSE)
 
