@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     # load cell type / cn type
     phenotype_dir = os.path.join(args.data_root, args.data_set, args.cellphenotype_dir)  
-    cell_type_path = os.path.join(phenotype_dir, "cell_cn_types.csv")
+    cell_type_path = os.path.join(phenotype_dir, "cell_type_cn_morphs.csv")
     cell_df = pd.read_csv(cell_type_path)
     cell_ids = cell_df["cell_id"].tolist()
     cell_types = cell_df["cell_type"].tolist()
