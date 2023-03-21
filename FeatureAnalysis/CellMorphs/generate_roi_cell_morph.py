@@ -32,7 +32,6 @@ if __name__ == "__main__":
     cell_type_path = os.path.join(phenotype_dir, "cell_type_cn_morphs.csv")
     celltype_df = pd.read_csv(cell_type_path)
     print("Total cell number is: {}".format(len(celltype_df)))
-    # cell_ids = celltype_df["cell_id"].tolist()
 
     # load image list
     roi_info_path = os.path.join(dataset_dir, args.data_type, args.steinbock_dir, "images.csv")
