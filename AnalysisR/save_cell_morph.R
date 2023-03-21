@@ -37,7 +37,7 @@ cell_df <- data.frame(cell_id = rownames(spe@colData),
                       cell_maj_ax_len = spe$major_axis_length,
                       cell_min_ax_len = spe$minor_axis_length,
                       cell_eccentricity = spe$eccentricity)
-cell_type_path <- file.path(phenotype_dir, "cell_cn_types.csv")
+cell_type_path <- file.path(phenotype_dir, "cell_type_cn_morphs.csv")
 write.csv(cell_df, cell_type_path, row.names=FALSE)
 
 
