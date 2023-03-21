@@ -43,7 +43,7 @@ if __name__ == "__main__":
     cell_types = cell_df["cell_type"].tolist()
     cell_cns = cell_df["cell_cn"].tolist()
 
-    cell_vis_dir = os.path.join(args.data_root, args.data_set, args.result_dir, "VisPhenotype")
+    cell_vis_dir = os.path.join(args.data_root, args.data_set, args.result_dir, "VisPhenotype-Point")
     if os.path.exists(cell_vis_dir):
         shutil.rmtree(cell_vis_dir)
     os.makedirs(cell_vis_dir)    
