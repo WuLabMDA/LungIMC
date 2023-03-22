@@ -35,7 +35,6 @@ patient_info_name <- "Patient_Info"
 patient_info_path <- file.path(metadata_dir, paste0(patient_info_name, ".xlsx"))
 patient_df <- read_excel(patient_info_path)
 
-
 ## filtering rois
 roi_lst <- roi_df$ROI_ID
 roi_vec <- c()
@@ -62,7 +61,7 @@ all_cell_lst <- c("Epithelial-Cell", "B-Cell", "Neutrophil", "NK-Cell", "Dendrit
 age_pvals <- c()
 gender_pvals <- c()
 race_pvals <- c()
-recur_pvals <- c()
+# recur_pvals <- c()
 smoke_pvals <- c()
 normal_aah_pvals <- c()
 normal_ais_pvals <- c()
@@ -81,7 +80,7 @@ for (cell_type in all_cell_lst) {
     ratio_lst <- c()
     gender_lst <- c()
     race_lst <- c()
-    recurrent_lst <- c()
+    # recurrent_lst <- c()
     median_age <- 71.3
     age_lst <- c()
     smoke_lst <- c()
@@ -104,10 +103,10 @@ for (cell_type in all_cell_lst) {
         patient_index <- which(patient_df$PatientID == pat_id)
         gender_lst <- append(gender_lst, patient_df$Gender[patient_index])
         race_lst <- append(race_lst, patient_df$Race[patient_index])
-        if (patient_df$RecurrentStatus[patient_index] == "RECURRENT")
-            recurrent_lst <- append(recurrent_lst, "Recur")
-        else
-            recurrent_lst <- append(recurrent_lst, "Non-Recur")
+        # if (patient_df$RecurrentStatus[patient_index] == "RECURRENT")
+        #     recurrent_lst <- append(recurrent_lst, "Recur")
+        # else
+        #     recurrent_lst <- append(recurrent_lst, "Non-Recur")
         if (patient_df$Age[patient_index] <= median_age) 
             age_lst <- append(age_lst, "<=71")
         else
@@ -119,21 +118,8 @@ for (cell_type in all_cell_lst) {
         stage_lst <- append(stage_lst, slide_info_df$Slide_Diag[slide_index])
     }
     
-    cell_ratio_df <- data.frame(Ratio=ratio_lst, Gender=gender_lst, Race=race_lst,
-                                Recurrent=recurrent_lst, Age=age_lst, Smoke=smoke_lst, Stage=stage_lst)
+    cell_ratio_df <- data.frame(Ratio=ratio_lst, Gender=gender_lst, Race=race_lst, Age=age_lst, Smoke=smoke_lst, Stage=stage_lst)
     long_ratio_df <- gather(cell_ratio_df, key = "variable", value = "value", -Ratio)
-
-    
-    # variable_names <- c("<=71", ">71", "F", "M", "White", "Asian", "Non-Recur", "Recur", "Non-Smoker", "Smoker", "Normal", "AAH", "AIS", "MIA", "ADC")
-    # # MinMeanSEMMax
-    # MinMeanSEMMax <- function(x) {
-    #     v <- c(min(x), mean(x) - sd(x)/sqrt(length(x)), mean(x), mean(x) + sd(x)/sqrt(length(x)), max(x))
-    #     names(v) <- c("ymin", "lower", "middle", "upper", "ymax")
-    #     v
-    # }
-    # ggplot(long_ratio_df, aes(x = factor(value, level=variable_names), y = Ratio)) +
-    #     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") +
-    #     geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.3)
     
     # Welch Two Sample t-test p-value
     age_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="<=71"], long_ratio_df$Ratio[long_ratio_df$value==">71"])
@@ -142,8 +128,8 @@ for (cell_type in all_cell_lst) {
     gender_pvals <- append(gender_pvals, gender_ttest$p.value)
     race_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="White"], long_ratio_df$Ratio[long_ratio_df$value=="Asian"])
     race_pvals <- append(race_pvals, race_ttest$p.value)
-    recurrent_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="Non-Recur"], long_ratio_df$Ratio[long_ratio_df$value=="Recur"])
-    recur_pvals <- append(recur_pvals, recurrent_ttest$p.value)
+    # recurrent_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="Non-Recur"], long_ratio_df$Ratio[long_ratio_df$value=="Recur"])
+    # recur_pvals <- append(recur_pvals, recurrent_ttest$p.value)
     smoke_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="Non-Smoker"], long_ratio_df$Ratio[long_ratio_df$value=="Smoker"])
     smoke_pvals <- append(smoke_pvals, smoke_ttest$p.value)
     normal_aah_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="Normal"], long_ratio_df$Ratio[long_ratio_df$value=="AAH"])
@@ -169,17 +155,14 @@ for (cell_type in all_cell_lst) {
 }
 
 
-p_val_df <- data.frame(Age=age_pvals, Gender=gender_pvals, Race=race_pvals, Recur=recur_pvals, Smoke=smoke_pvals,
+p_val_df <- data.frame(Age=age_pvals, Gender=gender_pvals, Race=race_pvals, Smoke=smoke_pvals,
                        Normal_AAH=normal_aah_pvals, Normal_AIS=normal_ais_pvals, Normal_MIA=normal_mia_pvals, Normal_ADC=normal_adc_pvals,
                        AAH_AIS=aah_ais_pvals, AAH_MIA=aah_mia_pvals, AAH_ADC=aah_adc_pvals, AIS_MIA=ais_mia_pvals,
                        AIS_ADC=ais_adc_pvals, MIA_ADC=mia_adc_pvals, row.names = all_cell_lst)
 
 
-var_order <- c("Age", "Gender", "Race", "Recur", "Smoke", "Normal_AAH", "Normal_AIS", "Normal_MIA",
+var_order <- c("Age", "Gender", "Race", "Smoke", "Normal_AAH", "Normal_AIS", "Normal_MIA",
                "Normal_ADC", "AAH_AIS", "AAH_MIA", "AAH_ADC", "AIS_MIA", "AIS_ADC", "MIA_ADC")
-
-# group_df <- p_val_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Pvals, -CellType) %>%
-#     mutate(gGroup = case_when(Pvals > 0.05 ~ 'NS', Pvals > 0.01 ~ '*', Pvals > 0.001 ~ '**', .default = "***"))
 
 group_df <- p_val_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Pvals, -CellType) 
 group_df$AdjustPs <- p.adjust(group_df$Pvals, method = "fdr")

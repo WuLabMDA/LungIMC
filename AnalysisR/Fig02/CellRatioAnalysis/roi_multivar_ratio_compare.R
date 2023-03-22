@@ -5,6 +5,7 @@ library(ggplot2)
 library(ggbeeswarm)
 library(cowplot)
 library(gridExtra)
+library(dplyr)
 
 ## set directory
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
@@ -61,7 +62,6 @@ roi_lst <- c()
 ratio_lst <- c()
 gender_lst <- c()
 race_lst <- c()
-recurrent_lst <- c()
 median_age <- 71.3
 age_lst <- c()
 smoke_lst <- c()
@@ -83,10 +83,6 @@ for (ir in 1:length(roi_vec)) {
     df_index <- which(patient_df$PatientID == pat_id)
     gender_lst <- append(gender_lst, patient_df$Gender[df_index])
     race_lst <- append(race_lst, patient_df$Race[df_index])
-    if (patient_df$RecurrentStatus[df_index] == "RECURRENT")
-        recurrent_lst <- append(recurrent_lst, "Recur")
-    else
-        recurrent_lst <- append(recurrent_lst, "Non-Recur")
     
     if (patient_df$Age[df_index] <= median_age) 
         age_lst <- append(age_lst, "<=71")
@@ -97,17 +93,13 @@ for (ir in 1:length(roi_vec)) {
 
 ## Construct data frame
 cell_ratio_df <- data.frame(ROI=roi_lst, Ratio=ratio_lst, Gender=gender_lst, Race=race_lst,
-                            Recurrent=recurrent_lst, Age=age_lst, Smoke=smoke_lst)
+                            Age=age_lst, Smoke=smoke_lst)
 ## Plotting
 p_gender <- ggplot(cell_ratio_df, aes(x = factor(Gender, level=c("M", "F")), y=Ratio)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
     geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
 
 p_race <- ggplot(cell_ratio_df, aes(x = factor(Race, level=c("Asian", "White")), y=Ratio)) + 
-    stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
-
-p_recurrent <- ggplot(cell_ratio_df, aes(x = factor(Recurrent, level=c("Non-Recur", "Recur")), y=Ratio)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
     geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
 
@@ -119,11 +111,4 @@ p_smoke <- ggplot(cell_ratio_df, aes(x = factor(Smoke, level=c("Non-Smoker", "Sm
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
     geom_beeswarm(cex = 2.5, corral = "random", corral.width = 0.5)
 
-# cowplot::plot_grid(p_gender, p_race, p_recurrent)
-grid.arrange(p_gender, p_race, p_recurrent, p_age, p_smoke, ncol=5)
-
-# # # Welch Two Sample t-test p-value
-# # recur_pval <- t.test(cell_ratio_df$Ratio[cell_ratio_df$Recurrent=="Non-Recur"], 
-# #                      cell_ratio_df$Ratio[cell_ratio_df$Recurrent=="Recur"])
-# # print(paste("Recurrance p-val:", recur_pval$p.value))
-
+grid.arrange(p_gender, p_race, p_age, p_smoke, ncol=4)
