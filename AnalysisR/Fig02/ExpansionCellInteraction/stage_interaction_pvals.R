@@ -4,12 +4,13 @@ library(tidyverse)
 library(scales)
 library(openxlsx)
 library(stringr)
+library(NCmisc)
 
 ## load all interactions
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 celltype_expansion_dir <- file.path(phenotype_dir, "ExpansionInteraction")
-threshold_val <- 50
+threshold_val <- 24
 cell_type_interaction_name <- paste0("ExpansionInteractionThreshold", threshold_val, ".RData")
 cell_type_interaction_path <- file.path(celltype_expansion_dir, cell_type_interaction_name)
 cell_spatial_path <- file.path(cell_type_interaction_path)
@@ -73,7 +74,8 @@ for (p_from_label in p_from_order) {
         mia_pair <- mia_subset[mia_subset$from_label == p_from_label & mia_subset$to_label == p_to_label,] %>% drop_na(sigval)
         adc_pair <- adc_subset[adc_subset$from_label == p_from_label & adc_subset$to_label == p_to_label,] %>% drop_na(sigval)
         
-        kw_pval <- kruskal.test(list(normal_pair$sigval, aah_pair$sigval, ais_pair$sigval, mia_pair$sigval, adc_pair$sigval))
+        # kw_pval <- kruskal.test(list(normal_pair$sigval, aah_pair$sigval, ais_pair$sigval, mia_pair$sigval, adc_pair$sigval))
+        kw_pval <- kruskal.test(list(aah_pair$sigval, ais_pair$sigval, mia_pair$sigval, adc_pair$sigval))
   
         pval_df[p_to_label, p_from_label] <- kw_pval$p.value
         group_pvals[group_ind, ] <- c(p_to_label, p_from_label, kw_pval$p.value)
