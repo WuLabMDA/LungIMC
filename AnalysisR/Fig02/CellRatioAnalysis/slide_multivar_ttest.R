@@ -160,14 +160,12 @@ p_val_df <- data.frame(Age=age_pvals, Gender=gender_pvals, Race=race_pvals, Smok
                        AAH_AIS=aah_ais_pvals, AAH_MIA=aah_mia_pvals, AAH_ADC=aah_adc_pvals, AIS_MIA=ais_mia_pvals,
                        AIS_ADC=ais_adc_pvals, MIA_ADC=mia_adc_pvals, row.names = all_cell_lst)
 
-
 var_order <- c("Age", "Gender", "Race", "Smoke", "Normal_AAH", "Normal_AIS", "Normal_MIA",
                "Normal_ADC", "AAH_AIS", "AAH_MIA", "AAH_ADC", "AIS_MIA", "AIS_ADC", "MIA_ADC")
 
 group_df <- p_val_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Pvals, -CellType) 
 group_df$AdjustPs <- p.adjust(group_df$Pvals, method = "fdr")
 adjust_df <- group_df %>% mutate(gGroup = case_when(AdjustPs > 0.05 ~ 'NS', AdjustPs > 0.01 ~ '*', AdjustPs > 0.001 ~ '**', .default = "***"))
-
 
 adjust_df %>% ggplot() +
     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)), 
