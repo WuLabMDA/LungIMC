@@ -29,11 +29,11 @@ interaction_out <- testInteractions(spe, group_by = "sample_id",
                                     iter = 200)
 
 # save the results
-celltype_expansion_dir <- file.path(phenotype_dir, "DelaunayInteraction")
-if (!dir.exists(celltype_expansion_dir))
-    dir.create(celltype_expansion_dir)
+celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
+if (!dir.exists(celltype_delaunay_dir))
+    dir.create(celltype_delaunay_dir)
 
 cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_val, ".RData")
-cell_type_interaction_path <- file.path(celltype_expansion_dir, cell_type_interaction_name)
+cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interaction_name)
 save(spe, interaction_out, file = cell_type_interaction_path)
 print(paste("Finish @", format(Sys.time(), "%a %b %d %X %Y")))
