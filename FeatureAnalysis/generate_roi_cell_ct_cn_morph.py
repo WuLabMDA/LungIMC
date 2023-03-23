@@ -29,7 +29,7 @@ if __name__ == "__main__":
     dataset_dir = os.path.join(args.data_root, args.data_set)
     # load cell_cn_types
     phenotype_dir = os.path.join(dataset_dir, args.cellphenotype_dir)  
-    cell_type_path = os.path.join(phenotype_dir, "cell_type_cn_morphs.csv")
+    cell_type_path = os.path.join(phenotype_dir, "cell_ct_cn_morphs.csv")
     celltype_df = pd.read_csv(cell_type_path)
     print("Total cell number is: {}".format(len(celltype_df)))
 
@@ -39,8 +39,7 @@ if __name__ == "__main__":
     img_lst = [os.path.splitext(ele)[0] for ele in roi_df["image"].tolist()]
 
     # prepare folder
-    feature_root_dir = os.path.join(dataset_dir, args.feature_dir)
-    celltype_dir = os.path.join(feature_root_dir, "CellMorphs")
+    celltype_dir = os.path.join(phenotype_dir, "Cell_CT_CN_Morphs")
     if os.path.exists(celltype_dir):
         shutil.rmtree(celltype_dir)
     os.makedirs(celltype_dir)
@@ -48,6 +47,7 @@ if __name__ == "__main__":
     # split
     split_ttl_num = 0
     for img_ind in np.arange(len(img_lst)):
+        print("Generate {:4d}/{}".format(img_ind+1, len(img_lst)))
         roi_img_name = img_lst[img_ind]
         roi_df = celltype_df[celltype_df["cell_id"].str.startswith(roi_img_name)]
         split_ttl_num += len(roi_df)
