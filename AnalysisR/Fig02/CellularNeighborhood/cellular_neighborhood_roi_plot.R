@@ -15,20 +15,15 @@ library(knitr)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
-spe_celltype_name <-"lung_spe_15_celltypes_final"
-spe_celltype_path <- file.path(phenotype_dir, paste0(spe_celltype_name, ".rds"))
-spe <- readRDS(spe_celltype_path)
-
-set.seed(1234)
-spe <- aggregateNeighbors(spe, colPairName = "neighborhood", aggregate_by = "metadata", count_by = "celltype")
-cn_kmeans <- kmeans(spe$aggregatedNeighbors, centers = 10)
-spe$cn_celltypes <- as.factor(cn_kmeans$cluster)
-
-
+# load the spe
+threshold_val <- 50
+num_cn <- 10
+spe_cn_name <- paste0("Delaunay", threshold_val, "-CN", num_cn, ".rds")
+spe_cn_path <- file.path(data_root_dir, "CellPhenotyping", spe_cn_name)
+spe <- readRDS(spe_cn_path)
 
 # plotting image cell type information
-numCN <- length(unique(spe$cn_celltypes))
-colCN <- setNames(colorRampPalette(brewer.pal(10, "Set3"))(numCN), sort(unique(spe$cn_celltypes)))
+colCN <- setNames(colorRampPalette(brewer.pal(10, "Set3"))(num_cn), sort(unique(spe$cn_celltypes)))
 colCN["2"] <- "#E41A1C"
 colCN["7"] <- "#33A02C"
 colCN["9"] <- "#A65628"
@@ -39,7 +34,7 @@ img_file_path <- file.path(data_root_dir, "LungROIProcessing", "Steinbock", "ima
 img_data_df <- read_csv(img_file_path)
 num_img <- nrow(img_data_df)
 
-cn_vis_dir <- file.path(data_root_dir, "Results", "CellularNeighbor10")
+cn_vis_dir <- file.path(data_root_dir, "Results", "Vis-Delaunay-CN10R")
 if (!file.exists(cn_vis_dir))
     dir.create(cn_vis_dir)
 
@@ -58,7 +53,6 @@ for (ind in 1:num_img) {
               axis.ticks.y=element_blank(),
               plot.title=element_blank(),
               legend.position="none") 
-    #     scale_x_continuous(expand = c(0,0)) + scale_y_continuous(expand = c(0,0)) 
     # save
     vis_w <- img_data_df$height_px[ind] / 100
     vis_h <- img_data_df$width_px[ind] / 100
