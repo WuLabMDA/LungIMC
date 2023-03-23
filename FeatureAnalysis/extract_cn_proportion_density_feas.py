@@ -42,11 +42,8 @@ if __name__ == "__main__":
     cellcn_lst = [ind+1 for ind in np.arange(10)]
 
     fea_names = ["ROI_ID", ]
-    fea_names.extend([ele + "-Proportion" for ele in celltype_lst])
     fea_names.extend(["CN" + str(ele) + "-Proportion" for ele in cellcn_lst])
-    fea_names.extend([ele + "-Density" for ele in celltype_lst])
     fea_names.extend(["CN" + str(ele) + "-Density" for ele in cellcn_lst])    
-
     fea_df = pd.DataFrame(columns=fea_names)
 
     # extract features images by images
@@ -57,20 +54,15 @@ if __name__ == "__main__":
         roi_celltype_path = os.path.join(celltype_dir, roi_name + ".csv")
         roi_celltype_df = pd.read_csv(roi_celltype_path)
         roi_cell_num = len(roi_celltype_df)
-        cell_type_lst = roi_celltype_df["cell_type"].tolist()
         cell_cn_lst = roi_celltype_df["cell_cn"].tolist()
         roi_area = img_heights[ind] * img_widths[ind]
 
         fea_lst = [roi_name, ]
-        for cell_type in celltype_lst:
-            fea_lst.append(cell_type_lst.count(cell_type) * 1.0 / roi_cell_num)
         for cell_cn in cellcn_lst:
             fea_lst.append(cell_cn_lst.count(cell_cn) * 1.0 / roi_cell_num)        
-        for cell_type in celltype_lst:
-            fea_lst.append(cell_type_lst.count(cell_type) * 1.0 / roi_area)
         for cell_cn in cellcn_lst:
             fea_lst.append(cell_cn_lst.count(cell_cn) * 1.0 / roi_area)
         fea_df.loc[len(fea_df)] = fea_lst
 
-    cell_fea_path = os.path.join(feature_root_dir, "CTCN_ProportionDensityFeas.csv")
+    cell_fea_path = os.path.join(feature_root_dir, "CN_ProportionDensityFeas.csv")
     fea_df.to_csv(cell_fea_path, index=False)
