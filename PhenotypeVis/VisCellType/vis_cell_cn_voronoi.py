@@ -32,7 +32,7 @@ if __name__ == "__main__":
     steinbock_dir = os.path.join(root_data_dir, args.data_type, args.steinbock_dir)
     feature_ana_dir = os.path.join(root_data_dir, args.feature_dir)    
     region_prop_dir = os.path.join(steinbock_dir, "regionprops")
-    cell_type_dir = os.path.join(feature_ana_dir, "CellTypes")
+    cell_type_dir = os.path.join(root_data_dir, args.cellphenotype_dir, "Cell_CT_CN_Morphs")
 
     voronoi_vis_dir = os.path.join(root_data_dir, args.result_dir, "VisCN-Voronoi")
     if os.path.exists(voronoi_vis_dir):
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     # generate voronoi graph one-by-one
     for roi_ind, cur_roi in enumerate(roi_lst):
-        print("Voronoi on {:4d}/{} ROI: {}".format(roi_ind+1, len(roi_lst), cur_roi))
+        print("CN Voronoi on {:4d}/{} ROI: {}".format(roi_ind+1, len(roi_lst), cur_roi))
         roi_meta_info = roi_meta_df[roi_meta_df["image"] == cur_roi + ".tiff"]
         roi_height = roi_meta_info["height_px"].tolist()[0]
         roi_width = roi_meta_info["width_px"].tolist()[0]  

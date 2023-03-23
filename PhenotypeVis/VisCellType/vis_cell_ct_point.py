@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     # load cell type / cn type
     phenotype_dir = os.path.join(args.data_root, args.data_set, args.cellphenotype_dir)  
-    cell_type_path = os.path.join(phenotype_dir, "cell_type_cn_morphs.csv")
+    cell_type_path = os.path.join(phenotype_dir, "cell_ct_cn_morphs.csv")
     cell_df = pd.read_csv(cell_type_path)
     cell_ids = cell_df["cell_id"].tolist()
     cell_types = cell_df["cell_type"].tolist()
@@ -57,6 +57,7 @@ if __name__ == "__main__":
     phenotype_color_dict = {cell_type: color for cell_type, color in zip(cell_phenotypes, phenotype_colors)}
 
     for img_ind in np.arange(len(img_lst)):
+        print("CT Point on {:4d}/{}".format(img_ind+1, len(img_lst)))
         img_name = img_lst[img_ind]
         img_height = img_heights[img_ind]
         img_width = img_widths[img_ind]
