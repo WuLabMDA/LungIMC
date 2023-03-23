@@ -95,7 +95,7 @@ if __name__ == "__main__":
                     break
             convex_hull_area = cv2.contourArea(convex_hull)
             if convex_hull_area <= max_face_area and face_type != None:
-                cv2.fillConvexPoly(roi_voronoi, ifacet, cell_color_dict[face_type])   
+                cv2.fillConvexPoly(roi_voronoi, ifacet, cell_color_dict[str(face_type)])   
         # save voronoi graph
         voronoi_path = os.path.join(voronoi_vis_dir, cur_roi + ".png")
         io.imsave(voronoi_path, roi_voronoi)
