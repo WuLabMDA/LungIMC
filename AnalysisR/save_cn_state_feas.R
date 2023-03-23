@@ -19,7 +19,7 @@ spe <- readRDS(spe_cn_path)
 # extract cell information
 cell_id_lst <- rownames(colData(spe))
 cell_cn_lst <- spe$cn_celltypes
-all_cn_lst <- c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
+all_cn_lst <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
 # filter functional markers
 function_markers = c("Ki67", "HLADR", "B2M", "CD45RO", "ICOS", "GranzymeB",
@@ -35,7 +35,7 @@ for (ind in 1:length(roi_lst)) {
     # extract cell index in each ROI
     cur_roi <- roi_lst[ind]
     roi_cell_indices <- startsWith(cell_id_lst, cur_roi)
-    roi_cell_cns <- all_cn_lst[roi_cell_indices]
+    roi_cell_cns <- cell_cn_lst[roi_cell_indices]
     roi_cell_exprs <- cell_fun_exprs[roi_cell_indices, ]
     # aggreate functional marker states
     roi_state_feas <- c()
