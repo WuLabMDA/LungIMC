@@ -9,7 +9,7 @@ library(stringr)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 celltype_expansion_dir <- file.path(phenotype_dir, "ExpansionInteraction")
-threshold_val <- 32
+threshold_val <- 24
 cell_type_interaction_name <- paste0("ExpansionInteractionThreshold", threshold_val, ".RData")
 cell_type_interaction_path <- file.path(celltype_expansion_dir, cell_type_interaction_name)
 cell_spatial_path <- file.path(cell_type_interaction_path)
