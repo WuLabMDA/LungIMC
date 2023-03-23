@@ -34,7 +34,7 @@ img_file_path <- file.path(data_root_dir, "LungROIProcessing", "Steinbock", "ima
 img_data_df <- read_csv(img_file_path)
 num_img <- nrow(img_data_df)
 
-cn_vis_dir <- file.path(data_root_dir, "Results", "Vis-Delaunay-CN10R")
+cn_vis_dir <- file.path(data_root_dir, "Results", "Vis-CN10-Delaunay")
 if (!file.exists(cn_vis_dir))
     dir.create(cn_vis_dir)
 
