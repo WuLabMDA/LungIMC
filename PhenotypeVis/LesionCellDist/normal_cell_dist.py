@@ -29,7 +29,7 @@ if __name__ == "__main__":
     roi_root_dir = os.path.join(args.data_root, args.data_type)
     metadata_dir = os.path.join(args.data_root, args.meta_dir)
     cellphenotype_dir = os.path.join(args.data_root, args.cellphenotype_dir)
-    stat_result_dir = os.path.join(args.data_root, args.result_dir, "Stats")
+    stat_result_dir = os.path.join(args.data_root, args.result_dir, "DistStats")
     if not os.path.exists(stat_result_dir):
         os.makedirs(stat_result_dir)    
         
