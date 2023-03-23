@@ -29,7 +29,6 @@ if __name__ == "__main__":
 
     # load image width/height information
     steinbock_dir = os.path.join(args.data_root, args.data_set, args.data_type, args.steinbock_dir)
-    cellmask_dir = os.path.join(steinbock_dir, "masks_deepcell")
     roi_info_path = os.path.join(steinbock_dir, "images.csv")
     roi_df = pd.read_csv(roi_info_path)
     img_lst = [os.path.splitext(ele)[0] for ele in roi_df["image"].tolist()]
@@ -44,7 +43,7 @@ if __name__ == "__main__":
     cell_types = cell_df["cell_type"].tolist()
     cell_cns = cell_df["cell_cn"].tolist()
 
-    cell_vis_dir = os.path.join(args.data_root, args.data_set, args.result_dir, "VisPhenotype-Seg")
+    cell_vis_dir = os.path.join(args.data_root, args.data_set, args.result_dir, "VisCT-Point")
     if os.path.exists(cell_vis_dir):
         shutil.rmtree(cell_vis_dir)
     os.makedirs(cell_vis_dir)    
@@ -58,15 +57,11 @@ if __name__ == "__main__":
     phenotype_color_dict = {cell_type: color for cell_type, color in zip(cell_phenotypes, phenotype_colors)}
 
     for img_ind in np.arange(len(img_lst)):
-        print("Phenotype Seg on {:4d}/{}".format(img_ind+1, len(img_lst)))
         img_name = img_lst[img_ind]
         img_height = img_heights[img_ind]
         img_width = img_widths[img_ind]
-        # load cell seg
-        roi_cell_seg_path = os.path.join(cellmask_dir, img_name + ".tiff")
-        roi_cell_seg = io.imread(roi_cell_seg_path)
-        # initizate image
-        phenotype_img = np.zeros((img_height, img_width, 3), dtype=np.uint8)
+        # initizate cn image
+        phenotype_img = np.ones((img_height, img_width, 3), dtype=np.uint8) * 255
         cell_inds = [ind for ind in np.arange(len(cell_ids)) if cell_ids[ind].startswith(img_name)]
         roi_cell_phenotypes = [cell_types[ind] for ind in cell_inds]
         roi_cell_ids = [int(cell_ids[ind][len(img_name)+1:]) for ind in cell_inds]
@@ -75,11 +70,9 @@ if __name__ == "__main__":
         for cell_ind in np.arange(len(cell_inds)):
             cell_phenotype = roi_cell_phenotypes[cell_ind]
             cell_id = roi_cell_ids[cell_ind]
-            roi_cell_mask = (roi_cell_seg == cell_id).astype(np.uint8) 
-            cell_color = phenotype_color_dict[cell_phenotype] 
-            phenotype_img[:,:,0] += roi_cell_mask * cell_color[0]
-            phenotype_img[:,:,1] += roi_cell_mask * cell_color[1]
-            phenotype_img[:,:,2] += roi_cell_mask * cell_color[2]
+            cell_h = int(np.floor(roi_cen_df["centroid-0"][cell_ind] + 0.5))
+            cell_w = int(np.floor(roi_cen_df["centroid-1"][cell_ind] + 0.5))
+            phenotype_img = cv2.circle(phenotype_img, (cell_w, cell_h), 4, phenotype_color_dict[cell_phenotype], -1)
         cell_phenotype_path = os.path.join(cell_vis_dir, img_name + args.plot_format)
         io.imsave(cell_phenotype_path, phenotype_img)
 
