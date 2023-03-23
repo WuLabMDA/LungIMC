@@ -63,7 +63,7 @@ if __name__ == "__main__":
     interaction_fea_df = pd.DataFrame(data = imp_sigvals, columns = interaction_lst)
     interaction_fea_df.insert(0, "ROI_ID", unique_roi_names, True)
     # Save features
-    cell_fea_path = os.path.join(feature_root_dir, "CT_InteractionDelaunay50Feas.csv")
+    cell_fea_path = os.path.join(feature_root_dir, "InteractionDelaunay50Feas.csv")
     interaction_fea_df.to_csv(cell_fea_path, index=False)
 
 
