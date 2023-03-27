@@ -248,8 +248,7 @@ adjust_df$Cmps <- as.factor(cmp_df$Cmps)
 
 adjust_df %>% ggplot() +
     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)), 
-                   size = p.to.Z(Pvals), shape = factor(gGroup, level=c("NS", "*", "**")),
-                   color = Cmps)) +
+                   size = p.to.Z(Pvals), shape = factor(gGroup, level=c("NS", "*", "**")), color = Cmps)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
 
 
