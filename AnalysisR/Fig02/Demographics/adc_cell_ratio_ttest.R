@@ -127,18 +127,20 @@ var_order <- c("Adja_Dist", "Marg_Adja", "Core_Marg")
 
 group_df <- p_val_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Pvals, -CellType) 
 group_df$AdjustPs <- p.adjust(group_df$Pvals, method = "fdr")
+
 adjust_df <- group_df %>% mutate(gGroup = case_when(AdjustPs > 0.05 ~ 'NS', AdjustPs > 0.01 ~ '*', .default = "**"))
+adjust_df$gGroup <- factor(adjust_df$gGroup, levels=c("NS", "*", "**"))
 
 cmp_df <- p_cmp_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Cmps, -CellType) 
 adjust_df$Cmps <- as.factor(cmp_df$Cmps) 
 
-# adjust_df %>% ggplot() +
-#     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)), 
-#                    size = p.to.Z(Pvals), shape = factor(gGroup, level=c("NS", "*", "**")), color = Cmps)) +
-#     theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
-
 adjust_df %>% ggplot() +
     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
-                   size = p.to.Z(Pvals), color = Cmps)) +
+                   size = p.to.Z(Pvals), shape = gGroup, color = Cmps)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# adjust_df %>% ggplot() +
+#     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
+#                    size = p.to.Z(Pvals), color = Cmps)) +
+#     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
