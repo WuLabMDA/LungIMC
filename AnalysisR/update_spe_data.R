@@ -5,7 +5,7 @@ data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
 ## load raw data
-raw_spe_name <- "steinbock_spe-all_celltypes_Renamed"
+raw_spe_name <- "steinbock_spe-all_celltypes_Renamed2"
 raw_spe_path <- file.path(phenotype_dir, paste0(raw_spe_name, ".rds"))
 spe <- readRDS(raw_spe_path)
 
