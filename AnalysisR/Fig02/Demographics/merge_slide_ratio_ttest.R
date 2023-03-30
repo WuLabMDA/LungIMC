@@ -366,14 +366,39 @@ for (cell_type in all_cell_lst) {
 p_val_df <- data.frame(Age=age_pvals, Gender=gender_pvals, Race=race_pvals, Smoke=smoke_pvals,
                        Normal_AAH=normal_aah_pvals, Normal_AIS=normal_ais_pvals, Normal_MIA=normal_mia_pvals, Normal_ADC=normal_adc_pvals,
                        AAH_AIS=aah_ais_pvals, AAH_MIA=aah_mia_pvals, AAH_ADC=aah_adc_pvals, AIS_MIA=ais_mia_pvals,
-                       AIS_ADC=ais_adc_pvals, MIA_ADC=mia_adc_pvals, row.names = all_cell_lst)
+                       AIS_ADC=ais_adc_pvals, MIA_ADC=mia_adc_pvals, AAH_TMB=aah_tmb_pvals, AIS_TMB=ais_tmb_pvals, 
+                       MIA_TMB=mia_tmb_pvals, ADC_TMB=adc_tmb_pvals, MIA_EGFR_KRAS=mia_egfr_kras_pvals, 
+                       MIA_EGFR_OTHER=mia_egfr_other_pvals, MIA_KRAS_OTHER=mia_kras_other_pvals, 
+                       ADC_EGFR_KRAS=adc_egfr_kras_pvals, ADC_EGFR_OTHER=adc_egfr_other_pvals, 
+                       ADC_KRAS_OTHER=adc_kras_other_pvals, row.names = all_cell_lst)
 p_cmp_df <- data.frame(Age=age_cmps, Gender=gender_cmps, Race=race_cmps, Smoke=smoke_cmps,
                        Normal_AAH=normal_aah_cmps, Normal_AIS=normal_ais_cmps, Normal_MIA=normal_mia_cmps, Normal_ADC=normal_adc_cmps,
                        AAH_AIS=aah_ais_cmps, AAH_MIA=aah_mia_cmps, AAH_ADC=aah_adc_cmps, AIS_MIA=ais_mia_cmps,
-                       AIS_ADC=ais_adc_cmps, MIA_ADC=mia_adc_cmps, row.names = all_cell_lst)
+                       AIS_ADC=ais_adc_cmps, MIA_ADC=mia_adc_cmps, AAH_TMB=aah_tmb_cmps, AIS_TMB=ais_tmb_cmps,
+                       MIA_TMB=mia_tmb_cmps, ADC_TMB=adc_tmb_cmps, MIA_EGFR_KRAS=mia_egfr_kras_cmps, 
+                       MIA_EGFR_OTHER=mia_egfr_other_cmps, MIA_KRAS_OTHER=mia_kras_other_cmps, 
+                       ADC_EGFR_KRAS=adc_egfr_kras_cmps, ADC_EGFR_OTHER=adc_egfr_other_cmps,                        
+                       ADC_KRAS_OTHER=adc_kras_other_cmps, row.names = all_cell_lst)
+var_order <- c("Age", "Gender", "Race", "Smoke", "Normal_AAH", "Normal_AIS", "Normal_MIA", "Normal_ADC", "AAH_AIS", "AAH_MIA", 
+               "AAH_ADC", "AIS_MIA", "AIS_ADC", "MIA_ADC", "AAH_TMB", "AIS_TMB", "MIA_TMB", "ADC_TMB", "MIA_EGFR_KRAS", 
+               "MIA_EGFR_OTHER", "MIA_KRAS_OTHER", "ADC_EGFR_KRAS", "ADC_EGFR_OTHER", "ADC_KRAS_OTHER")
 
+group_df <- p_val_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Pvals, -CellType) 
+group_df$AdjustPs <- p.adjust(group_df$Pvals, method = "fdr")
+adjust_df <- group_df %>% mutate(gGroup = case_when(AdjustPs > 0.05 ~ 'NS', AdjustPs > 0.01 ~ '*', .default = "**"))
+adjust_df$gGroup <- factor(adjust_df$gGroup, levels=c("NS", "*", "**"))
+cmp_df <- p_cmp_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Cmps, -CellType) 
+adjust_df$Cmps <- as.factor(cmp_df$Cmps) 
 
-var_order <- c("EGFR_KRAS", "EGFR_Other", "KRAS_Other")
+adjust_df %>% ggplot() +
+    geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
+                   size = p.to.Z(Pvals), shape = gGroup, color = Cmps)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# adjust_df %>% ggplot() +
+#     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
+#                    size = p.to.Z(Pvals), color = Cmps)) +
+#     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 
 
