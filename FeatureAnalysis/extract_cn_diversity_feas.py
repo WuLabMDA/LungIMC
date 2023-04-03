@@ -48,8 +48,7 @@ if __name__ == "__main__":
         roi_celltype_df = pd.read_csv(roi_celltype_path)
         roi_cell_num = len(roi_celltype_df)
         cell_cn_lst = roi_celltype_df["cell_cn"].tolist()
-        roi_cn_ratios = [(cellcn_lst.count(cell_cn) * 1.0 / roi_cell_num) for cell_cn in cell_cn_lst]
-        import pdb; pdb.set_trace()
+        roi_cn_ratios = [(cell_cn_lst.count(cell_cn) * 1.0 / roi_cell_num) for cell_cn in cellcn_lst]
         # richness
         cn_richness = sum([cn_ratio != 0.0 for cn_ratio in roi_cn_ratios])
         # Shannon index
