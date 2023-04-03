@@ -53,14 +53,18 @@ if __name__ == "__main__":
         row_ind = unique_roi_names.index(roi_name)
         roi_df[interaction_name][row_ind] = interaction_df["sig_vals"][ind]
     
-    # MICE imputation
-    imp = SimpleImputer(missing_values=np.nan, strategy='mean')
-    imp.fit(roi_df.to_numpy())
-    imp_sigvals = imp.transform(roi_df.to_numpy())
-    imp_sigvals = np.around(imp_sigvals)
+    # # MICE imputation
+    # imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+    # imp.fit(roi_df.to_numpy())
+    # imp_sigvals = imp.transform(roi_df.to_numpy())
+    # imp_sigvals = np.around(imp_sigvals)
+
+    # filling -1 for np.nan
+    roi_df.replace(np.nan, -1)
+    roi_arr = roi_df.to_numpy()
 
     # Create cell interaction features
-    interaction_fea_df = pd.DataFrame(data = imp_sigvals, columns = interaction_lst)
+    interaction_fea_df = pd.DataFrame(data = roi_arr, columns = interaction_lst)
     interaction_fea_df.insert(0, "ROI_ID", unique_roi_names, True)
     # Save features
     cell_fea_path = os.path.join(feature_root_dir, "InteractionDelaunay50Feas.csv")
