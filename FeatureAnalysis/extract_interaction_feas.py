@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # imp_sigvals = np.around(imp_sigvals)
 
     # filling -1 for np.nan
-    roi_df.replace(np.nan, -1)
+    roi_df = roi_df.replace(np.nan, -1)
     roi_arr = roi_df.to_numpy()
 
     # Create cell interaction features
@@ -69,8 +69,4 @@ if __name__ == "__main__":
     # Save features
     cell_fea_path = os.path.join(feature_root_dir, "InteractionDelaunay50Feas.csv")
     interaction_fea_df.to_csv(cell_fea_path, index=False)
-
-
-    
-     
-        
+      
