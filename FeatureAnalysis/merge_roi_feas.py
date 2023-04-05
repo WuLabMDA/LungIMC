@@ -12,6 +12,7 @@ def set_args():
     parser = argparse.ArgumentParser(description = "Visualize Cell Neighborhood")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])
+    parser.add_argument("--metadata_dir",           type=str,       default="Metadata")   
     parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")    
 
     args = parser.parse_args()
@@ -21,7 +22,8 @@ def set_args():
 if __name__ == "__main__":
     args = set_args()
 
-    dataset_dir = os.path.join(args.data_root, args.data_set) 
+    dataset_dir = os.path.join(args.data_root, args.data_set)
+    metadata_dir = os.path.join(dataset_dir, args.metadata_dir) 
     feature_root_dir = os.path.join(dataset_dir, args.feature_dir)
 
     fea_num_lst = []
@@ -108,6 +110,30 @@ if __name__ == "__main__":
     roi_fea_df = pd.concat([ct_proportion_density_df, ct_state_df, ct_morph_df, ct_diversity_df,
                             cn_proportion_density_df, cn_state_df, cn_morph_df, cn_diversity_df,
                             joint_dist_ct_cn_df, interaction_delaunay_df], axis=1)
+    
+    # Insert ROI stage information
+    roi_info_path = os.path.join(metadata_dir, "ROI_Info.xlsx")
+    roi_info_df = pd.read_excel(roi_info_path)
+    roi_id_lst = [ele for ele in roi_info_df["ROI_ID"].tolist()]
+    roi_loc_lst = [ele for ele in roi_info_df["ROI_Location"].tolist()]
+    roi_diag_lst = [ele for ele in roi_info_df["ROI_Diag"].tolist()]
+    # obtain roi stages
+    roi_stage_lst = []
+    for loc, diag in zip(roi_loc_lst, roi_diag_lst):
+        if loc != "Tumor":
+            roi_stage_lst.append("Normal")
+        else:
+            roi_stage_lst.append(diag)
+    # construct ROI data frame
+    roi_stage_df = pd.DataFrame(list(zip(roi_id_lst, roi_stage_lst)), columns=["ROI_ID", "ROI_Stage"])
+    roi_stage_df = roi_stage_df.set_index("ROI_ID")
+    roi_stage_df  = roi_stage_df.reindex(index=ct_proportion_density_df["ROI_ID"])
+    roi_stage_df = roi_stage_df.reset_index()
+    roi_stage_lst = [ele for ele in roi_stage_df["ROI_Stage"].tolist()]
+
+    # insert stage column
+    roi_fea_df.insert(loc=1, column="ROI_Stage", value=roi_stage_lst)
+    
     # Merge features
     merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Merge.csv")
     roi_fea_df.to_csv(merge_roi_fea_path, index=False)
