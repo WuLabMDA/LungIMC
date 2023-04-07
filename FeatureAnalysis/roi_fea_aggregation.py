@@ -120,10 +120,12 @@ if __name__ == "__main__":
     # obtain roi stages
     roi_stage_lst = []
     for loc, diag in zip(roi_loc_lst, roi_diag_lst):
-        if loc != "Tumor":
-            roi_stage_lst.append("Normal")
-        else:
+        if loc == "Tumor":
             roi_stage_lst.append(diag)
+        elif loc == "AdjacentNormal":
+            roi_stage_lst.append(loc)
+        else:
+            roi_stage_lst.append("Normal")
     # construct ROI data frame
     roi_stage_df = pd.DataFrame(list(zip(roi_id_lst, roi_stage_lst)), columns=["ROI_ID", "ROI_Stage"])
     roi_stage_df = roi_stage_df.set_index("ROI_ID")
@@ -136,4 +138,5 @@ if __name__ == "__main__":
     
     # Merge features
     merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Merge.csv")
-    roi_fea_df.to_csv(merge_roi_fea_path, index=False)
+    filter_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
+    filter_fea_df.to_csv(merge_roi_fea_path, index=False)
