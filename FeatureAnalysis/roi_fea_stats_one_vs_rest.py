@@ -3,10 +3,13 @@
 import os, sys
 import shutil, argparse
 import json, pytz, itertools
+from operator import itemgetter
 from datetime import datetime
 import pandas as pd
 import numpy as np
 from scipy import stats
+from collections import OrderedDict
+import matplotlib.pyplot as plt
 
 
 def set_args():
@@ -31,14 +34,13 @@ if __name__ == "__main__":
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
     roi_fea_names = roi_fea_columns[2:] # exclude ROI_ID & ROI_Stage
 
-    normal_pval_lst = []
-    aah_pval_lst = []
-    ais_pval_lst = []
-    mia_pval_lst = []
-    adc_pval_lst = []
+    normal_pval_dict = {}
+    aah_pval_dict = {}
+    ais_pval_dict = {}
+    mia_pval_dict = {}
+    adc_pval_dict = {}
 
     # iterate each feature
-    common_features = []
     for cur_fea_name in roi_fea_names:
         stage_dict = {}
         for cur_stage in roi_fea_df["ROI_Stage"].unique():
@@ -54,20 +56,49 @@ if __name__ == "__main__":
         rest_mia_feas = list(itertools.chain(normal_feas, aah_feas, ais_feas, adc_feas))
         rest_adc_feas = list(itertools.chain(normal_feas, aah_feas, ais_feas, mia_feas))
 
-        normal_test = stats.ttest_ind(normal_feas, rest_normal_feas)
-        normal_pval_lst.append(normal_test.pvalue)
-        aah_test = stats.ttest_ind(aah_feas, rest_aah_feas)
-        aah_pval_lst.append(aah_test.pvalue)
-        ais_test = stats.ttest_ind(ais_feas, rest_ais_feas)
-        ais_pval_lst.append(ais_test.pvalue)
-        mia_test = stats.ttest_ind(mia_feas, rest_mia_feas)
-        mia_pval_lst.append(mia_test.pvalue)
-        adc_test = stats.ttest_ind(adc_feas, rest_adc_feas)
-        adc_pval_lst.append(adc_test.pvalue)
+        if np.mean(normal_feas) > np.mean(rest_normal_feas):
+            normal_test = stats.ttest_ind(normal_feas, rest_normal_feas)
+            normal_pval_dict[cur_fea_name] = normal_test.pvalue    
+        if np.mean(aah_feas) > np.mean(rest_aah_feas):        
+            aah_test = stats.ttest_ind(aah_feas, rest_aah_feas)
+            aah_pval_dict[cur_fea_name] = aah_test.pvalue
+        if np.mean(ais_feas) > np.mean(rest_ais_feas):
+            ais_test = stats.ttest_ind(ais_feas, rest_ais_feas)
+            ais_pval_dict[cur_fea_name] = ais_test.pvalue
+        if np.mean(mia_feas) > np.mean(rest_mia_feas):
+            mia_test = stats.ttest_ind(mia_feas, rest_mia_feas)
+            mia_pval_dict[cur_fea_name] = mia_test.pvalue
+        if np.mean(adc_feas) > np.mean(rest_adc_feas):
+            adc_test = stats.ttest_ind(adc_feas, rest_adc_feas)
+            adc_pval_dict[cur_fea_name] = adc_test.pvalue
+    # merge
+    top_num = 10
+    top_normal = dict(sorted(normal_pval_dict.items(), key=itemgetter(1))[:top_num])
+    top_normal_feas = [ele for ele in top_normal.keys()]
+    top_aah = dict(sorted(aah_pval_dict.items(), key=itemgetter(1))[:top_num])
+    top_aah_feas = [ele for ele in top_aah.keys()]
+    top_ais = dict(sorted(ais_pval_dict.items(), key=itemgetter(1))[:top_num])
+    top_ais_feas = [ele for ele in top_ais.keys()]    
+    top_mia = dict(sorted(mia_pval_dict.items(), key=itemgetter(1))[:top_num])
+    top_mia_feas = [ele for ele in top_mia.keys()]
+    top_adc = dict(sorted(mia_pval_dict.items(), key=itemgetter(1))[:top_num])
+    top_adc_feas = [ele for ele in top_adc.keys()]
+    merge_fea_lst = list(itertools.chain(top_normal_feas, top_aah_feas, top_ais_feas, top_mia_feas, top_adc_feas))
+    merge_fea_lst = list(dict.fromkeys(merge_fea_lst))
 
-    # 
-    print("Normal has {} features with significance.".format(sum([(ele < 0.01) for ele in normal_pval_lst])))
-    print("AAH has {} features with significance.".format(sum([(ele < 0.01) for ele in aah_pval_lst])))
-    print("AIS has {} features with significance.".format(sum([(ele < 0.01) for ele in ais_pval_lst])))
-    print("MIA has {} features with significance.".format(sum([(ele < 0.01) for ele in mia_pval_lst])))
-    print("ADC has {} features with significance.".format(sum([(ele < 0.01) for ele in adc_pval_lst])))                
+    keep_features = ["ROI_ID", "ROI_Stage"]
+    keep_features.extend(merge_fea_lst)     
+    keep_fea_df = roi_fea_df.loc[:, roi_fea_df.columns.isin(keep_features)]
+    stage_order_lst = ["Normal", "AAH", "AIS", "MIA", "ADC"]
+    keep_fea_df["ROI_Stage"] = pd.Categorical(keep_fea_df["ROI_Stage"], stage_order_lst)
+    keep_fea_df = keep_fea_df.sort_values("ROI_Stage")
+    keep_fea_df[merge_fea_lst] -= keep_fea_df[merge_fea_lst].min()
+    keep_fea_df[merge_fea_lst] /= keep_fea_df[merge_fea_lst].max()
+
+    keep_fea_arr = (np.transpose(keep_fea_df[merge_fea_lst].to_numpy()) * 255.0).astype(np.uint8)
+    cmap = plt.get_cmap('OrRd')
+    keep_fea_arr = cmap(keep_fea_arr)
+    keep_fea_map_path = os.path.join(feature_root_dir, "one_rest_fea_heatmap.pdf")
+    fig, ax = plt.subplots(figsize=(12, 6))
+    plt.imshow(keep_fea_arr)
+    plt.savefig(keep_fea_map_path, transparent=False, dpi=600)    

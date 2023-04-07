@@ -48,7 +48,7 @@ if __name__ == "__main__":
     fea_dict = {}
     for cell_type in celltype_lst:
         for cn_type in cellcn_lst:
-            ct_cn_comb = cell_type + "-" + cn_type
+            ct_cn_comb = cell_type + "-CN" + cn_type
             ct_cn_combs.append(ct_cn_comb)
             fea_dict[ct_cn_comb] = fea_ind
             fea_ind += 1
@@ -70,7 +70,7 @@ if __name__ == "__main__":
         fea_lst = [roi_name, ]
         ct_cn_feas = [0.0, ] * len(ct_cn_combs)
         for ct, cn in zip(cell_type_lst, cell_cn_lst):
-            ct_cn_feas[fea_dict[ct + "-" + str(cn)]] += 1
+            ct_cn_feas[fea_dict[ct + "-CN" + str(cn)]] += 1
         norm_ct_cn_feas = [ele * 1.0 / roi_area for ele in ct_cn_feas]
         fea_lst.extend(norm_ct_cn_feas)
         fea_df.loc[len(fea_df)] = fea_lst

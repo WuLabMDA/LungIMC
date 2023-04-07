@@ -62,19 +62,22 @@ if __name__ == "__main__":
         mia_adc_p = stats.ttest_ind(mia_feas, adc_feas)
         mia_adc_d = 1 if np.mean(adc_feas) > np.mean(mia_feas) else -1
         mia_adc_pval_lst.append(mia_adc_p.pvalue)
+        # # find the maximum pval
+        # max_pval = max(normal_aah_p.pvalue, aah_ais_p.pvalue, ais_mia_p.pvalue, mia_adc_p.pvalue)
+        # sum_d = normal_aah_d + aah_ais_d + ais_mia_d + mia_adc_d
         # find the maximum pval
-        max_pval = max(normal_aah_p.pvalue, aah_ais_p.pvalue, ais_mia_p.pvalue, mia_adc_p.pvalue)
-        sum_d = normal_aah_d + aah_ais_d + ais_mia_d + mia_adc_d
-        # if max_pval < 0.1:
-        if sum_d == 4:
-            increase_features.append(cur_fea_name)
-        elif sum_d == -4:
-            decrease_features.append(cur_fea_name)
+        max_pval = max(normal_aah_p.pvalue, aah_ais_p.pvalue, mia_adc_p.pvalue)
+        sum_d = normal_aah_d + aah_ais_d + mia_adc_d        
+        if max_pval < 0.05:
+            if sum_d == 3:
+                increase_features.append(cur_fea_name)
+            elif sum_d == -3:
+                decrease_features.append(cur_fea_name)
             
-    # print("There are {} features significance increasing between featuers.".format(len(increase_features)))
-    # print(increase_features)
-    # print("There are {} features significance decreasing between featuers.".format(len(decrease_features)))
-    # print(decrease_features)
+    print("There are {} features significance increasing between featuers.".format(len(increase_features)))
+    print(increase_features)
+    print("There are {} features significance decreasing between featuers.".format(len(decrease_features)))
+    print(decrease_features)
 
     roi_stages = [ele for ele in roi_fea_df["ROI_Stage"].tolist()]
     stage_order_lst = ["Normal", "AAH", "AIS", "MIA", "ADC"]
