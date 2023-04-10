@@ -29,7 +29,7 @@ if __name__ == "__main__":
     dataset_dir = os.path.join(args.data_root, args.data_set)
     demo_root_dir = os.path.join(dataset_dir, "NatureFigures", "Fig03")
 
-    annotation_dir = os.path.join(demo_root_dir, "DemoContours")
+    annotation_dir = os.path.join(demo_root_dir, "Slidesannotation")
     imitation_dir = os.path.join(demo_root_dir, "Imitations")
     if not os.path.exists(imitation_dir):
         os.makedirs(imitation_dir)
@@ -50,16 +50,27 @@ if __name__ == "__main__":
         # load annotations
         cur_annotation_path = os.path.join(annotation_dir, cur_slide + ".xml")
         lesion_vertices, roi_anno_dict = parse_imagescope_annotations(cur_annotation_path)
-        # print("--- with {} ROIs".format(len(roi_anno_dict)))
-        # draw lesion
-        lesion_cv_cnt = np.expand_dims((lesion_vertices / args.reduction_ratio).astype(np.int32), axis=1)
-        cv2.drawContours(imitate_img, [lesion_cv_cnt, ], 0, (255, 0, 0), 3)
+        lesion_status = len(lesion_vertices) > 0
+        if lesion_status:
+            # draw lesion
+            lesion_cv_cnt = np.expand_dims((lesion_vertices / args.reduction_ratio).astype(np.int32), axis=1)
+            cv2.drawContours(imitate_img, [lesion_cv_cnt, ], 0, (255, 0, 0), 3)
         # draw rois
+        # print("--- with {} ROIs".format(len(roi_anno_dict)))        
         for roi_name, roi_cnt in roi_anno_dict.items():
             reduction_cnt = roi_cnt / args.reduction_ratio
             mean_x, mean_y = np.mean(reduction_cnt, axis=0)
             cv2.putText(imitate_img, roi_name, (int(mean_x), int(mean_y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,  cv2.LINE_AA)
             roi_cv_cnt = np.expand_dims(reduction_cnt.astype(np.int32), axis=1)
             cv2.drawContours(imitate_img, [roi_cv_cnt, ], 0, (0, 0, 255), 2)
-        anno_imitation_path = os.path.join(imitation_dir, cur_slide + ".png")
+
+        # Save Imitations
+        if lesion_status:
+            anno_imitation_dir = os.path.join(imitation_dir, "Tumor")
+        else:
+            anno_imitation_dir = os.path.join(imitation_dir, "Normal")
+        if not os.path.exists(anno_imitation_dir):
+            os.makedirs(anno_imitation_dir)
+        # save imitation image
+        anno_imitation_path = os.path.join(anno_imitation_dir, cur_slide + ".png")
         io.imsave(anno_imitation_path, imitate_img)
