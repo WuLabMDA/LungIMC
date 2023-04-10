@@ -35,12 +35,12 @@ if __name__ == "__main__":
         os.makedirs(imitation_dir)
 
     slide_lst = [os.path.splitext(ele)[0] for ele in os.listdir(annotation_dir) if ele.endswith(".svs")]
-    print("Number of slides: {}".format(len(slide_lst)))
+    # print("Number of slides: {}".format(len(slide_lst)))
     ann_slide_lst = [ele for ele in slide_lst if os.path.exists(os.path.join(annotation_dir, ele + ".xml"))]
-    print("There are {} annotated slides.".format(len(ann_slide_lst)))
-    for cur_slide in slide_lst:
-        if cur_slide not in ann_slide_lst:
-            print(cur_slide)
+    # print("There are {} annotated slides.".format(len(ann_slide_lst)))
+    # for cur_slide in slide_lst:
+    #     if cur_slide not in ann_slide_lst:
+    #         print(cur_slide)
 
     for ind, cur_slide in enumerate(ann_slide_lst):
         print("Imitate on {} {}/{}".format(cur_slide, ind+1, len(ann_slide_lst)))
@@ -66,9 +66,9 @@ if __name__ == "__main__":
             reduction_cnt = roi_cnt / args.reduction_ratio
             mean_x, mean_y = np.mean(reduction_cnt, axis=0)
             # # add roi information
-            # cv2.putText(imitate_img, roi_name, (int(mean_x), int(mean_y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,  cv2.LINE_AA)
             roi_cv_cnt = np.expand_dims(reduction_cnt.astype(np.int32), axis=1)
             cv2.drawContours(roi_img, [roi_cv_cnt, ], 0, (0, 0, 255), -1)
+            cv2.putText(roi_img, roi_name, (int(mean_x), int(mean_y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,  cv2.LINE_AA)
 
         # Save Imitations
         imitate_img = None
