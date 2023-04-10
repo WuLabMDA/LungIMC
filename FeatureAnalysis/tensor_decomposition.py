@@ -29,8 +29,8 @@ if __name__ == "__main__":
     celltype_dir = os.path.join(dataset_dir, "CellPhenotyping", "Cell_CT_CN_Morphs")   
 
     # load features
-    test_stage = "AAH"
-    merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Merge.csv")
+    test_stage = "ADC"
+    merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
     merge_roi_fea_df = pd.read_csv(merge_roi_fea_path)
     stage_fea_df = merge_roi_fea_df[merge_roi_fea_df["ROI_Stage"] == test_stage]
 
@@ -65,12 +65,10 @@ if __name__ == "__main__":
     cn_factor_df = pd.DataFrame(np.transpose(factors[2]), columns=cellcn_lst)
     cn_factor_df.to_csv(cn_factor_path)
 
-    
     core1_lst = core[0, :, :].diagonal()
     core2_lst = core[1, :, :].diagonal()   
     # print("Core 1 diagnoal:")
     # print("Core 2 diagnoal:")
-
 
     ct_cn_core_path = os.path.join(feature_root_dir, "tensor_core_diagnoals.csv")
     ct_cn_core_df = pd.DataFrame(list(zip(core1_lst, core2_lst)), columns=["Core1", "Core2"])
