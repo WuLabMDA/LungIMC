@@ -121,7 +121,10 @@ if __name__ == "__main__":
     roi_stage_lst = []
     for loc, diag in zip(roi_loc_lst, roi_diag_lst):
         if loc == "Tumor":
-            roi_stage_lst.append(diag)
+            if diag == "AIS" or diag == "MIA":
+                roi_stage_lst.append("AIS_MIA")
+            else:
+                roi_stage_lst.append(diag)
         elif loc == "AdjacentNormal":
             roi_stage_lst.append(loc)
         else:
@@ -137,6 +140,6 @@ if __name__ == "__main__":
     roi_fea_df.insert(loc=1, column="ROI_Stage", value=roi_stage_lst)
     
     # Merge features
-    merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Merge.csv")
+    merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
     filter_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
     filter_fea_df.to_csv(merge_roi_fea_path, index=False)
