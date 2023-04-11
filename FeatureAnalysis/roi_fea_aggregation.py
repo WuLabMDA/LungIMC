@@ -89,14 +89,14 @@ if __name__ == "__main__":
     cn_diversity_df = cn_diversity_df.reset_index()
     cn_diversity_df = cn_diversity_df.iloc[:, 1:]  
 
-    # Joint Dist CT-CN
-    joint_dist_ct_cn_fea_path = os.path.join(feature_root_dir, "JointDistCTCNFeas.csv")
-    joint_dist_ct_cn_df = pd.read_csv(joint_dist_ct_cn_fea_path)
-    fea_num_lst.append(joint_dist_ct_cn_df.shape[1] - 1)
-    joint_dist_ct_cn_df = joint_dist_ct_cn_df.set_index("ROI_ID")
-    joint_dist_ct_cn_df  = joint_dist_ct_cn_df.reindex(index=ct_proportion_density_df["ROI_ID"])
-    joint_dist_ct_cn_df = joint_dist_ct_cn_df.reset_index()
-    joint_dist_ct_cn_df = joint_dist_ct_cn_df.iloc[:, 1:]    
+    # # Joint Dist CT-CN
+    # joint_dist_ct_cn_fea_path = os.path.join(feature_root_dir, "JointDistCTCNFeas.csv")
+    # joint_dist_ct_cn_df = pd.read_csv(joint_dist_ct_cn_fea_path)
+    # fea_num_lst.append(joint_dist_ct_cn_df.shape[1] - 1)
+    # joint_dist_ct_cn_df = joint_dist_ct_cn_df.set_index("ROI_ID")
+    # joint_dist_ct_cn_df  = joint_dist_ct_cn_df.reindex(index=ct_proportion_density_df["ROI_ID"])
+    # joint_dist_ct_cn_df = joint_dist_ct_cn_df.reset_index()
+    # joint_dist_ct_cn_df = joint_dist_ct_cn_df.iloc[:, 1:]    
 
     # Interaction Delaunay
     interaction_delaunay_fea_path = os.path.join(feature_root_dir, "InteractionDelaunay50Feas.csv")

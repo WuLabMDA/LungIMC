@@ -29,15 +29,14 @@ if __name__ == "__main__":
     feature_root_dir = os.path.join(dataset_dir, args.feature_dir)
 
     # load features
-    roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Merge.csv")
+    roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
     roi_fea_df = pd.read_csv(roi_fea_path)
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
     roi_fea_names = roi_fea_columns[2:] # exclude ROI_ID & ROI_Stage
 
     normal_pval_dict = {}
     aah_pval_dict = {}
-    ais_pval_dict = {}
-    mia_pval_dict = {}
+    aismia_pval_dict = {}
     adc_pval_dict = {}
 
     # iterate each feature
@@ -47,14 +46,12 @@ if __name__ == "__main__":
             stage_dict[cur_stage] = roi_fea_df[cur_fea_name][roi_fea_df["ROI_Stage"]==cur_stage].values
         normal_feas = stage_dict["Normal"]
         aah_feas = stage_dict["AAH"]
-        ais_feas = stage_dict["AIS"]
-        mia_feas = stage_dict["MIA"]
+        aismia_feas = stage_dict["AIS_MIA"]
         adc_feas = stage_dict["ADC"]
-        rest_normal_feas = list(itertools.chain(aah_feas, ais_feas, mia_feas, adc_feas))
-        rest_aah_feas = list(itertools.chain(normal_feas, ais_feas, mia_feas, adc_feas))
-        rest_ais_feas = list(itertools.chain(normal_feas, aah_feas, mia_feas, adc_feas))
-        rest_mia_feas = list(itertools.chain(normal_feas, aah_feas, ais_feas, adc_feas))
-        rest_adc_feas = list(itertools.chain(normal_feas, aah_feas, ais_feas, mia_feas))
+        rest_normal_feas = list(itertools.chain(aah_feas, aismia_feas, adc_feas))
+        rest_aah_feas = list(itertools.chain(normal_feas, aismia_feas, adc_feas))
+        rest_aismia_feas = list(itertools.chain(normal_feas, aah_feas, adc_feas))
+        rest_adc_feas = list(itertools.chain(normal_feas, aah_feas, aismia_feas))
 
         if np.mean(normal_feas) > np.mean(rest_normal_feas):
             normal_test = stats.ttest_ind(normal_feas, rest_normal_feas)
@@ -62,12 +59,9 @@ if __name__ == "__main__":
         if np.mean(aah_feas) > np.mean(rest_aah_feas):        
             aah_test = stats.ttest_ind(aah_feas, rest_aah_feas)
             aah_pval_dict[cur_fea_name] = aah_test.pvalue
-        if np.mean(ais_feas) > np.mean(rest_ais_feas):
-            ais_test = stats.ttest_ind(ais_feas, rest_ais_feas)
-            ais_pval_dict[cur_fea_name] = ais_test.pvalue
-        if np.mean(mia_feas) > np.mean(rest_mia_feas):
-            mia_test = stats.ttest_ind(mia_feas, rest_mia_feas)
-            mia_pval_dict[cur_fea_name] = mia_test.pvalue
+        if np.mean(aismia_feas) > np.mean(rest_aismia_feas):
+            aismia_test = stats.ttest_ind(aismia_feas, rest_aismia_feas)
+            aismia_pval_dict[cur_fea_name] = aismia_test.pvalue
         if np.mean(adc_feas) > np.mean(rest_adc_feas):
             adc_test = stats.ttest_ind(adc_feas, rest_adc_feas)
             adc_pval_dict[cur_fea_name] = adc_test.pvalue
@@ -77,19 +71,17 @@ if __name__ == "__main__":
     top_normal_feas = [ele for ele in top_normal.keys()]
     top_aah = dict(sorted(aah_pval_dict.items(), key=itemgetter(1))[:top_num])
     top_aah_feas = [ele for ele in top_aah.keys()]
-    top_ais = dict(sorted(ais_pval_dict.items(), key=itemgetter(1))[:top_num])
-    top_ais_feas = [ele for ele in top_ais.keys()]    
-    top_mia = dict(sorted(mia_pval_dict.items(), key=itemgetter(1))[:top_num])
-    top_mia_feas = [ele for ele in top_mia.keys()]
-    top_adc = dict(sorted(mia_pval_dict.items(), key=itemgetter(1))[:top_num])
+    top_aismia = dict(sorted(aismia_pval_dict.items(), key=itemgetter(1))[:top_num])
+    top_aismia_feas = [ele for ele in top_aismia.keys()]    
+    top_adc = dict(sorted(adc_pval_dict.items(), key=itemgetter(1))[:top_num])
     top_adc_feas = [ele for ele in top_adc.keys()]
-    merge_fea_lst = list(itertools.chain(top_normal_feas, top_aah_feas, top_ais_feas, top_mia_feas, top_adc_feas))
+    merge_fea_lst = list(itertools.chain(top_normal_feas, top_aah_feas, top_aismia_feas, top_adc_feas))
     merge_fea_lst = list(dict.fromkeys(merge_fea_lst))
 
     keep_features = ["ROI_ID", "ROI_Stage"]
     keep_features.extend(merge_fea_lst)     
     keep_fea_df = roi_fea_df.loc[:, roi_fea_df.columns.isin(keep_features)]
-    stage_order_lst = ["Normal", "AAH", "AIS", "MIA", "ADC"]
+    stage_order_lst = ["Normal", "AAH", "AIS_MIA", "ADC"]
     keep_fea_df["ROI_Stage"] = pd.Categorical(keep_fea_df["ROI_Stage"], stage_order_lst)
     keep_fea_df = keep_fea_df.sort_values("ROI_Stage")
     keep_fea_df[merge_fea_lst] -= keep_fea_df[merge_fea_lst].min()
