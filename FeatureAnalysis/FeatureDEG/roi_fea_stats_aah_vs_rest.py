@@ -17,7 +17,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])  
     parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")
-    parser.add_argument("--pval_thresh",            type=float,     default=0.05)     
+    parser.add_argument("--pval_thresh",            type=float,     default=0.05)           
 
     args = parser.parse_args()
     return args
@@ -35,7 +35,7 @@ if __name__ == "__main__":
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
     roi_fea_names = roi_fea_columns[2:] # exclude ROI_ID & ROI_Stage
     print("Of overall {} features:".format(len(roi_fea_names)))
-
+    
     feature_lst = []
     # iterate each feature
     for cur_fea_name in roi_fea_names:
@@ -51,14 +51,13 @@ if __name__ == "__main__":
         mean_aah = np.mean(aah_feas)
         mean_aismia = np.mean(aismia_feas)
         mean_adc = np.mean(adc_feas)
-        max_mean_rest = np.max([mean_aah, mean_aismia, mean_adc])
-        if mean_normal > max_mean_rest:
-            normal_aah_p = stats.ttest_ind(normal_feas, aah_feas)
-            normal_aismia_p = stats.ttest_ind(normal_feas, aismia_feas)
-            normal_adc_p = stats.ttest_ind(normal_feas, adc_feas)
-            max_pval = np.max([normal_aah_p.pvalue, normal_aismia_p.pvalue, normal_adc_p.pvalue])
+        max_mean_rest = np.max([mean_normal, mean_aismia, mean_adc])
+        if mean_aah > max_mean_rest:
+            aah_normal_p = stats.ttest_ind(aah_feas, normal_feas)
+            aah_aismia_p = stats.ttest_ind(aah_feas, aismia_feas)
+            aah_adc_p = stats.ttest_ind(aah_feas, adc_feas)
+            max_pval = np.max([aah_normal_p.pvalue, aah_aismia_p.pvalue, aah_adc_p.pvalue])
             if max_pval < args.pval_thresh:
                 feature_lst.append(cur_fea_name)
-    print("Normal has {} DEG significant features.".format(len(feature_lst)))
-    print(feature_lst)
-    
+    print("AAH has {} DEG significant features.".format(len(feature_lst)))
+    print(feature_lst)    
