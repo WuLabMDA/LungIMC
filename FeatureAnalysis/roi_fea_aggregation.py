@@ -109,7 +109,8 @@ if __name__ == "__main__":
 
     roi_fea_df = pd.concat([ct_proportion_density_df, ct_state_df, ct_morph_df, ct_diversity_df,
                             cn_proportion_density_df, cn_state_df, cn_morph_df, cn_diversity_df,
-                            joint_dist_ct_cn_df, interaction_delaunay_df], axis=1)
+                            # joint_dist_ct_cn_df, 
+                            interaction_delaunay_df], axis=1)
     
     # Insert ROI stage information
     roi_info_path = os.path.join(metadata_dir, "ROI_Info.xlsx")
