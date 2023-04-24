@@ -122,10 +122,11 @@ if __name__ == "__main__":
     roi_stage_lst = []
     for loc, diag in zip(roi_loc_lst, roi_diag_lst):
         if loc == "Tumor":
-            if diag == "AIS" or diag == "MIA":
-                roi_stage_lst.append("AIS_MIA")
-            else:
-                roi_stage_lst.append(diag)
+            # if diag == "AIS" or diag == "MIA":
+            #     roi_stage_lst.append("AIS_MIA")
+            # else:
+            #     roi_stage_lst.append(diag)
+            roi_stage_lst.append(diag)
         elif loc == "AdjacentNormal":
             roi_stage_lst.append(loc)
         else:
