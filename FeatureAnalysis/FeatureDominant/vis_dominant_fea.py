@@ -35,11 +35,10 @@ if __name__ == "__main__":
     stage_order_lst = ["Normal", "AAH", "AIS_MIA", "ADC"]
 
     normal_features = ['4-Eccentricity', 'Epithelial-Cell-Eccentricity', 'CT-SimpsonIndex', 'Fibroblast-Eccentricity', 'Endothelial-Cell-Proportion', 'Undefined-Eccentricity', 'CN4-Proportion', 'Epithelial-Cell-Proportion', 'CN2-Proportion', '9-VISTA']
-    aah_features = []
-    ais_features = []
-    mia_features = []
-    adc_features = []
-
+    aah_features = ['3-TIM3', 'Proliferating-Cell-TIM3', 'MDSC-TIM3', '10-TIM3', 'Monocyte-TIM3', 'CD8-T-Cell-TIM3', '5-TIM3', 'CD4-T-Cell-TIM3', '4-TIM3', '1-TIM3']
+    ais_features = ['4-HLADR', '2-HLADR', 'Endothelial-Cell-HLADR', '6-HLADR', 'Proliferating-Cell-HLADR', 'Epithelial-Cell-HLADR', 'MDSC-Proportion', '3-HLADR', 'CN6-Density', 'MDSC-Density']
+    mia_features = ['CD8-T-Cell-Area', 'Undefined-MajorAxisLength', 'Undefined-MinorAxisLength', 'Endothelial-Cell-MinorAxisLength', 'Undefined-Area', 'Endothelial-Cell-Area', 'Endothelial-Cell-MajorAxisLength', 'CD4-T-Cell-Area', 'CN1-Density', '5-MajorAxisLength']
+    adc_features = ['NK-Cell-Macrophage', 'NK-Cell-Fibroblast', 'NK-Cell-NK-Cell', 'Proliferating-Cell-NK-Cell', 'NK-Cell-CD8-T-Cell', 'NK-Cell-Proliferating-Cell', 'Proliferating-Cell-Proliferating-Cell', 'Proliferating-Cell-Density', 'NK-Cell-Endothelial-Cell', 'Fibroblast-NK-Cell']]
     dominant_features = normal_features + aah_features + ais_features + mia_features + adc_features
 
     keep_features = ["ROI_ID", "ROI_Stage"]
