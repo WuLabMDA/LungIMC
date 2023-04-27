@@ -31,12 +31,17 @@ if __name__ == "__main__":
     roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
     roi_fea_df = pd.read_csv(roi_fea_path)
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
-    roi_fea_names = roi_fea_columns[2:] 
+    roi_fea_names = roi_fea_columns[2:]      
 
     # Ordering ROIs based on their stages
     stage_order_lst = ["Normal", "AAH", "AIS", "MIA", "ADC"]
     roi_fea_df["ROI_Stage"] = pd.Categorical(roi_fea_df["ROI_Stage"], stage_order_lst)
     roi_fea_df = roi_fea_df.sort_values("ROI_Stage")
+
+    # print ROI number counts
+    roi_stages = [ele for ele in roi_fea_df["ROI_Stage"].tolist()]
+    for cur_stage in stage_order_lst:
+        print("{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages])))       
 
     # min-max rescaling features
     roi_fea_df[roi_fea_names] -= roi_fea_df[roi_fea_names].min()
@@ -47,7 +52,7 @@ if __name__ == "__main__":
     cmap = plt.get_cmap('OrRd')
     roi_fea_arr = cmap(roi_fea_arr)
     fea_heatmap_path = os.path.join(feature_root_dir, "fea_heatmap_stage.pdf")
-    fig, ax = plt.subplots(figsize=(6, 8))
+    fig, ax = plt.subplots(figsize=(12, 5))
     plt.imshow(roi_fea_arr)
     plt.savefig(fea_heatmap_path, transparent=False, dpi=300)
 
