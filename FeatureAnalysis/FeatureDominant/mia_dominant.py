@@ -41,6 +41,8 @@ if __name__ == "__main__":
     # iterate each feature
     feature_fc_dict = {}
     for cur_fea_name in roi_fea_names:
+        roi_fea_df[cur_fea_name] -= roi_fea_df[cur_fea_name].min()
+        roi_fea_df[cur_fea_name] /= roi_fea_df[cur_fea_name].max()        
         stage_dict = {}
         for cur_stage in roi_fea_df["ROI_Stage"].unique():
             stage_dict[cur_stage] = roi_fea_df[cur_fea_name][roi_fea_df["ROI_Stage"]==cur_stage].values
@@ -49,7 +51,6 @@ if __name__ == "__main__":
         ais_feas = stage_dict["AIS"]
         mia_feas = stage_dict["MIA"]
         adc_feas = stage_dict["ADC"]
-
         # calculate mean values of each stage
         mean_normal = np.mean(normal_feas)
         mean_aah = np.mean(aah_feas)
@@ -57,23 +58,26 @@ if __name__ == "__main__":
         mean_mia = np.mean(mia_feas)
         mean_adc = np.mean(adc_feas)
 
-        max_mean_rest = np.max([mean_normal, mean_aah, mean_ais, mean_adc])
-        if mean_mia > max_mean_rest:
-            mia_normal_p = stats.ttest_ind(mia_feas, normal_feas)
-            mia_aah_p = stats.ttest_ind(mia_feas, aah_feas)
-            mia_ais_p = stats.ttest_ind(mia_feas, ais_feas)
-            mia_adc_p = stats.ttest_ind(mia_feas, adc_feas)
-            max_pval = np.max([mia_normal_p.pvalue, mia_aah_p.pvalue, mia_ais_p.pvalue, mia_adc_p.pvalue])
-            if max_pval < args.pval_thresh:
-                # stage_fc_lst = [mean_normal*1.0/mean_aah, mean_normal*1.0/mean_ais, mean_normal*1.0/mean_mia, mean_normal*1.0/mean_adc]
-                # avg_log2fc = np.mean([math.log2(ele) for ele in stage_fc_lst])
-                feature_fc_dict[cur_fea_name] = max_pval
-    sorted_fea_dict = dict(sorted(feature_fc_dict.items(), key=operator.itemgetter(1),reverse=False))
+        # max_mean_rest = np.max([mean_normal, mean_aah, mean_ais, mean_adc])
+        # if mean_mia > max_mean_rest:
+        mia_normal_p = stats.ttest_ind(mia_feas, normal_feas)
+        mia_aah_p = stats.ttest_ind(mia_feas, aah_feas)
+        mia_ais_p = stats.ttest_ind(mia_feas, ais_feas)
+        mia_adc_p = stats.ttest_ind(mia_feas, adc_feas)
+        max_pval = np.max([mia_normal_p.pvalue, mia_aah_p.pvalue, mia_ais_p.pvalue, mia_adc_p.pvalue])
+        if max_pval < args.pval_thresh:
+            feature_fc_dict[cur_fea_name] = mean_mia
+    sorted_fea_dict = dict(sorted(feature_fc_dict.items(), key=operator.itemgetter(1),reverse=True))
     print("MIA has {} significant features.".format(len(sorted_fea_dict)))
-    print("Top {} features are: ".format(args.top_n))
-    feature_keys = [fea for fea in sorted_fea_dict.keys()]
-    top_feas = [feature_keys[ind] for ind in np.arange(args.top_n)]
-    print(top_feas)
-    for feature_name in top_feas:
-        fea_pval = sorted_fea_dict[feature_name]
-        print("Feature {} with p-value: {}".format(feature_name, fea_pval))
+    sig_num = len(sorted_fea_dict)
+    if sig_num > 0:
+        top_num = args.top_n
+        if sig_num < top_num:
+            top_num = sig_num
+        print("Top {} features are: ".format(top_num))
+        feature_keys = [fea for fea in sorted_fea_dict.keys()]
+        top_feas = [feature_keys[ind] for ind in np.arange(top_num)]
+        print(top_feas)
+        for feature_name in top_feas:
+            fea_pval = sorted_fea_dict[feature_name]
+            print("Feature {} with mean-value: {}".format(feature_name, fea_pval))
