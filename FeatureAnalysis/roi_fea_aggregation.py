@@ -89,7 +89,7 @@ if __name__ == "__main__":
     cn_diversity_df = cn_diversity_df.reset_index()
     cn_diversity_df = cn_diversity_df.iloc[:, 1:]  
 
-    # Joint Dist CT-CN
+    # Joint CT-CN Dist 
     joint_dist_ct_cn_fea_path = os.path.join(feature_root_dir, "JointDistCTCNFeas.csv")
     joint_dist_ct_cn_df = pd.read_csv(joint_dist_ct_cn_fea_path)
     fea_num_lst.append(joint_dist_ct_cn_df.shape[1] - 1)
@@ -107,10 +107,11 @@ if __name__ == "__main__":
     interaction_delaunay_df = interaction_delaunay_df.reset_index()
     interaction_delaunay_df = interaction_delaunay_df.iloc[:, 1:]
 
-    # roi_fea_df = pd.concat([ct_proportion_density_df, ct_state_df, ct_morph_df, ct_diversity_df,
-    #                         cn_proportion_density_df, cn_state_df, cn_morph_df, cn_diversity_df,
-    #                         # joint_dist_ct_cn_df, interaction_delaunay_df], axis=1)
-    roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, interaction_delaunay_df], axis=1)
+    # Aggregate features
+    roi_fea_df = pd.concat([ct_proportion_density_df, ct_state_df, ct_morph_df, ct_diversity_df,
+                            cn_proportion_density_df, cn_state_df, cn_morph_df, cn_diversity_df,
+                            interaction_delaunay_df], axis=1)
+    # roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, interaction_delaunay_df], axis=1)
     
     # Insert ROI stage information
     roi_info_path = os.path.join(metadata_dir, "ROI_Info.xlsx")
@@ -122,10 +123,6 @@ if __name__ == "__main__":
     roi_stage_lst = []
     for loc, diag in zip(roi_loc_lst, roi_diag_lst):
         if loc == "Tumor":
-            # if diag == "AIS" or diag == "MIA":
-            #     roi_stage_lst.append("AIS_MIA")
-            # else:
-            #     roi_stage_lst.append(diag)
             roi_stage_lst.append(diag)
         elif loc == "AdjacentNormal":
             roi_stage_lst.append(loc)
@@ -138,10 +135,19 @@ if __name__ == "__main__":
     roi_stage_df = roi_stage_df.reset_index()
     roi_stage_lst = [ele for ele in roi_stage_df["ROI_Stage"].tolist()]
 
-    # insert stage column
+    # insert stage column and sort
     roi_fea_df.insert(loc=1, column="ROI_Stage", value=roi_stage_lst)
-    
+    roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
+    stage_order_lst = ["Normal", "AAH", "AIS", "MIA", "ADC"]
+    roi_fea_df["ROI_Stage"] = pd.Categorical(roi_fea_df["ROI_Stage"], stage_order_lst)
+    roi_fea_df = roi_fea_df.sort_values("ROI_Stage")
+
+    # print ROI number counts
+    print("In total, there are {} ROIs.".format(roi_fea_df.shape[0]))
+    roi_stages = [ele for ele in roi_fea_df["ROI_Stage"].tolist()]
+    for cur_stage in stage_order_lst:
+        print("-{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages]))) 
+
     # Merge features
     merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
-    filter_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
-    filter_fea_df.to_csv(merge_roi_fea_path, index=False)
+    roi_fea_df.to_csv(merge_roi_fea_path, index=False)

@@ -33,9 +33,10 @@ if __name__ == "__main__":
     roi_fea_df = pd.read_csv(roi_fea_path)
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
     roi_fea_names = roi_fea_columns[2:] # exclude ROI_ID & ROI_Stage
-    stage_order_lst = ["Normal", "AAH", "AIS", "MIA", "ADC"]
+
     # print ROI number counts
     roi_stages = [ele for ele in roi_fea_df["ROI_Stage"].tolist()]
+    stage_order_lst = ["Normal", "AAH", "AIS", "MIA", "ADC"]
     for cur_stage in stage_order_lst:
         print("{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages])))    
 
@@ -87,29 +88,28 @@ if __name__ == "__main__":
     print("There are {} features significance decreasing between featuers.".format(len(decrease_features)))
     print(decrease_features)
 
-    monotonous_features = list(itertools.chain(decrease_features, increase_features))
-    keep_features = ["ROI_ID", "ROI_Stage"]
-    keep_features.extend(monotonous_features)
-    keep_fea_df = roi_fea_df.loc[:, roi_fea_df.columns.isin(keep_features)]
-    keep_fea_df["ROI_Stage"] = pd.Categorical(keep_fea_df["ROI_Stage"], stage_order_lst)
-    keep_fea_df = keep_fea_df.sort_values("ROI_Stage")
-    keep_fea_df[monotonous_features] -= keep_fea_df[monotonous_features].min()
-    keep_fea_df[monotonous_features] /= keep_fea_df[monotonous_features].max()
+    # monotonous_features = list(itertools.chain(decrease_features, increase_features))
+    # keep_features = ["ROI_ID", "ROI_Stage"]
+    # keep_features.extend(monotonous_features)
+    # keep_fea_df = roi_fea_df.loc[:, roi_fea_df.columns.isin(keep_features)]
+    # keep_fea_df["ROI_Stage"] = pd.Categorical(keep_fea_df["ROI_Stage"], stage_order_lst)
+    # keep_fea_df = keep_fea_df.sort_values("ROI_Stage")
+    # keep_fea_df[monotonous_features] -= keep_fea_df[monotonous_features].min()
+    # keep_fea_df[monotonous_features] /= keep_fea_df[monotonous_features].max()
 
-    monotonous_fea_arr = (np.transpose(keep_fea_df[monotonous_features].to_numpy()) * 255.0).astype(np.uint8)
-    cmap = plt.get_cmap('OrRd')
-    monotonous_fea_arr = cmap(monotonous_fea_arr)
-    monotonous_fea_map_path = os.path.join(feature_root_dir, "monotonous_fea_stage_roi_heatmap.pdf")
-    fig, ax = plt.subplots(figsize=(12, 6))
-    plt.imshow(monotonous_fea_arr)
-    plt.savefig(monotonous_fea_map_path, transparent=False, dpi=600)
-    # io.imsave(monotonous_fea_map_path, monotonous_fea_arr)
+    # monotonous_fea_arr = (np.transpose(keep_fea_df[monotonous_features].to_numpy()) * 255.0).astype(np.uint8)
+    # cmap = plt.get_cmap('OrRd')
+    # monotonous_fea_arr = cmap(monotonous_fea_arr)
+    # monotonous_fea_map_path = os.path.join(feature_root_dir, "monotonous_fea_stage_roi_heatmap.pdf")
+    # fig, ax = plt.subplots(figsize=(12, 6))
+    # plt.imshow(monotonous_fea_arr)
+    # plt.savefig(monotonous_fea_map_path, transparent=False, dpi=300)
 
-    stage_mean_df = keep_fea_df.groupby("ROI_Stage")[monotonous_features].mean()
-    stage_mean_df = stage_mean_df.T
-    fig, ax = plt.subplots(figsize=(3, 18))
-    fig = plt.figure()
-    sns.set(font_scale=0.2)
-    sns.heatmap(stage_mean_df, cmap='RdYlGn_r', linewidths=0.3, annot=False)
-    monotonous_mean_map_path = os.path.join(feature_root_dir, "monotonous_fea_stage_mean_heatmap.pdf")
-    plt.savefig(monotonous_mean_map_path, transparent=False, dpi=600)
+    # stage_mean_df = keep_fea_df.groupby("ROI_Stage")[monotonous_features].mean()
+    # stage_mean_df = stage_mean_df.T
+    # fig, ax = plt.subplots(figsize=(3, 18))
+    # fig = plt.figure()
+    # sns.set(font_scale=0.2)
+    # sns.heatmap(stage_mean_df, cmap='RdYlGn_r', linewidths=0.3, annot=False)
+    # monotonous_mean_map_path = os.path.join(feature_root_dir, "monotonous_fea_stage_mean_heatmap.pdf")
+    # plt.savefig(monotonous_mean_map_path, transparent=False, dpi=300)
