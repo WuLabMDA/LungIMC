@@ -41,7 +41,8 @@ RUN pip install opencv-python==4.5.4.60 scikit-image==0.18.0 deepdish==0.3.6
 RUN pip install xtiff==0.7.8 anndata==0.8.0 scanpy==1.9.1 napari==0.4.17 squidpy==1.2.3
 RUN pip install pyreadr==0.4.4 pandas==1.5.2 openpyxl==3.1.0
 RUN pip install openslide-python==1.2.0
-RUN pip install tensorly==0.8.0
+RUN pip install tensorly==0.8.0 
+RUN pip install pydaily==0.4.4 pycontour==1.5.1
 
 # Create some folders for python packages
 WORKDIR /.local
