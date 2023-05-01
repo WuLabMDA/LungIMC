@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 from skimage import io
 import cv2
-from pydaily import coor_transform, rela 
+from pycontour import coor_transform, rela 
 
 from annotation_utils import parse_imagescope_annotations
 
