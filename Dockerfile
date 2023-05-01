@@ -10,7 +10,7 @@ ENV NUMBA_CACHE_DIR /tmp
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/3bf863cc.pub
 RUN apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64/7fa2af80.pub
 RUN apt-get update && apt-get install -y --no-install-recommends \
-  build-essential libgl1-mesa-glx libglib2.0-0 libgeos-dev libvips-tools \
+  build-essential libgl1-mesa-glx libglib2.0-0 libgeos-dev libvips-tools libsm6 libxext6 \
   curl sudo git wget vim ca-certificates python3-openslide \
   && rm -rf /var/lib/apt/lists/*
 
@@ -42,7 +42,7 @@ RUN pip install xtiff==0.7.8 anndata==0.8.0 scanpy==1.9.1 napari==0.4.17 squidpy
 RUN pip install pyreadr==0.4.4 pandas==1.5.2 openpyxl==3.1.0
 RUN pip install openslide-python==1.2.0
 RUN pip install tensorly==0.8.0 
-RUN pip install pydaily==0.4.4 pycontour==1.5.1
+RUN pip install pycontour==1.5.1
 
 # Create some folders for python packages
 WORKDIR /.local
