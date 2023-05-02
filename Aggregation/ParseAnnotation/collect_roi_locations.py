@@ -17,7 +17,6 @@ def set_args():
     parser = argparse.ArgumentParser(description = "Visualize Cell Neighborhood")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])  
-    parser.add_argument("--reduction_ratio",        type=float,     default=10.0) 
                     
     args = parser.parse_args()
     return args
