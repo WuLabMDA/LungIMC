@@ -17,7 +17,8 @@ def set_args():
     parser = argparse.ArgumentParser(description = "Visualize Cell Neighborhood")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])  
-                    
+    parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
+
     args = parser.parse_args()
     return args
 
@@ -30,7 +31,10 @@ if __name__ == "__main__":
     annotation_dir = os.path.join(demo_root_dir, "Slidesannotation")
     imitation_dir = os.path.join(demo_root_dir, "Imitations")
     if not os.path.exists(imitation_dir):
-        os.makedirs(imitation_dir)    
+        os.makedirs(imitation_dir)   
+    slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
+    if not os.path.exists(slide_agg_dir):
+        os.makedirs(slide_agg_dir) 
 
     slide_lst = [os.path.splitext(ele)[0] for ele in os.listdir(annotation_dir) if ele.endswith(".svs")]
     print("Number of slides: {}".format(len(slide_lst)))
@@ -58,6 +62,6 @@ if __name__ == "__main__":
             lesion_roi_dict[cur_slide] = lesion_dict
     print("There are {} lesions with annotated ROIs.".format(len(lesion_roi_dict)))
     # save information to json
-    lesion_roi_loc_path = os.path.join(imitation_dir, "lesion_roi_loc.pkl")
+    lesion_roi_loc_path = os.path.join(slide_agg_dir, "lesion_roi_loc.pkl")
     with open(lesion_roi_loc_path, 'wb') as handle:
         pickle.dump(lesion_roi_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
