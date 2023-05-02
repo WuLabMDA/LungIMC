@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     patient_info_path = os.path.join(dataset_dir, "NatureFigures", "Fig03", "Patient_Info_PackYear.xlsx")
-    lesion_info_path = os.path.join(dataset_dir, "Metadata", "Lesion_Info.xlsx")
+    lesion_info_path = os.path.join(dataset_dir, "Metadata", "Lesion_Info_Aggregation.csv")
 
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
     if not os.path.exists(slide_agg_dir):
@@ -52,7 +52,7 @@ if __name__ == "__main__":
         patient_smoke_dict[pid] = smoke
 
     # load lesions
-    lesion_df = pd.read_excel(lesion_info_path)
+    lesion_df = pd.read_csv(lesion_info_path)
     lesion_df = lesion_df[lesion_df["Slide_Diag"] != "Normal"]
     lesion_df = lesion_df[~(lesion_df.Slide_Diag == "AAH") | ~(lesion_df.Slide_ID == "2571-1D")]
     slide_smoke_lst = []
