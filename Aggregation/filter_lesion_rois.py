@@ -43,7 +43,22 @@ if __name__ == "__main__":
         cur_roi_lst = [ele for ele in lesion_dict.keys() if ele.startswith("ROI")]
         lesion_roi_lst.extend(["-".join([cur_lesion, ele]) for ele in cur_roi_lst])
     roi_fea_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(lesion_roi_lst)]
-    print("{} ROIs inside lesion.".format(len(roi_fea_df)))
-    
+
+    # Add smoking information
+    slide_smoke_path = os.path.join(slide_agg_dir, "lesion_smoke_info.xlsx")
+    lesion_df = pd.read_excel(slide_smoke_path)
+    lesion_slide_lst = [ele for ele in lesion_df["Slide_ID"].tolist()]
+    smoke_slide_lst = [ele for ele in lesion_df["SmokeLevel"].tolist()]
+    lesion_smoke_dict = {lesion: smoke for lesion, smoke in zip(lesion_slide_lst, smoke_slide_lst)}
+    roi_smoke_lst = []
+    lesion_roi = [ele for ele in roi_fea_df["ROI_ID"]]
+    for cur_roi in lesion_roi:
+        cur_lesion = cur_roi[:-7]
+        cur_status = lesion_smoke_dict[cur_lesion]
+        roi_smoke_lst.append(cur_status)
+    roi_fea_df.insert(loc = 2, column = "SmokeStatus", value = roi_smoke_lst)
+    roi_fea_df = roi_fea_df[roi_fea_df["SmokeStatus"].isin(["Never", "Heavy"])]
+    roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "Normal"]
+    print("{} ROIs inside lesion.".format(len(roi_fea_df)))    
     lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
     roi_fea_df.to_excel(lesion_roi_fea_path, index = False)
