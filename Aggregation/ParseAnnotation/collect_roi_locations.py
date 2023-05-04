@@ -61,7 +61,7 @@ if __name__ == "__main__":
                 lesion_dict[roi_name] = {"X":mean_x, "Y": mean_y}
             lesion_roi_dict[cur_slide] = lesion_dict
     print("There are {} lesions with annotated ROIs.".format(len(lesion_roi_dict)))
-    # save information to json
+    # save information to pkl
     lesion_roi_loc_path = os.path.join(slide_agg_dir, "lesion_roi_loc.pkl")
     with open(lesion_roi_loc_path, 'wb') as handle:
         pickle.dump(lesion_roi_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
