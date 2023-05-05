@@ -43,6 +43,7 @@ RUN pip install pyreadr==0.4.4 pandas==1.5.2 openpyxl==3.1.0
 RUN pip install openslide-python==1.2.0
 RUN pip install tensorly==0.8.0 
 RUN pip install pycontour==1.5.1
+RUN pip install bioinfokit==2.1.0
 
 # Create some folders for python packages
 WORKDIR /.local
