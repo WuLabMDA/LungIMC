@@ -16,7 +16,7 @@ $ docker run -it --rm --user $(id -u):$(id -g) \
 $ docker run -it --rm --user $(id -u):$(id -g) \
   -v /rsrch1/ip/pchen6/Codes/LungIMC:/App/LungIMC \
   -v /rsrch1/ip/pchen6/LungIMCData:/Data \
-  --shm-size=896G --cpuset-cpus=150-255 \
+  --shm-size=640G --cpuset-cpus=150-255 \
   --name lungimc_ping lungimc:ping
 ```
 
