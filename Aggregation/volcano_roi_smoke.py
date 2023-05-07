@@ -61,10 +61,12 @@ if __name__ == "__main__":
         stage_vol_df.loc[len(stage_vol_df.index)] = [cur_fea_name, fea_log_fc, fea_pval]
 
     # plot volcano 
+    plot_name = "{}_roi_volcano_plot".format(args.path_stage)
     visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
         lfc_thr=(0.25, 0.25), pv_thr=(0.05, 0.05), sign_line=True, 
         xlm=(-0.8, 0.8, 0.1), ylm=(0, 10, 2),
-        gstyle=2, axtickfontsize=10)
+        gstyle=2, axtickfontsize=10,
+        figname=plot_name, figtype="pdf")
     
     # # save plot
     # roi_volcano_path = os.path.join(slide_agg_dir, "{}_ROI_volcano.pdf".format(args.path_stage))
