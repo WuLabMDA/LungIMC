@@ -26,6 +26,14 @@ if __name__ == "__main__":
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
     lesion_avg_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.xlsx")
     lesion_fea_df = pd.read_excel(lesion_avg_fea_path)
+
+    # normalize all features between 0.0 to 1.0
+    lesion_fea_columns = [ele for ele in lesion_fea_df.columns.tolist()]
+    lesion_fea_names = lesion_fea_columns[3:]
+    for fea in lesion_fea_names:
+        lesion_fea_df[fea] = (lesion_fea_df[fea] - lesion_fea_df[fea].mean()) / lesion_fea_df[fea].std(ddof=0)
+        lesion_fea_df[fea] = (lesion_fea_df[fea].clip(-2.0, 2.0) + 2.0) / 4.0
+            
     # collect stage & smoke
     lesion_stages = lesion_fea_df["LesionStage"]
     lesion_smokes = lesion_fea_df["SmokeStatus"]
@@ -74,36 +82,36 @@ if __name__ == "__main__":
         if aah_p.pvalue < args.pval_thresh:
             sig_num += 1
             if aah_p.statistic > 0:
-                sig_directions.append("+AAH")
-            else:
                 sig_directions.append("-AAH")
+            else:
+                sig_directions.append("+AAH")
         ais_never_feas = [cur_fea_lst[ele] for ele in ais_never]
         ais_heavy_feas = [cur_fea_lst[ele] for ele in ais_heavy]
         ais_p = stats.ttest_ind(ais_never_feas, ais_heavy_feas)
         if ais_p.pvalue < args.pval_thresh:
             sig_num += 1
             if ais_p.statistic > 0:
-                sig_directions.append("+AIS")
-            else:
                 sig_directions.append("-AIS")
+            else:
+                sig_directions.append("+AIS")
         mia_never_feas = [cur_fea_lst[ele] for ele in mia_never]
         mia_heavy_feas = [cur_fea_lst[ele] for ele in mia_heavy]
         mia_p = stats.ttest_ind(mia_never_feas, mia_heavy_feas)
         if mia_p.pvalue < args.pval_thresh:
             sig_num += 1
             if mia_p.statistic > 0:
-                sig_directions.append("+MIA")
-            else:
                 sig_directions.append("-MIA")
+            else:
+                sig_directions.append("+MIA")
         adc_never_feas = [cur_fea_lst[ele] for ele in adc_never]
         adc_heavy_feas = [cur_fea_lst[ele] for ele in adc_heavy]
         adc_p = stats.ttest_ind(adc_never_feas, adc_heavy_feas)
         if adc_p.pvalue < args.pval_thresh:
             sig_num += 1
             if adc_p.statistic > 0:
-                sig_directions.append("+ADC")
-            else:
                 sig_directions.append("-ADC")
+            else:
+                sig_directions.append("+ADC")
 
         # stratify feature
         if sig_num == 0:
@@ -128,5 +136,6 @@ if __name__ == "__main__":
     print("Sig3 has {}".format(len(sig3_feas)))   
     print("Sig4 has {}".format(len(sig4_feas)))      
 
+    print("----Sig2 features:") 
     for fea, direction in zip(sig2_feas, sig2_directions):
         print("{}:{}".format(fea, direction))            

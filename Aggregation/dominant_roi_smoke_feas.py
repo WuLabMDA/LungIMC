@@ -26,6 +26,14 @@ if __name__ == "__main__":
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
     lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
     roi_fea_df = pd.read_excel(lesion_roi_fea_path)
+
+    # normalize all features between 0.0 to 1.0
+    roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
+    roi_fea_names = roi_fea_columns[3:]
+    for fea in roi_fea_names:
+        roi_fea_df[fea] = (roi_fea_df[fea] - roi_fea_df[fea].mean()) / roi_fea_df[fea].std(ddof=0)
+        roi_fea_df[fea] = (roi_fea_df[fea].clip(-2.0, 2.0) + 2.0) / 4.0
+
     # collect stage & smoke
     roi_stages = roi_fea_df["ROI_Stage"]
     roi_smokes = roi_fea_df["SmokeStatus"]
@@ -50,14 +58,6 @@ if __name__ == "__main__":
             adc_heavy.append(ind)
         else:
             print("Unkown stage: {} and smoke {}".format(roi_stages[ind], roi_smokes[ind]))
-    # print("AAH Never: {}".format(len(aah_never)))
-    # print("AIS Never: {}".format(len(ais_never)))
-    # print("MIA Never: {}".format(len(mia_never)))
-    # print("ADC Never: {}".format(len(adc_never)))
-    # print("AAH Heavy: {}".format(len(aah_heavy)))
-    # print("AIS Heavy: {}".format(len(ais_heavy)))
-    # print("MIA Heavy: {}".format(len(mia_heavy)))
-    # print("ADC Heavy: {}".format(len(adc_heavy)))
 
     # feature analysis
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
@@ -74,36 +74,36 @@ if __name__ == "__main__":
         if aah_p.pvalue < args.pval_thresh:
             sig_num += 1
             if aah_p.statistic > 0:
-                sig_directions.append("+AAH")
-            else:
                 sig_directions.append("-AAH")
+            else:
+                sig_directions.append("+AAH")
         ais_never_feas = [cur_fea_lst[ele] for ele in ais_never]
         ais_heavy_feas = [cur_fea_lst[ele] for ele in ais_heavy]
         ais_p = stats.ttest_ind(ais_never_feas, ais_heavy_feas)
         if ais_p.pvalue < args.pval_thresh:
             sig_num += 1
             if ais_p.statistic > 0:
-                sig_directions.append("+AIS")
-            else:
                 sig_directions.append("-AIS")
+            else:
+                sig_directions.append("+AIS")
         mia_never_feas = [cur_fea_lst[ele] for ele in mia_never]
         mia_heavy_feas = [cur_fea_lst[ele] for ele in mia_heavy]
         mia_p = stats.ttest_ind(mia_never_feas, mia_heavy_feas)
         if mia_p.pvalue < args.pval_thresh:
             sig_num += 1
             if mia_p.statistic > 0:
-                sig_directions.append("+MIA")
-            else:
                 sig_directions.append("-MIA")
+            else:
+                sig_directions.append("+MIA")
         adc_never_feas = [cur_fea_lst[ele] for ele in adc_never]
         adc_heavy_feas = [cur_fea_lst[ele] for ele in adc_heavy]
         adc_p = stats.ttest_ind(adc_never_feas, adc_heavy_feas)
         if adc_p.pvalue < args.pval_thresh:
             sig_num += 1
             if adc_p.statistic > 0:
-                sig_directions.append("+ADC")
-            else:
                 sig_directions.append("-ADC")
+            else:
+                sig_directions.append("+ADC")
 
         # stratify feature
         if sig_num == 0:
@@ -121,13 +121,16 @@ if __name__ == "__main__":
         if sig_num == 4:
             sig4_feas.append(cur_fea_name) 
             sig4_directions.append(sig_directions)
-    # print("Sig4 has {}".format(len(sig4_feas)))      
-    # print("Sig4 features:")
-    # print(sig4_feas)   
 
-    # print("Sig0 has {}".format(len(sig0_feas)))     
-    # print("Sig1 has {}".format(len(sig1_feas)))     
-    # print("Sig2 has {}".format(len(sig2_feas)))     
-    print("Sig2 has {}".format(len(sig2_feas)))   
-    for fea, direction in zip(sig2_feas, sig2_directions):
-        print("{}:{}".format(fea, direction))            
+    print("Sig0 has {}".format(len(sig0_feas)))     
+    print("Sig1 has {}".format(len(sig1_feas)))     
+    print("Sig2 has {}".format(len(sig2_feas)))     
+    print("Sig3 has {}".format(len(sig3_feas)))   
+    print("Sig4 has {}".format(len(sig4_feas)))
+
+    print("----Sig3 features:") 
+    for fea, direction in zip(sig3_feas, sig3_directions):
+        print("{}:{}".format(fea, direction))   
+    print("----Sig4 features:")
+    for fea, direction in zip(sig4_feas, sig4_directions):
+        print("{}:{}".format(fea, direction))                       
