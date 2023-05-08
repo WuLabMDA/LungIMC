@@ -49,6 +49,8 @@ if __name__ == "__main__":
 
     # collect features 
     volcano_fea_lst = ["Feature", "Log2FC", "Pvalue"]
+    heavy_ones = []
+    never_ones = []
     stage_vol_df = pd.DataFrame(columns=volcano_fea_lst)
     for cur_fea_name in roi_fea_names:
         cur_fea_lst = [ele for ele in roi_fea_df[cur_fea_name].tolist()]
@@ -57,17 +59,27 @@ if __name__ == "__main__":
         fea_log_fc = np.log2(np.mean(heavy_feas) / np.mean(never_feas))
         fea_ttest = stats.ttest_ind(heavy_feas, never_feas)
         fea_pval = fea_ttest.pvalue
+        if fea_pval < 0.05:
+            if fea_log_fc > 0.0:
+                heavy_ones.append(cur_fea_name)
+            else:
+                never_ones.append(cur_fea_name)
         # insert feature
         stage_vol_df.loc[len(stage_vol_df.index)] = [cur_fea_name, fea_log_fc, fea_pval]
 
+    volcano_dir = os.path.join(slide_agg_dir, "ROI-Volcano")
+    if not os.path.exists(volcano_dir):
+        os.makedirs(volcano_dir)
     # plot volcano 
     plot_name = "{}_roi_volcano_plot".format(args.path_stage)
+    fig_path = os.path.join(volcano_dir, plot_name)
     visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
-        lfc_thr=(0.25, 0.25), pv_thr=(0.05, 0.05), sign_line=True, 
-        xlm=(-0.8, 0.8, 0.1), ylm=(0, 10, 2),
+        lfc_thr=(0.0, 0.0), pv_thr=(0.05, 0.05), sign_line=True, 
+        xlm=(-0.7, 0.8, 0.1), ylm=(0, 10, 2),
         gstyle=2, axtickfontsize=10,
-        figname=plot_name, figtype="pdf")
+        plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
+        figname=fig_path, figtype="pdf")
     
-    # # save plot
-    # roi_volcano_path = os.path.join(slide_agg_dir, "{}_ROI_volcano.pdf".format(args.path_stage))
-    # plt.savefig(roi_volcano_path, transparent=False, dpi=300)    
+    print("ROI on stage {}".format(args.path_stage))
+    print("Heavy smokers dominant features: {}".format(heavy_ones))
+    print("Never smokers dominant features: {}".format(never_ones))    
