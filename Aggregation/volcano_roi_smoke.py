@@ -2,7 +2,7 @@
 
 import os, sys
 import shutil, argparse
-import json, pytz, pickle
+import json, pytz, pickle, math
 from datetime import datetime
 import pandas as pd
 import numpy as np
@@ -11,11 +11,13 @@ from bioinfokit import visuz
 import matplotlib.pyplot as plt
 import matplotlib.font_manager
 
+
 def set_args():
     parser = argparse.ArgumentParser(description = "Visualize Cell Neighborhood")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])                        
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
+    parser.add_argument("--pval_thresh",            type=float,     default=0.05)       
     parser.add_argument("--path_stage",             type=str,       default="AAH")
 
     args = parser.parse_args()
@@ -53,13 +55,15 @@ if __name__ == "__main__":
     never_ones = []
     stage_vol_df = pd.DataFrame(columns=volcano_fea_lst)
     for cur_fea_name in roi_fea_names:
-        cur_fea_lst = [ele for ele in roi_fea_df[cur_fea_name].tolist()]
+        cur_fea_lst = [ele for ele in stage_fea_df[cur_fea_name].tolist()]
         never_feas = [cur_fea_lst[ele] for ele in never_inds]
         heavy_feas = [cur_fea_lst[ele] for ele in heavy_inds]
         fea_log_fc = np.log2(np.mean(heavy_feas) / np.mean(never_feas))
         fea_ttest = stats.ttest_ind(heavy_feas, never_feas)
         fea_pval = fea_ttest.pvalue
-        if fea_pval < 0.05:
+        if math.isnan(fea_pval):
+            fea_pval = 1.0
+        if fea_pval < args.pval_thresh:
             if fea_log_fc > 0.0:
                 heavy_ones.append(cur_fea_name)
             else:
@@ -74,12 +78,14 @@ if __name__ == "__main__":
     plot_name = "{}_roi_volcano_plot".format(args.path_stage)
     fig_path = os.path.join(volcano_dir, plot_name)
     visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
-        lfc_thr=(0.0, 0.0), pv_thr=(0.05, 0.05), sign_line=True, 
+        lfc_thr=(0.0, 0.0), pv_thr=(args.pval_thresh, args.pval_thresh), sign_line=True, 
         xlm=(-0.7, 0.8, 0.1), ylm=(0, 10, 2),
         gstyle=2, axtickfontsize=10,
         plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
         figname=fig_path, figtype="pdf")
     
     print("ROI on stage {}".format(args.path_stage))
-    print("Heavy smokers dominant features: {}".format(heavy_ones))
-    print("Never smokers dominant features: {}".format(never_ones))    
+    print("--Heavy smokers dominant features:")
+    print(heavy_ones)
+    print("Never smokers dominant features:")
+    print(never_ones)
