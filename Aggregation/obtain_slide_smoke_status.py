@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     # load lesions
     lesion_df = pd.read_csv(lesion_info_path)
-    lesion_df = lesion_df[lesion_df["Slide_Diag"] != "Normal"]
+    # lesion_df = lesion_df[lesion_df["Slide_Diag"] != "Normal"]
     lesion_df = lesion_df[~(lesion_df.Slide_Diag == "AAH") | ~(lesion_df.Slide_ID == "2571-1D")]
     slide_smoke_lst = []
     lesion_pid_lst = [ele for ele in lesion_df["Patient_ID"]]
