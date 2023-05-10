@@ -67,10 +67,9 @@ if __name__ == "__main__":
         fea_fc_lst.append(fea_log_fc)
         
     # p-value FDR adjustment 
-    print("Minimum p-val before adjustment: {}".format(np.min(fea_pval_lst)))    
     pval_rejects, adjusted_pvals = multitest.fdrcorrection(fea_pval_lst)
-    print("Minimum p-val after adjustment: {}".format(np.min(adjusted_pvals)))
 
+    # collect signficant features
     heavy_ones = []
     never_ones = []
     stage_vol_df = pd.DataFrame(columns=volcano_fea_lst)
@@ -97,7 +96,9 @@ if __name__ == "__main__":
         gstyle=2, axtickfontsize=10,
         plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
         figname=fig_path, figtype="pdf")
-    
+
+    print("Minimum p-val before adjustment: {}".format(np.min(fea_pval_lst)))    
+    print("Minimum p-val after adjustment: {}".format(np.min(adjusted_pvals)))
     print("ROI on stage {}".format(args.path_stage))
     print("--Heavy smokers dominant features:")
     print(heavy_ones)
