@@ -24,25 +24,23 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     # load aggregated feature
-    feature_root_dir = os.path.join(dataset_dir, args.feature_dir)    
-    merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
-    roi_fea_df = pd.read_csv(merge_roi_fea_path)
-    # all_roi_ids = [ele for ele in roi_fea_df["ROI_ID"].tolist()]
-
-    # load location information
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-    lesion_roi_loc_path = os.path.join(slide_agg_dir, "lesion_roi_loc.pkl")
-    lesion_roi_dict = None
-    with open(lesion_roi_loc_path, 'rb') as handle:
-        lesion_roi_dict = pickle.load(handle)        
-    lesion_names = [ele for ele in lesion_roi_dict.keys()]
-    print("There are {} annotated leision.".format(len(lesion_names)))
-    lesion_roi_lst = []
-    for cur_lesion in lesion_names:
-        lesion_dict = lesion_roi_dict[cur_lesion]
-        cur_roi_lst = [ele for ele in lesion_dict.keys() if ele.startswith("ROI")]
-        lesion_roi_lst.extend(["-".join([cur_lesion, ele]) for ele in cur_roi_lst])
-    roi_fea_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(lesion_roi_lst)]
+    agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation.csv")
+    roi_fea_df = pd.read_csv(agg_roi_fea_path)
+
+    # # load location information
+    # lesion_roi_loc_path = os.path.join(slide_agg_dir, "lesion_roi_loc.pkl")
+    # lesion_roi_dict = None
+    # with open(lesion_roi_loc_path, 'rb') as handle:
+    #     lesion_roi_dict = pickle.load(handle)        
+    # lesion_names = [ele for ele in lesion_roi_dict.keys()]
+    # print("There are {} annotated leision.".format(len(lesion_names)))
+    # lesion_roi_lst = []
+    # for cur_lesion in lesion_names:
+    #     lesion_dict = lesion_roi_dict[cur_lesion]
+    #     cur_roi_lst = [ele for ele in lesion_dict.keys() if ele.startswith("ROI")]
+    #     lesion_roi_lst.extend(["-".join([cur_lesion, ele]) for ele in cur_roi_lst])
+    # roi_fea_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(lesion_roi_lst)]
 
     # Add smoking information
     slide_smoke_path = os.path.join(slide_agg_dir, "lesion_smoke_info.xlsx")
@@ -57,8 +55,8 @@ if __name__ == "__main__":
         cur_status = lesion_smoke_dict[cur_lesion]
         roi_smoke_lst.append(cur_status)
     roi_fea_df.insert(loc = 2, column = "SmokeStatus", value = roi_smoke_lst)
-    roi_fea_df = roi_fea_df[roi_fea_df["SmokeStatus"].isin(["Never", "Heavy"])]
-    roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "Normal"]
+    roi_fea_df.loc[roi_fea_df["SmokeStatus"] == "Light", "SmokeStatus"] = "Never"
+    roi_fea_df.loc[roi_fea_df["ROI_Stage"] == "DistantNormal", "ROI_Stage"] = "Normal"
     print("{} ROIs inside lesion.".format(len(roi_fea_df)))    
     lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
     roi_fea_df.to_excel(lesion_roi_fea_path, index = False)
