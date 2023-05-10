@@ -7,6 +7,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 from scipy import stats
+from statsmodels.stats import multitest
 from bioinfokit import visuz
 import matplotlib.pyplot as plt
 import matplotlib.font_manager
@@ -17,6 +18,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])                        
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
+    parser.add_argument("--pval_thresh",            type=float,     default=0.05)         
     parser.add_argument("--path_stage",             type=str,       default="AAH")
 
     args = parser.parse_args()
@@ -50,9 +52,8 @@ if __name__ == "__main__":
 
     # collect features 
     volcano_fea_lst = ["Feature", "Log2FC", "Pvalue"]
-    heavy_ones = []
-    never_ones = []
-    stage_vol_df = pd.DataFrame(columns=volcano_fea_lst)
+    fea_pval_lst = []
+    fea_fc_lst = []
     for cur_fea_name in lesion_fea_names:
         cur_fea_lst = [ele for ele in stage_fea_df[cur_fea_name].tolist()]
         never_feas = [cur_fea_lst[ele] for ele in never_inds]
@@ -61,13 +62,27 @@ if __name__ == "__main__":
         fea_ttest = stats.ttest_ind(heavy_feas, never_feas)
         fea_pval = fea_ttest.pvalue
         if math.isnan(fea_pval):
-            fea_pval = 1.0        
-        if fea_pval < 0.05:
+            fea_pval = 1.0  
+        fea_pval_lst.append(fea_pval)
+        fea_fc_lst.append(fea_log_fc)
+
+    # p-value FDR adjustment 
+    print("Minimum p-val before adjustment: {}".format(np.min(fea_pval_lst)))
+    pval_rejects, adjusted_pvals = multitest.fdrcorrection(fea_pval_lst)
+    print("Minimum p-val after adjustment: {}".format(np.min(adjusted_pvals)))
+    import pdb; pdb.set_trace()
+    heavy_ones = []
+    never_ones = []
+    stage_vol_df = pd.DataFrame(columns=volcano_fea_lst)
+    for ind in np.arange(len(lesion_fea_names)):
+        cur_fea_name = lesion_fea_names[ind]
+        fea_log_fc = fea_fc_lst[ind]
+        fea_pval = adjusted_pvals[ind]
+        if fea_pval < args.pval_thresh:
             if fea_log_fc > 0.0:
                 heavy_ones.append(cur_fea_name)
             else:
                 never_ones.append(cur_fea_name)
-        # insert feature
         stage_vol_df.loc[len(stage_vol_df.index)] = [cur_fea_name, fea_log_fc, fea_pval]
 
     volcano_dir = os.path.join(slide_agg_dir, "Slide-Volcano")
