@@ -35,33 +35,31 @@ if __name__ == "__main__":
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
     roi_fea_columns = roi_fea_columns[3:]
     slide_column_lst.extend(roi_fea_columns)
-    slide_df = pd.DataFrame(columns=slide_column_lst)    
+    slide_df = pd.DataFrame(columns=slide_column_lst)
 
-    
-    # for cur_lesion in lesion_roi_dict.keys():
-    #     row_val_lst = [cur_lesion, ]
-    #     roi_names = [ele for ele in lesion_roi_dict[cur_lesion].keys()]
-    #     cur_lesion_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(roi_names)]
-    #     if len(cur_lesion_df) == 0:
-    #         print("No lesion detected in {}".format(cur_lesion))
-    #         continue
-    #     # add stage
-    #     cur_stages = cur_lesion_df["ROI_Stage"].tolist()
-    #     if len(set(cur_stages)) != 1:
-    #         print("Multiple stages in {}".format(cur_lesion))
-    #     else:
-    #         row_val_lst.append(cur_stages[0])
-    #     # add smoke
-    #     cur_smokes = cur_lesion_df["SmokeStatus"].tolist()
-    #     if len(set(cur_smokes)) != 1:
-    #         print("Multiple smokes in {}".format(cur_lesion))
-    #     else:
-    #         row_val_lst.append(cur_smokes[0])
-    #     lesion_fea_df = cur_lesion_df.iloc[:, 3:]
-    #     for cur_fea in roi_fea_columns:
-    #         row_val_lst.append(np.mean(cur_lesion_df[cur_fea].tolist()))
-    #     slide_df.loc[len(slide_df.index)] = row_val_lst
-    
-    # # Check slide dataframe information 
-    # lesion_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.xlsx")
-    # slide_df.to_excel(lesion_fea_path, index = False)
+    roi_lst = roi_fea_df["ROI_ID"].tolist()
+    lesion_lst = list(set([ele[:-7] for ele in roi_lst]))    
+    for cur_lesion in lesion_lst:
+        roi_names = [roi_lst[ind] for ind in np.arange(len(roi_lst)) if roi_lst[ind].startswith(cur_lesion)]
+        cur_lesion_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(roi_names)]
+        cur_smokes = cur_lesion_df["SmokeStatus"].tolist()
+        if len(set(cur_smokes)) != 1:
+            print("Multiple smokes in {}".format(cur_lesion))
+            continue
+        cur_smoke = cur_smokes[0]
+        stage_lst = cur_lesion_df["ROI_Stage"].tolist()
+        distinct_stages = list(set(stage_lst))
+        for cur_stage in distinct_stages:
+            row_val_lst = [cur_lesion, cur_stage, cur_smoke]
+            stage_rois = []
+            for cur_roi, roi_stage in zip(roi_names, stage_lst):
+                if roi_stage == cur_stage:
+                    stage_rois.append(cur_roi)
+            cur_lesion_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(stage_rois)]
+            lesion_fea_df = cur_lesion_df.iloc[:, 3:]
+            for cur_fea in roi_fea_columns:
+                row_val_lst.append(np.mean(cur_lesion_df[cur_fea].tolist()))
+            slide_df.loc[len(slide_df.index)] = row_val_lst
+    # Check slide dataframe information 
+    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.xlsx")
+    slide_df.to_excel(lesion_fea_path, index = False)
