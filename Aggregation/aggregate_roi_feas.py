@@ -139,9 +139,9 @@ if __name__ == "__main__":
     # insert stage column and sort
     roi_fea_df.insert(loc=1, column="ROI_Stage", value=roi_stage_lst)
     roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
-    stage_order_lst = ["Normal", "AAH", "AIS", "MIA", "ADC"]
-    roi_fea_df["ROI_Stage"] = pd.Categorical(roi_fea_df["ROI_Stage"], stage_order_lst)
-    roi_fea_df = roi_fea_df.sort_values("ROI_Stage")
+    stage_order_lst = ["Normal", "DistantNormal", "AAH", "AIS", "MIA", "ADC"]
+    # roi_fea_df["ROI_Stage"] = pd.Categorical(roi_fea_df["ROI_Stage"], stage_order_lst)
+    # roi_fea_df = roi_fea_df.sort_values("ROI_Stage")
 
     # print ROI number counts
     print("In total, there are {} ROIs.".format(roi_fea_df.shape[0]))
