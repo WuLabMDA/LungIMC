@@ -10,7 +10,7 @@ from scipy import stats
 from statsmodels.stats import multitest
 from bioinfokit import visuz
 import matplotlib.pyplot as plt
-import matplotlib.font_manager
+plt.rcParams['font.serif'] = ['Times New Roman']
 
 
 def set_args():
@@ -67,10 +67,8 @@ if __name__ == "__main__":
         fea_fc_lst.append(fea_log_fc)
 
     # p-value FDR adjustment 
-    print("Minimum p-val before adjustment: {}".format(np.min(fea_pval_lst)))
     pval_rejects, adjusted_pvals = multitest.fdrcorrection(fea_pval_lst)
-    print("Minimum p-val after adjustment: {}".format(np.min(adjusted_pvals)))
-    import pdb; pdb.set_trace()
+
     heavy_ones = []
     never_ones = []
     stage_vol_df = pd.DataFrame(columns=volcano_fea_lst)
@@ -88,17 +86,21 @@ if __name__ == "__main__":
     volcano_dir = os.path.join(slide_agg_dir, "Slide-Volcano")
     if not os.path.exists(volcano_dir):
         os.makedirs(volcano_dir)
-    # plot volcano 
-    plot_name = "{}_slide_volcano_plot".format(args.path_stage)
-    fig_path = os.path.join(volcano_dir, plot_name)
-    visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
-        lfc_thr=(0.0, 0.0), pv_thr=(0.05, 0.05), sign_line=True, 
-        xlm=(-1.4, 1.5, 0.1), ylm=(0, 5, 1),
-        gstyle=2, axtickfontsize=10,
-        plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
-        figname=fig_path, figtype="pdf")
-    
+    # # plot volcano 
+    # plot_name = "{}_slide_volcano_plot".format(args.path_stage)
+    # fig_path = os.path.join(volcano_dir, plot_name)
+    # visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
+    #     lfc_thr=(0.0, 0.0), pv_thr=(0.05, 0.05), sign_line=True, 
+    #     xlm=(-1.4, 1.5, 0.1), ylm=(0, 5, 1),
+    #     gstyle=2, axtickfontsize=10,
+    #     plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
+    #     figname=fig_path, figtype="pdf")
+
     print("Slide on stage {}".format(args.path_stage))
+    print("No. Never Smoker: {}".format(len(never_inds)))
+    print("No. Heavy Smoker: {}".format(len(heavy_inds)))
+    print("Minimum p-val before adjustment: {}".format(np.min(fea_pval_lst)))
+    print("Minimum p-val after adjustment: {}".format(np.min(adjusted_pvals)))
     print("--Heavy smokers dominant features:")
     print(heavy_ones)
     print("Never smokers dominant features:")
