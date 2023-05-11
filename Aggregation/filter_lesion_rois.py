@@ -28,20 +28,6 @@ if __name__ == "__main__":
     agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation.csv")
     roi_fea_df = pd.read_csv(agg_roi_fea_path)
 
-    # # load location information
-    # lesion_roi_loc_path = os.path.join(slide_agg_dir, "lesion_roi_loc.pkl")
-    # lesion_roi_dict = None
-    # with open(lesion_roi_loc_path, 'rb') as handle:
-    #     lesion_roi_dict = pickle.load(handle)        
-    # lesion_names = [ele for ele in lesion_roi_dict.keys()]
-    # print("There are {} annotated leision.".format(len(lesion_names)))
-    # lesion_roi_lst = []
-    # for cur_lesion in lesion_names:
-    #     lesion_dict = lesion_roi_dict[cur_lesion]
-    #     cur_roi_lst = [ele for ele in lesion_dict.keys() if ele.startswith("ROI")]
-    #     lesion_roi_lst.extend(["-".join([cur_lesion, ele]) for ele in cur_roi_lst])
-    # roi_fea_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(lesion_roi_lst)]
-
     # Add smoking information
     slide_smoke_path = os.path.join(slide_agg_dir, "lesion_smoke_info.xlsx")
     lesion_df = pd.read_excel(slide_smoke_path)
