@@ -68,7 +68,7 @@ if __name__ == "__main__":
             # # add roi information
             roi_cv_cnt = np.expand_dims(reduction_cnt.astype(np.int32), axis=1)
             cv2.drawContours(roi_img, [roi_cv_cnt, ], 0, (0, 0, 255), -1)
-            cv2.putText(roi_img, roi_name, (int(mean_x), int(mean_y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2,  cv2.LINE_AA)
+            cv2.putText(roi_img, roi_name, (int(mean_x), int(mean_y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1,  cv2.LINE_AA)
 
         # Save Imitations
         imitate_img = None
