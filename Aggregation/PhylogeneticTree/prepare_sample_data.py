@@ -113,8 +113,9 @@ if __name__ == "__main__":
     interaction_delaunay_df = interaction_delaunay_df.iloc[:, 1:]
 
     # Aggregate features
-    roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, cn_proportion_density_df, cn_morph_df,
+    roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, ct_state_df, cn_proportion_density_df, cn_morph_df,
                             interaction_delaunay_df], axis=1)
+    
     
     # Insert ROI stage information
     roi_info_path = os.path.join(metadata_dir, "ROI_Info.xlsx")
@@ -147,10 +148,11 @@ if __name__ == "__main__":
 
     # filter AdjacentNormal & DistantNormal
     roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
-    roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "DistantNormal"]
 
     # filter patient
-    interested_pid = "2405"
+    # interested_pid = "2405"
+    # interested_pid = "H18-0271"
+    interested_pid = "H16-0223"
     lesion_names = [ele[:-7] for ele in roi_fea_df["ROI_ID"].tolist()]
     patient_names = [ele[:ele.rindex("-")] for ele in lesion_names]
     patient_inds = []

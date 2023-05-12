@@ -17,7 +17,7 @@ def set_args():
     parser = argparse.ArgumentParser(description = "Visualize Cell Neighborhood")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])  
-    parser.add_argument("--reduction_ratio",        type=float,     default=10.0) 
+    parser.add_argument("--reduction_ratio",        type=float,     default=5.0) 
                     
     args = parser.parse_args()
     return args
@@ -58,7 +58,7 @@ if __name__ == "__main__":
             lesion_img = np.zeros((imitate_height, imitate_width, 3), dtype=np.uint8)
             # draw lesion
             lesion_cv_cnt = np.expand_dims((lesion_vertices / args.reduction_ratio).astype(np.int32), axis=1)
-            cv2.drawContours(lesion_img, [lesion_cv_cnt, ], 0, (255, 0, 0), -1)
+            cv2.drawContours(lesion_img, [lesion_cv_cnt, ], 0, (0, 255, 0), -1)
         # draw rois
         # print("--- with {} ROIs".format(len(roi_anno_dict)))        
         roi_img = np.zeros((imitate_height, imitate_width, 3), dtype=np.uint8)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
             # # add roi information
             roi_cv_cnt = np.expand_dims(reduction_cnt.astype(np.int32), axis=1)
             cv2.drawContours(roi_img, [roi_cv_cnt, ], 0, (0, 0, 255), -1)
-            cv2.putText(roi_img, roi_name, (int(mean_x), int(mean_y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 1,  cv2.LINE_AA)
+            cv2.putText(roi_img, roi_name, (int(mean_x), int(mean_y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2,  cv2.LINE_AA)
 
         # Save Imitations
         imitate_img = None
