@@ -14,6 +14,8 @@ cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_v
 cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interaction_name)
 load(cell_type_interaction_path)
 
+# replace NA to -1
+interaction_out$sigval <- replace(interaction_out$sigval, is.na(interaction_out$sigval), -1)
 
 # group interaction
 group_interaction <- interaction_out %>% as_tibble() %>% group_by(from_label, to_label) 

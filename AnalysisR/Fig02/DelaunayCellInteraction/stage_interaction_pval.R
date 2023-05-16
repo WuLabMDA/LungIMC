@@ -15,6 +15,9 @@ cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_v
 cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interaction_name)
 load(cell_type_interaction_path)
 
+# replace NA to -1
+interaction_out$sigval <- replace(interaction_out$sigval, is.na(interaction_out$sigval), -1)
+
 ## load ROI diagnosis information
 metadata_dir <- file.path(data_root_dir, "Metadata")
 roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")

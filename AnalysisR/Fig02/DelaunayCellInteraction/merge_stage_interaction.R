@@ -14,6 +14,9 @@ cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_v
 cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interaction_name)
 load(cell_type_interaction_path)
 
+# replace NA to -1
+interaction_out$sigval <- replace(interaction_out$sigval, is.na(interaction_out$sigval), -1)
+
 
 ## load ROI diagnosis information
 metadata_dir <- file.path(data_root_dir, "Metadata")
@@ -42,9 +45,10 @@ ais_subset_out <- interaction_out[interaction_out$group_by %in% ais_roi_info$ROI
 mia_subset_out <- interaction_out[interaction_out$group_by %in% mia_roi_info$ROI_ID, ]
 adc_subset_out <- interaction_out[interaction_out$group_by %in% adc_roi_info$ROI_ID, ]
 
+
 # Delaunay-50
 max_per_val <- 1.00
-min_per_val <- -0.60
+min_per_val <- -1.00
 
 # update normal
 normal_subset <- normal_subset_out %>% as_tibble() %>% group_by(from_label, to_label) %>%
