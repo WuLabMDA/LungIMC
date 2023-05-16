@@ -17,7 +17,7 @@ spe <- readRDS(spe_celltype_path)
 
 # detecting all cells within a given distance to the center cell (expansion)
 threshold_val <- 50
-spe <- buildSpatialGraph(spe, img_id = "sample_id", type = "delaunay", threshold = threshold_val)
+spe <- buildSpatialGraph(spe, img_id = "sample_id", type = "delaunay", max_dist = threshold_val)
 
 ## test cell_type interaction
 print(paste("Start @", format(Sys.time(), "%a %b %d %X %Y")))
