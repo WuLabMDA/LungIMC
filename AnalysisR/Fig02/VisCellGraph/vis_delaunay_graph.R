@@ -47,51 +47,55 @@ ct_delaunay_dir <- file.path(data_root_dir, "Results", "VisCT-Delaunay")
 if (!file.exists(ct_delaunay_dir))
     dir.create(ct_delaunay_dir)
 
-# test roi
-test_roi_name <- "2017-1B-ROI001"
-# cell connection visualization
-plotSpatial(spe[, spe$sample_id == test_roi_name],
-            node_color_by = "celltype",
-            img_id = "sample_id",
-            node_size_fix = 1.0,
-            draw_edges = TRUE,
-            colPairName = "delaunay_interaction_graph",
-            edge_width_fix = 0.1,
-            nodes_first = FALSE,
-            directed = FALSE,
-            edge_color_fix = "black") + 
-    scale_color_manual(values = ct_palette) 
+# # test roi
+# # Normal - 2323-5F-ROI002
+# # AAH - 2513-1G-ROI005
+# # AIS - H18-0255-6-ROI015
+# # MIA - 2513-1C-ROI012
+# # ADC - H18-0331-11-ROI003
+# test_roi_name <- "2323-5F-ROI002"
+# # cell connection visualization
+# plotSpatial(spe[, spe$sample_id == test_roi_name],
+#             img_id = "sample_id",
+#             node_color_by = "celltype",
+#             node_size_fix = 1.0,
+#             draw_edges = TRUE,
+#             colPairName = "delaunay_interaction_graph",
+#             edge_width_fix = 0.1,
+#             nodes_first = FALSE,
+#             directed = FALSE,
+#             edge_color_fix = "black") + 
+#     scale_color_manual(values = ct_palette) 
 
-# 
-# for (ind in 1:num_img) {
-#     img_fullname <- img_data_df$image[ind]
-#     img_name <- substr(img_fullname, 1, nchar(img_fullname) - 5)
-#     ct_delaunay_path <- file.path(ct_delaunay_dir, paste0(img_name, ".pdf"))    
-#     # # test roi
-#     # test_roi_name <- "2166-1B-ROI009"
-#     # cell connection visualization
-#     plotSpatial(spe[, spe$sample_id == img_name],
-#                 node_color_by = "celltype",
-#                 img_id = "sample_id",
-#                 node_size_fix = 1.0,
-#                 draw_edges = TRUE,
-#                 colPairName = "delaunay_interaction_graph",
-#                 edge_width_fix = 0.1,
-#                 nodes_first = FALSE,
-#                 directed = FALSE,
-#                 edge_color_fix = "black") + 
-#         scale_color_manual(values = ct_palette) + 
-#         theme(axis.text.x=element_blank(),
-#               axis.ticks.x=element_blank(),
-#               axis.text.y=element_blank(),
-#               axis.ticks.y=element_blank(),
-#               plot.title=element_blank(),
-#               legend.position="none") 
-#     # save
-#     vis_w <- img_data_df$height_px[ind] / 100
-#     vis_h <- img_data_df$width_px[ind] / 100
-#     ggsave(filename = ct_delaunay_path, device='pdf', width=vis_w, height=vis_h, dpi=300)
-#     while (!is.null(dev.list()))
-#         dev.off()
-# }
-    
+
+for (ind in 1:num_img) {
+    img_fullname <- img_data_df$image[ind]
+    img_name <- substr(img_fullname, 1, nchar(img_fullname) - 5)
+    ct_delaunay_path <- file.path(ct_delaunay_dir, paste0(img_name, ".pdf"))
+    # # test roi
+    # test_roi_name <- "2166-1B-ROI009"
+    # cell connection visualization
+    plotSpatial(spe[, spe$sample_id == img_name],
+                img_id = "sample_id",
+                node_color_by = "celltype",
+                node_size_fix = 1.0,
+                draw_edges = TRUE,
+                colPairName = "delaunay_interaction_graph",
+                edge_width_fix = 0.1,
+                nodes_first = FALSE,
+                directed = FALSE,
+                edge_color_fix = "black") +
+        scale_color_manual(values = ct_palette) +
+        theme(axis.text.x=element_blank(),
+              axis.ticks.x=element_blank(),
+              axis.text.y=element_blank(),
+              axis.ticks.y=element_blank(),
+              plot.title=element_blank(),
+              legend.position="none")
+    # save
+    vis_w <- img_data_df$height_px[ind] / 100
+    vis_h <- img_data_df$width_px[ind] / 100
+    ggsave(filename = ct_delaunay_path, device='pdf', width=vis_w, height=vis_h, dpi=300)
+    while (!is.null(dev.list()))
+        dev.off()
+}
