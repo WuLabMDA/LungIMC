@@ -16,7 +16,9 @@ spe_celltype_path <- file.path(phenotype_dir, paste0(spe_celltype_name, ".rds"))
 spe <- readRDS(spe_celltype_path)
 
 # detecting all cells within a given distance to the center cell (expansion)
-threshold_val <- 50
+# threshold_val <- 30
+threshold_val <- 40
+# threshold_val <- 50
 spe <- buildSpatialGraph(spe, img_id = "sample_id", type = "delaunay", max_dist = threshold_val)
 
 ## test cell_type interaction

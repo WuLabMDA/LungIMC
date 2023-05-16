@@ -75,8 +75,6 @@ for (p_from_label in p_from_order) {
         ais_pair <- ais_subset[ais_subset$from_label == p_from_label & ais_subset$to_label == p_to_label,] %>% drop_na(sigval)
         mia_pair <- mia_subset[mia_subset$from_label == p_from_label & mia_subset$to_label == p_to_label,] %>% drop_na(sigval)
         adc_pair <- adc_subset[adc_subset$from_label == p_from_label & adc_subset$to_label == p_to_label,] %>% drop_na(sigval)
-        
-        # kw_pval <- kruskal.test(list(normal_pair$sigval, aah_pair$sigval, ais_pair$sigval, mia_pair$sigval, adc_pair$sigval))
         kw_pval <- kruskal.test(list(aah_pair$sigval, ais_pair$sigval, mia_pair$sigval, adc_pair$sigval))
         pval_df[p_to_label, p_from_label] <- kw_pval$p.value
         group_pvals[group_ind, ] <- c(p_to_label, p_from_label, kw_pval$p.value)
