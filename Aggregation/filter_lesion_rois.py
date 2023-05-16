@@ -41,7 +41,8 @@ if __name__ == "__main__":
         cur_status = lesion_smoke_dict[cur_lesion]
         roi_smoke_lst.append(cur_status)
     roi_fea_df.insert(loc = 2, column = "SmokeStatus", value = roi_smoke_lst)
-    roi_fea_df.loc[roi_fea_df["SmokeStatus"] == "Light", "SmokeStatus"] = "Never"
+    roi_fea_df.loc[roi_fea_df["SmokeStatus"] == "Light", "SmokeStatus"] = "Never" # combine Light to Never
+    # roi_fea_df = roi_fea_df[roi_fea_df["SmokeStatus"].isin(["Never", "Heavy"])]  # remove Light
     roi_fea_df.loc[roi_fea_df["ROI_Stage"] == "DistantNormal", "ROI_Stage"] = "Normal"
     print("{} ROIs inside lesion.".format(len(roi_fea_df)))    
     lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
