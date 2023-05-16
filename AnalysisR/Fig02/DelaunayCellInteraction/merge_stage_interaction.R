@@ -42,15 +42,6 @@ ais_subset_out <- interaction_out[interaction_out$group_by %in% ais_roi_info$ROI
 mia_subset_out <- interaction_out[interaction_out$group_by %in% mia_roi_info$ROI_ID, ]
 adc_subset_out <- interaction_out[interaction_out$group_by %in% adc_roi_info$ROI_ID, ]
 
-
-# # Delaunay-30
-# max_per_val <- 1.00
-# min_per_val <- -0.60
-
-# # Delaunay-40
-# max_per_val <- 1.00
-# min_per_val <- -0.60
-
 # Delaunay-50
 max_per_val <- 1.00
 min_per_val <- -0.60
