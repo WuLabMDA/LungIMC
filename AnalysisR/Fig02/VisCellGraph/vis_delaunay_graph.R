@@ -5,6 +5,10 @@ library(RColorBrewer)
 library(dittoSeq)
 library(ggplot2)
 library(viridis)
+library(randomcoloR)
+library(tidyverse)
+library(readxl)
+library(knitr)
 
 ## set directory
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
@@ -17,16 +21,77 @@ cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interac
 cell_spatial_path <- file.path(cell_type_interaction_path)
 load(cell_spatial_path)
 
-# test roi
-test_roi_name <- "2166-1B-ROI009"
+ct_palette <- c(
+    "#CAB2D6", # B-Cell
+    "#6A3D9A", # CD4-T-Cell
+    "#1F77B4", # CD8-T-Cell
+    "#A5CEE2", # Dendritic-Cell
+    "#FF7F00", # Endothelial-Cell
+    "#E21A1C", # Epithelial-Cell
+    "#FDBE6F", # Fibroblast
+    "#33A02B", # Macrophage
+    "#B2DF8A", # MDSC
+    "#FEFF99", # Monocyte
+    "#663300", # Neutrophil
+    "#E658A0", # NK-Cell
+    "#666600", # Proliferating-Cell
+    "#333300", # T-Reg-Cell
+    "#D6D6D6"  # Undefined
+)
 
+img_file_path <- file.path(data_root_dir, "LungROIProcessing", "Steinbock", "images.csv")
+img_data_df <- read_csv(img_file_path)
+num_img <- nrow(img_data_df)
+
+ct_delaunay_dir <- file.path(data_root_dir, "Results", "VisCT-Delaunay")
+if (!file.exists(ct_delaunay_dir))
+    dir.create(ct_delaunay_dir)
+
+# test roi
+test_roi_name <- "2017-1B-ROI001"
 # cell connection visualization
 plotSpatial(spe[, spe$sample_id == test_roi_name],
             node_color_by = "celltype",
             img_id = "sample_id",
-            node_size_fix = 0.5,
+            node_size_fix = 1.0,
             draw_edges = TRUE,
             colPairName = "delaunay_interaction_graph",
+            edge_width_fix = 0.1,
             nodes_first = FALSE,
             directed = FALSE,
-            edge_color_fix = "grey")
+            edge_color_fix = "black") + 
+    scale_color_manual(values = ct_palette) 
+
+# 
+# for (ind in 1:num_img) {
+#     img_fullname <- img_data_df$image[ind]
+#     img_name <- substr(img_fullname, 1, nchar(img_fullname) - 5)
+#     ct_delaunay_path <- file.path(ct_delaunay_dir, paste0(img_name, ".pdf"))    
+#     # # test roi
+#     # test_roi_name <- "2166-1B-ROI009"
+#     # cell connection visualization
+#     plotSpatial(spe[, spe$sample_id == img_name],
+#                 node_color_by = "celltype",
+#                 img_id = "sample_id",
+#                 node_size_fix = 1.0,
+#                 draw_edges = TRUE,
+#                 colPairName = "delaunay_interaction_graph",
+#                 edge_width_fix = 0.1,
+#                 nodes_first = FALSE,
+#                 directed = FALSE,
+#                 edge_color_fix = "black") + 
+#         scale_color_manual(values = ct_palette) + 
+#         theme(axis.text.x=element_blank(),
+#               axis.ticks.x=element_blank(),
+#               axis.text.y=element_blank(),
+#               axis.ticks.y=element_blank(),
+#               plot.title=element_blank(),
+#               legend.position="none") 
+#     # save
+#     vis_w <- img_data_df$height_px[ind] / 100
+#     vis_h <- img_data_df$width_px[ind] / 100
+#     ggsave(filename = ct_delaunay_path, device='pdf', width=vis_w, height=vis_h, dpi=300)
+#     while (!is.null(dev.list()))
+#         dev.off()
+# }
+    
