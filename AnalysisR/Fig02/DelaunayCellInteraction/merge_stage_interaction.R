@@ -14,9 +14,34 @@ cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_v
 cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interaction_name)
 load(cell_type_interaction_path)
 
-# replace NA to -1
-interaction_out$sigval <- replace(interaction_out$sigval, is.na(interaction_out$sigval), -1)
 
+# interaction_out$sigval <- replace(interaction_out$sigval, is.na(interaction_out$sigval), -1)
+# replace NA to -1, both unavailable 0
+cell_type_num <- 15
+interaction_num <- cell_type_num * cell_type_num
+num_roi <- interaction_out@nrows / interaction_num
+# for (n in 1:1) {
+for (n in 1:num_roi) {
+    start_ind <- (n - 1) * interaction_num + 1
+    end_ind <- n * interaction_num
+    cur_sigvals <- interaction_out$sigval[start_ind:end_ind]
+    cell_exists <- rep(0, cell_type_num)
+    for (m in 1:cell_type_num) {
+        cur_cell_vals <- cur_sigvals[(m-1)*cell_type_num+1:m*cell_type_num]
+        if (all(is.na(cur_cell_vals)))
+            cell_exists[m] <- 1
+    }
+    cur_sigvals <- replace(cur_sigvals, is.na(cur_sigvals), -1)
+    missing_inds <- which(cell_exists == 1)
+    if (length(missing_inds) > 0) {
+        ind_combs <- crossing(missing_inds, missing_inds)
+        for (j in 1:dim(ind_combs)[1]) {
+            ele_ind <- (ind_combs[[j,1]]-1)* cell_type_num + ind_combs[[j,2]]
+            cur_sigvals[ele_ind] <- 0
+        }
+    }
+    interaction_out$sigval[start_ind:end_ind] <- cur_sigvals
+}
 
 ## load ROI diagnosis information
 metadata_dir <- file.path(data_root_dir, "Metadata")
