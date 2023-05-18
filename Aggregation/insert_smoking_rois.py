@@ -45,5 +45,5 @@ if __name__ == "__main__":
     # roi_fea_df = roi_fea_df[roi_fea_df["SmokeStatus"].isin(["Never", "Heavy"])]  # remove Light
     roi_fea_df.loc[roi_fea_df["ROI_Stage"] == "DistantNormal", "ROI_Stage"] = "Normal"
     print("{} ROIs inside lesion.".format(len(roi_fea_df)))    
-    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
-    roi_fea_df.to_excel(lesion_roi_fea_path, index = False)
+    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
+    roi_fea_df.to_csv(lesion_roi_fea_path, index = False)

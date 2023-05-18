@@ -30,8 +30,8 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
-    roi_fea_df = pd.read_excel(lesion_roi_fea_path)
+    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
+    roi_fea_df = pd.read_csv(lesion_roi_fea_path)
 
     # normalize all features between 0.0 to 1.0
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]

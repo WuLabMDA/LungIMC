@@ -9,34 +9,33 @@ library(stringr)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
-threshold_val <- 50
+threshold_val <- 30
+# threshold_val <- 40
+# threshold_val <- 50
 cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_val, ".RData")
 cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interaction_name)
 load(cell_type_interaction_path)
 
-
-# interaction_out$sigval <- replace(interaction_out$sigval, is.na(interaction_out$sigval), -1)
 # replace NA to -1, both unavailable 0
 cell_type_num <- 15
 interaction_num <- cell_type_num * cell_type_num
 num_roi <- interaction_out@nrows / interaction_num
-# for (n in 1:1) {
-for (n in 1:num_roi) {
-    start_ind <- (n - 1) * interaction_num + 1
-    end_ind <- n * interaction_num
+for (nn in 1:num_roi) {
+    start_ind <- (nn - 1) * interaction_num + 1
+    end_ind <- nn * interaction_num
     cur_sigvals <- interaction_out$sigval[start_ind:end_ind]
     cell_exists <- rep(0, cell_type_num)
-    for (m in 1:cell_type_num) {
-        cur_cell_vals <- cur_sigvals[(m-1)*cell_type_num+1:m*cell_type_num]
+    for (mm in 1:cell_type_num) {
+        cur_cell_vals <- cur_sigvals[(mm-1)*cell_type_num+1:mm*cell_type_num]
         if (all(is.na(cur_cell_vals)))
-            cell_exists[m] <- 1
+            cell_exists[mm] <- 1
     }
     cur_sigvals <- replace(cur_sigvals, is.na(cur_sigvals), -1)
     missing_inds <- which(cell_exists == 1)
     if (length(missing_inds) > 0) {
         ind_combs <- crossing(missing_inds, missing_inds)
-        for (j in 1:dim(ind_combs)[1]) {
-            ele_ind <- (ind_combs[[j,1]]-1)* cell_type_num + ind_combs[[j,2]]
+        for (jj in 1:dim(ind_combs)[1]) {
+            ele_ind <- (ind_combs[[jj,1]]-1)* cell_type_num + ind_combs[[jj,2]]
             cur_sigvals[ele_ind] <- 0
         }
     }
@@ -119,3 +118,15 @@ order_merge_set %>%
     scale_fill_gradient2(low = "blue", mid = "white", high = "red") + 
     theme(axis.text.x=element_text(angle=45, hjust=1)) 
 
+# merge_to_order <- c()
+# for (cell_type in to_order)
+#     merge_to_order <- append(merge_to_order, paste(cell_type, "ADC", sep="-"))
+# 
+# adc_subset <- adc_subset %>% as_tibble() %>%
+#     mutate(from_label=factor(from_label, levels=from_order)) %>%
+#     mutate(to_label=factor(to_label, levels=merge_to_order))
+# adc_subset %>%
+#     ggplot() +
+#     geom_tile(aes(from_label, to_label, fill=sum_sigval)) +
+#     scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
+#     theme(axis.text.x=element_text(angle=45, hjust=1))

@@ -17,8 +17,8 @@ spe <- readRDS(spe_celltype_path)
 
 # detecting all cells within a given distance to the center cell (expansion)
 # threshold_val <- 30
-threshold_val <- 40
-# threshold_val <- 50
+# threshold_val <- 40
+threshold_val <- 50
 spe <- buildSpatialGraph(spe, img_id = "sample_id", type = "delaunay", max_dist = threshold_val)
 
 ## test cell_type interaction
@@ -29,7 +29,6 @@ interaction_out <- testInteractions(spe, group_by = "sample_id",
                                     method = "patch",
                                     patch_size = 3,
                                     iter = 200)
-
 # save the results
 celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
 if (!dir.exists(celltype_delaunay_dir))

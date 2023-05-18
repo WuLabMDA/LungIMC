@@ -27,8 +27,8 @@ if __name__ == "__main__":
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
 
     # load aggregated feature
-    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
-    roi_fea_df = pd.read_excel(lesion_roi_fea_path)
+    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
+    roi_fea_df = pd.read_csv(lesion_roi_fea_path)
 
     # create empty slide dataframe
     slide_column_lst = ["LesionID", "LesionStage", "SmokeStatus"]

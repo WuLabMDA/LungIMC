@@ -2,9 +2,9 @@ root_path = "E:/LungIMCData/HumanWholeIMC/Aggregation/Phylo"
 source("tree_utils.R")
 
 
-pid <- "2405"
+# pid <- "2405"
 # pid <- "H16-0223"
-# pid <- "H18-0271"
+pid <- "H18-0271"
 fea_path <- file.path(root_path, paste(pid, "roi_feas.csv", sep="_"))
 p_feas <- read.table(fea_path, header=TRUE, sep=",", quote="", stringsAsFactors=FALSE)
 col_num <- dim(p_feas)[2]

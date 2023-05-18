@@ -59,10 +59,10 @@ if __name__ == "__main__":
     # imp_sigvals = imp.transform(roi_df.to_numpy())
     # imp_sigvals = np.around(imp_sigvals)
 
-    # filling -1 for np.nan
-    roi_df = roi_df.replace(np.nan, -1)
-    roi_arr = roi_df.to_numpy()
+    # # filling -1 for np.nan
+    # roi_df = roi_df.replace(np.nan, -1)
 
+    roi_arr = roi_df.to_numpy()
     # Create cell interaction features
     interaction_fea_df = pd.DataFrame(data = roi_arr, columns = interaction_lst)
     interaction_fea_df.insert(0, "ROI_ID", unique_roi_names, True)

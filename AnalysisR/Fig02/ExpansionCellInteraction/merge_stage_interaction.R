@@ -9,12 +9,37 @@ library(stringr)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 celltype_expansion_dir <- file.path(phenotype_dir, "ExpansionInteraction")
-threshold_val <- 32
+threshold_val <- 24
 cell_type_interaction_name <- paste0("ExpansionInteractionThreshold", threshold_val, ".RData")
 cell_type_interaction_path <- file.path(celltype_expansion_dir, cell_type_interaction_name)
 cell_spatial_path <- file.path(cell_type_interaction_path)
 load(cell_spatial_path)
 
+# replace NA to -1, both unavailable 0
+cell_type_num <- 15
+interaction_num <- cell_type_num * cell_type_num
+num_roi <- interaction_out@nrows / interaction_num
+for (nn in 1:num_roi) {
+    start_ind <- (nn - 1) * interaction_num + 1
+    end_ind <- nn * interaction_num
+    cur_sigvals <- interaction_out$sigval[start_ind:end_ind]
+    cell_exists <- rep(0, cell_type_num)
+    for (mm in 1:cell_type_num) {
+        cur_cell_vals <- cur_sigvals[(mm-1)*cell_type_num+1:mm*cell_type_num]
+        if (all(is.na(cur_cell_vals)))
+            cell_exists[mm] <- 1
+    }
+    cur_sigvals <- replace(cur_sigvals, is.na(cur_sigvals), -1)
+    missing_inds <- which(cell_exists == 1)
+    if (length(missing_inds) > 0) {
+        ind_combs <- crossing(missing_inds, missing_inds)
+        for (jj in 1:dim(ind_combs)[1]) {
+            ele_ind <- (ind_combs[[jj,1]]-1)* cell_type_num + ind_combs[[jj,2]]
+            cur_sigvals[ele_ind] <- 0
+        }
+    }
+    interaction_out$sigval[start_ind:end_ind] <- cur_sigvals
+}
 
 ## load ROI diagnosis information
 metadata_dir <- file.path(data_root_dir, "Metadata")
@@ -43,14 +68,16 @@ ais_subset_out <- interaction_out[interaction_out$group_by %in% ais_roi_info$ROI
 mia_subset_out <- interaction_out[interaction_out$group_by %in% mia_roi_info$ROI_ID, ]
 adc_subset_out <- interaction_out[interaction_out$group_by %in% adc_roi_info$ROI_ID, ]
 
+max_per_val <- 1.0
+min_per_val <- -1.0
 
 # # centroid-24
 # max_per_val <- 0.98
 # min_per_val <- -0.81
 
-# centroid-32
-max_per_val <- 0.95
-min_per_val <- -0.90
+# # centroid-32
+# max_per_val <- 0.95
+# min_per_val <- -0.90
 
 # # centroid-50
 # max_per_val <- 0.84
