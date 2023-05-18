@@ -14,12 +14,10 @@ library(knitr)
 ## load all interactions
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
+celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
 
 # load the spe
-threshold_val <- 50
-num_cn <- 10
-spe_cn_name <- paste0("Delaunay", threshold_val, "-CN", num_cn, ".rds")
-spe_cn_path <- file.path(phenotype_dir, spe_cn_name)
+spe_cn_path <- file.path(celltype_delaunay_dir, "Delaunay50-CN8.rds")
 spe <- readRDS(spe_cn_path)
 
 # save cell information
@@ -32,9 +30,3 @@ cell_df <- data.frame(cell_id = rownames(spe@colData),
                       cell_eccentricity = spe$eccentricity)
 cell_type_path <- file.path(phenotype_dir, "cell_ct_cn_morphs.csv")
 write.csv(cell_df, cell_type_path, row.names=FALSE)
-
-
-
-
-
-

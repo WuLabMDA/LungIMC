@@ -7,19 +7,17 @@ library(tidyverse)
 ## load all interactions
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
+celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
 feature_dir <- file.path(data_root_dir, "FeatureAnalysis")
 
 # load the spe
-threshold_val <- 50
-num_cn <- 10
-spe_cn_name <- paste0("Delaunay", threshold_val, "-CN", num_cn, ".rds")
-spe_cn_path <- file.path(phenotype_dir, spe_cn_name)
+spe_cn_path <- file.path(celltype_delaunay_dir, "Delaunay50-CN8.rds")
 spe <- readRDS(spe_cn_path)
 
 # extract cell information
 cell_id_lst <- rownames(colData(spe))
 cell_cn_lst <- spe$cn_celltypes
-all_cn_lst <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+all_cn_lst <- c(1, 2, 3, 4, 5, 6, 7, 8)
 
 # filter functional markers
 function_markers = c("Ki67", "HLADR", "B2M", "CD45RO", "ICOS", "GranzymeB",
@@ -58,7 +56,10 @@ for (ind in 1:length(roi_lst)) {
 
 # generate function feature names
 function_fea_names <- c()
-for (cur_cn_name in all_cn_lst) {
+all_cn_name_lst <- c("Undefined-CN1", "Epithelial1-CN2", "Proliferating-CN3",
+                     "Epithelial2-CN4", "Endothelial-CN5", "Fibroblast-CN6",
+                     "Macrophage-CN7", "PanImmune-CN8")
+for (cur_cn_name in all_cn_name_lst) {
     cell_function_names <- paste(cur_cn_name, function_markers, sep="-")
     function_fea_names <- append(function_fea_names, cell_function_names)
 }
