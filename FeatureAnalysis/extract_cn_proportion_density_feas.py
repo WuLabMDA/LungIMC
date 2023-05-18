@@ -39,7 +39,9 @@ if __name__ == "__main__":
     celltype_lst = ["Epithelial-Cell", "Endothelial-Cell", "Fibroblast", "CD4-T-Cell", "CD8-T-Cell", 
                     "T-Reg-Cell", "B-Cell", "Macrophage", "Monocyte", "Dendritic-Cell", 
                     "Neutrophil", "MDSC", "NK-Cell", "Proliferating-Cell", "Undefined"]
-    cellcn_lst = [ind+1 for ind in np.arange(10)]
+    cellcn_lst = [ind+1 for ind in np.arange(8)]
+    cn_name_lst = ["Undefined-CN1", "Epithelial1-CN2", "Proliferating-CN3", "Epithelial2-CN4",
+                   "Endothelial-CN5", "Fibroblast-CN6", "Macrophage-CN7", "PanImmune-CN8"]
 
     fea_names = ["ROI_ID", ]
     fea_names.extend(["CN" + str(ele) + "-Proportion" for ele in cellcn_lst])

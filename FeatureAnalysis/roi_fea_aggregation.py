@@ -47,14 +47,14 @@ if __name__ == "__main__":
     ct_morph_df  = ct_morph_df.reindex(index=ct_proportion_density_df["ROI_ID"])
     ct_morph_df = ct_morph_df.reset_index()
     ct_morph_df = ct_morph_df.iloc[:, 1:]
-    # CT Diveristy
-    ct_diveristy_fea_path = os.path.join(feature_root_dir, "CT_DiversityFeas.csv")
-    ct_diversity_df = pd.read_csv(ct_diveristy_fea_path)
-    fea_num_lst.append(ct_diversity_df.shape[1] - 1)
-    ct_diversity_df = ct_diversity_df.set_index("ROI_ID")
-    ct_diversity_df  = ct_diversity_df.reindex(index=ct_proportion_density_df["ROI_ID"])
-    ct_diversity_df = ct_diversity_df.reset_index()
-    ct_diversity_df = ct_diversity_df.iloc[:, 1:]  
+    # # CT Diveristy
+    # ct_diveristy_fea_path = os.path.join(feature_root_dir, "CT_DiversityFeas.csv")
+    # ct_diversity_df = pd.read_csv(ct_diveristy_fea_path)
+    # fea_num_lst.append(ct_diversity_df.shape[1] - 1)
+    # ct_diversity_df = ct_diversity_df.set_index("ROI_ID")
+    # ct_diversity_df  = ct_diversity_df.reindex(index=ct_proportion_density_df["ROI_ID"])
+    # ct_diversity_df = ct_diversity_df.reset_index()
+    # ct_diversity_df = ct_diversity_df.iloc[:, 1:]  
 
     # CN Proportion/Density
     cn_proportion_density_fea_path = os.path.join(feature_root_dir, "CN_ProportionDensityFeas.csv")
@@ -80,23 +80,23 @@ if __name__ == "__main__":
     cn_morph_df  = cn_morph_df.reindex(index=ct_proportion_density_df["ROI_ID"])
     cn_morph_df = cn_morph_df.reset_index()
     cn_morph_df = cn_morph_df.iloc[:, 1:]    
-    # CN Diveristy
-    cn_diveristy_fea_path = os.path.join(feature_root_dir, "CN_DiversityFeas.csv")
-    cn_diversity_df = pd.read_csv(cn_diveristy_fea_path)
-    fea_num_lst.append(cn_diversity_df.shape[1] - 1)
-    cn_diversity_df = cn_diversity_df.set_index("ROI_ID")
-    cn_diversity_df  = cn_diversity_df.reindex(index=ct_proportion_density_df["ROI_ID"])
-    cn_diversity_df = cn_diversity_df.reset_index()
-    cn_diversity_df = cn_diversity_df.iloc[:, 1:]  
+    # # CN Diveristy
+    # cn_diveristy_fea_path = os.path.join(feature_root_dir, "CN_DiversityFeas.csv")
+    # cn_diversity_df = pd.read_csv(cn_diveristy_fea_path)
+    # fea_num_lst.append(cn_diversity_df.shape[1] - 1)
+    # cn_diversity_df = cn_diversity_df.set_index("ROI_ID")
+    # cn_diversity_df  = cn_diversity_df.reindex(index=ct_proportion_density_df["ROI_ID"])
+    # cn_diversity_df = cn_diversity_df.reset_index()
+    # cn_diversity_df = cn_diversity_df.iloc[:, 1:]  
 
-    # Joint CT-CN Dist 
-    joint_dist_ct_cn_fea_path = os.path.join(feature_root_dir, "JointDistCTCNFeas.csv")
-    joint_dist_ct_cn_df = pd.read_csv(joint_dist_ct_cn_fea_path)
-    fea_num_lst.append(joint_dist_ct_cn_df.shape[1] - 1)
-    joint_dist_ct_cn_df = joint_dist_ct_cn_df.set_index("ROI_ID")
-    joint_dist_ct_cn_df  = joint_dist_ct_cn_df.reindex(index=ct_proportion_density_df["ROI_ID"])
-    joint_dist_ct_cn_df = joint_dist_ct_cn_df.reset_index()
-    joint_dist_ct_cn_df = joint_dist_ct_cn_df.iloc[:, 1:]    
+    # # Joint CT-CN Dist 
+    # joint_dist_ct_cn_fea_path = os.path.join(feature_root_dir, "JointDistCTCNFeas.csv")
+    # joint_dist_ct_cn_df = pd.read_csv(joint_dist_ct_cn_fea_path)
+    # fea_num_lst.append(joint_dist_ct_cn_df.shape[1] - 1)
+    # joint_dist_ct_cn_df = joint_dist_ct_cn_df.set_index("ROI_ID")
+    # joint_dist_ct_cn_df  = joint_dist_ct_cn_df.reindex(index=ct_proportion_density_df["ROI_ID"])
+    # joint_dist_ct_cn_df = joint_dist_ct_cn_df.reset_index()
+    # joint_dist_ct_cn_df = joint_dist_ct_cn_df.iloc[:, 1:]    
 
     # Interaction Delaunay
     interaction_delaunay_fea_path = os.path.join(feature_root_dir, "InteractionDelaunay50Feas.csv")
@@ -111,10 +111,6 @@ if __name__ == "__main__":
     roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, 
                             cn_proportion_density_df, cn_morph_df,
                             interaction_delaunay_df], axis=1)
-    # roi_fea_df = pd.concat([ct_proportion_density_df, ct_state_df, ct_morph_df, ct_diversity_df,
-    #                         cn_proportion_density_df, cn_state_df, cn_morph_df, cn_diversity_df,
-    #                         interaction_delaunay_df], axis=1)    
-    # roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, interaction_delaunay_df], axis=1)
     
     # Insert ROI stage information
     roi_info_path = os.path.join(metadata_dir, "ROI_Info.xlsx")
