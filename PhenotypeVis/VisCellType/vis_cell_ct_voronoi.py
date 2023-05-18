@@ -48,12 +48,9 @@ if __name__ == "__main__":
     cell_phenotypes = ["Epithelial-Cell", "Endothelial-Cell", "Fibroblast", "CD4-T-Cell", "CD8-T-Cell",
                     "T-Reg-Cell", "B-Cell", "Macrophage", "Monocyte", "Dendritic-Cell", 
                     "Neutrophil", "MDSC", "NK-Cell", "Proliferating-Cell", "Undefined"]
-    color_lst = [(255, 225, 25), (245, 130, 48), (255, 250, 200), (128, 128, 0), (0, 128, 128),
-                 (170, 255, 195), (128, 0, 0), (70, 240, 240), (250, 190, 212), (0, 0, 128),
-                 (145, 30, 180), (210, 245, 60),  (255, 215, 180), (170, 110, 40), (220, 190, 255)]
-    # color_lst = [(255, 0, 0), (0, 0, 255), (0, 0, 255), (0, 255, 0), (0, 255, 0),
-    #              (0, 255, 0), (0, 255, 0), (0, 255, 0), (0, 255, 0), (0, 255, 0),
-    #              (0, 255, 0), (0, 255, 0),  (0, 255, 0), (255, 0, 0), (0, 0, 0)]
+    color_lst = [(226, 26, 28), (255, 127, 0), (253, 190, 111), (106, 61, 154), (31, 119, 180),
+                 (51, 51, 0), (202, 178, 214), (51, 160, 43), (254, 255, 153), (165, 206, 226),
+                 (102, 51, 0), (178, 223, 138),  (230, 88, 160), (102, 102, 0), (214, 214, 214)]
     cell_color_dict = {cell_type: color for cell_type, color in zip(cell_phenotypes, color_lst)}
 
     # generate voronoi graph one-by-one

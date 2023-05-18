@@ -49,8 +49,8 @@ if __name__ == "__main__":
         shutil.rmtree(cell_vis_dir)
     os.makedirs(cell_vis_dir)    
 
-    cell_color_dict = {"1": (141, 211, 199), "2": (228, 26, 28), "3": (190, 186, 218), "4": (251, 128, 114), "5": (128, 177, 211),
-                       "6": (253, 180, 98), "7": (51, 160, 44), "8": (252, 205, 229), "9": (166, 86, 40), "10": (106, 61, 154)}
+    cell_color_dict = {"1": (214, 214, 214), "2": (226, 26, 28), "3": (102, 102, 0), "4": (255, 127, 0), "5": (255, 127, 0),
+                       "6": (253, 190, 111), "7": (51, 160, 43), "8": (178, 223, 138)}
 
     for img_ind in np.arange(len(img_lst)):
         print("CN Seg on {:4d}/{}".format(img_ind+1, len(img_lst)))
@@ -77,10 +77,3 @@ if __name__ == "__main__":
             phenotype_img[:,:,2] += roi_cell_mask * cell_color[2]
         cell_phenotype_path = os.path.join(cell_vis_dir, img_name + args.plot_format)
         io.imsave(cell_phenotype_path, phenotype_img)
-
-
-
-
-
-
-
