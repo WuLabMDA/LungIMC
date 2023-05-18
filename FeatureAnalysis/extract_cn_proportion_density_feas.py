@@ -44,8 +44,8 @@ if __name__ == "__main__":
                    "Endothelial-CN5", "Fibroblast-CN6", "Macrophage-CN7", "PanImmune-CN8"]
 
     fea_names = ["ROI_ID", ]
-    fea_names.extend(["CN" + str(ele) + "-Proportion" for ele in cellcn_lst])
-    fea_names.extend(["CN" + str(ele) + "-Density" for ele in cellcn_lst])    
+    fea_names.extend([ele + "-Proportion" for ele in cn_name_lst])
+    fea_names.extend([ele + "-Density" for ele in cn_name_lst])    
     fea_df = pd.DataFrame(columns=fea_names)
 
     # extract features images by images
