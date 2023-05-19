@@ -37,8 +37,7 @@ if __name__ == "__main__":
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
     roi_fea_names = roi_fea_columns[3:]
     for fea in roi_fea_names:
-        roi_fea_df[fea] = (roi_fea_df[fea] - roi_fea_df[fea].mean()) / roi_fea_df[fea].std(ddof=0)
-        roi_fea_df[fea] = (roi_fea_df[fea].clip(-2.0, 2.0) + 2.0) / 4.0
+        roi_fea_df[fea] = (roi_fea_df[fea] + 3.0) / 6.0
 
     # filtering stage
     stage_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] == args.path_stage]

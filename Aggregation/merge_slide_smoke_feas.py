@@ -61,5 +61,5 @@ if __name__ == "__main__":
                 row_val_lst.append(np.mean(cur_lesion_df[cur_fea].tolist()))
             slide_df.loc[len(slide_df.index)] = row_val_lst
     # Check slide dataframe information 
-    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.xlsx")
-    slide_df.to_excel(lesion_fea_path, index = False)
+    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.csv")
+    slide_df.to_csv(lesion_fea_path, index = False)

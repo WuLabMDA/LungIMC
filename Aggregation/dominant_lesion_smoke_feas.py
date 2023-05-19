@@ -24,15 +24,14 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-    lesion_avg_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.xlsx")
-    lesion_fea_df = pd.read_excel(lesion_avg_fea_path)
+    lesion_avg_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.csv")
+    lesion_fea_df = pd.read_csv(lesion_avg_fea_path)
 
     # normalize all features between 0.0 to 1.0
     lesion_fea_columns = [ele for ele in lesion_fea_df.columns.tolist()]
     lesion_fea_names = lesion_fea_columns[3:]
     for fea in lesion_fea_names:
-        lesion_fea_df[fea] = (lesion_fea_df[fea] - lesion_fea_df[fea].mean()) / lesion_fea_df[fea].std(ddof=0)
-        lesion_fea_df[fea] = (lesion_fea_df[fea].clip(-2.0, 2.0) + 2.0) / 4.0
+        lesion_fea_df[fea] = (lesion_fea_df[fea] + 3.0) / 6.0
             
     # collect stage & smoke
     lesion_stages = lesion_fea_df["LesionStage"]
@@ -68,8 +67,6 @@ if __name__ == "__main__":
     print("ADC Heavy: {}".format(len(adc_heavy)))
 
     # feature analysis
-    lesion_fea_columns = [ele for ele in lesion_fea_df.columns.tolist()]
-    lesion_fea_names = lesion_fea_columns[3:] 
     sig0_feas, sig1_feas, sig2_feas, sig3_feas, sig4_feas = [], [], [], [], []
     sig0_directions, sig1_directions, sig2_directions, sig3_directions, sig4_directions = [], [], [], [], []
     for cur_fea_name in lesion_fea_names:
@@ -136,6 +133,6 @@ if __name__ == "__main__":
     print("Sig3 has {}".format(len(sig3_feas)))   
     print("Sig4 has {}".format(len(sig4_feas)))      
 
-    print("----Sig2 features:") 
-    for fea, direction in zip(sig2_feas, sig2_directions):
+    print("----Sig3 features:") 
+    for fea, direction in zip(sig3_feas, sig3_directions):
         print("{}:{}".format(fea, direction))            

@@ -24,15 +24,14 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
-    roi_fea_df = pd.read_excel(lesion_roi_fea_path)
+    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
+    roi_fea_df = pd.read_csv(lesion_roi_fea_path)
 
     # normalize all features between 0.0 to 1.0
     roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
     roi_fea_names = roi_fea_columns[3:]
     for fea in roi_fea_names:
-        roi_fea_df[fea] = (roi_fea_df[fea] - roi_fea_df[fea].mean()) / roi_fea_df[fea].std(ddof=0)
-        roi_fea_df[fea] = (roi_fea_df[fea].clip(-2.0, 2.0) + 2.0) / 4.0
+        roi_fea_df[fea] = (roi_fea_df[fea] + 3.0) / 6.0
 
     # collect stage & smoke
     roi_stages = roi_fea_df["ROI_Stage"]
@@ -59,9 +58,7 @@ if __name__ == "__main__":
         else:
             print("Unkown stage: {} and smoke {}".format(roi_stages[ind], roi_smokes[ind]))
 
-    # feature analysis
-    roi_fea_columns = [ele for ele in roi_fea_df.columns.tolist()]
-    roi_fea_names = roi_fea_columns[3:] # exclude ROI_ID & ROI_Stage    
+    # feature analysis 
     sig0_feas, sig1_feas, sig2_feas, sig3_feas, sig4_feas = [], [], [], [], []
     sig0_directions, sig1_directions, sig2_directions, sig3_directions, sig4_directions = [], [], [], [], []
     for cur_fea_name in roi_fea_names:
@@ -128,9 +125,9 @@ if __name__ == "__main__":
     print("Sig3 has {}".format(len(sig3_feas)))   
     print("Sig4 has {}".format(len(sig4_feas)))
 
-    print("----Sig3 features:") 
-    for fea, direction in zip(sig3_feas, sig3_directions):
-        print("{}:{}".format(fea, direction))   
-    print("----Sig4 features:")
-    for fea, direction in zip(sig4_feas, sig4_directions):
-        print("{}:{}".format(fea, direction))                       
+    # print("----Sig3 features:") 
+    # for fea, direction in zip(sig3_feas, sig3_directions):
+    #     print("{}:{}".format(fea, direction))   
+    # print("----Sig4 features:")
+    # for fea, direction in zip(sig4_feas, sig4_directions):
+    #     print("{}:{}".format(fea, direction))                       

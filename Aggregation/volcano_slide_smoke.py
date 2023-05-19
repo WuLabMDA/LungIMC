@@ -30,15 +30,14 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.xlsx")
-    lesion_fea_df = pd.read_excel(lesion_fea_path)
+    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_avg_feas.csv")
+    lesion_fea_df = pd.read_csv(lesion_fea_path)
 
     # normalize all features between 0.0 to 1.0
     lesion_fea_columns = [ele for ele in lesion_fea_df.columns.tolist()]
     lesion_fea_names = lesion_fea_columns[3:]
     for fea in lesion_fea_names:
-        lesion_fea_df[fea] = (lesion_fea_df[fea] - lesion_fea_df[fea].mean()) / lesion_fea_df[fea].std(ddof=0)
-        lesion_fea_df[fea] = (lesion_fea_df[fea].clip(-2.0, 2.0) + 2.0) / 4.0
+        lesion_fea_df[fea] = (lesion_fea_df[fea] + 3.0) / 6.0
 
     # filtering stage
     stage_fea_df = lesion_fea_df[lesion_fea_df["LesionStage"] == args.path_stage]
