@@ -56,33 +56,25 @@ if __name__ == "__main__":
     fea_names = [ele for ele in all_fea_df.columns.tolist()]
     print("There are {} features in total.".format(len(fea_names)))    
 
-    # Kruskal Wallis Test
-    kw_fea_inds = []
-    for ind, fea_name in enumerate(fea_names):
-        fea_vals = [ele for ele in all_fea_df[fea_name].tolist()]
-        normal_feas = [fea_vals[ind] for ind in normal_inds]
-        aah_feas = [fea_vals[ind] for ind in normal_inds]
-        ais_feas = [fea_vals[ind] for ind in ais_inds]
-        mia_feas = [fea_vals[ind] for ind in mia_inds]
-        adc_feas = [fea_vals[ind] for ind in adc_inds]
-        kw_test = stats.kruskal(normal_feas, aah_feas, ais_feas, mia_feas, adc_feas)
-        if kw_test.pvalue < 0.05:
-            kw_fea_inds.append(ind)
-    print("{}/{} pass Kruskal Wallis test.".format(len(kw_fea_inds), len(fea_names)))
-    kw_fea_df = all_fea_df.iloc[:, kw_fea_inds]
-    print("KW feature shape:")
-    print(kw_fea_df.shape)
+    # # Kruskal Wallis Test
+    # kw_fea_inds = []
+    # for ind, fea_name in enumerate(fea_names):
+    #     fea_vals = [ele for ele in all_fea_df[fea_name].tolist()]
+    #     normal_feas = [fea_vals[ind] for ind in normal_inds]
+    #     aah_feas = [fea_vals[ind] for ind in normal_inds]
+    #     ais_feas = [fea_vals[ind] for ind in ais_inds]
+    #     mia_feas = [fea_vals[ind] for ind in mia_inds]
+    #     adc_feas = [fea_vals[ind] for ind in adc_inds]
+    #     kw_test = stats.kruskal(normal_feas, aah_feas, ais_feas, mia_feas, adc_feas)
+    #     if kw_test.pvalue < 0.05:
+    #         kw_fea_inds.append(ind)
+    # print("{}/{} pass Kruskal Wallis test.".format(len(kw_fea_inds), len(fea_names)))
+    # all_fea_df = all_fea_df.iloc[:, kw_fea_inds]
+    # print("KW feature shape:")
+    # print(all_fea_df.shape)
 
-    # Feature Z-Score
-    zs_fea_df = kw_fea_df.copy()
-    kw_fea_lst = list(kw_fea_df.columns)
-    for fea in kw_fea_lst:
-        zs_fea_df[fea] = (kw_fea_df[fea] - kw_fea_df[fea].mean()) / kw_fea_df[fea].std(ddof=0)
-    # clipping (-3.0, 3.0)
-    zs_fea_df = zs_fea_df.clip(-2.0, 2.0)
-    zs_fea_df.index = roi_stages    
-
-    plt.imshow(zs_fea_df, cmap ="bwr", aspect=0.5)
+    all_fea_df.index = roi_stages
+    plt.imshow(all_fea_df, cmap ="bwr", aspect=0.5)
     plt.colorbar()
     fea_heatmap_path = os.path.join(feature_root_dir, "fea_heatmap_stage.pdf")
     plt.savefig(fea_heatmap_path, transparent=False, dpi=300)

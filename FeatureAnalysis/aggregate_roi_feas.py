@@ -136,12 +136,20 @@ if __name__ == "__main__":
     interested_col_inds = [ind for ind, fea_name in enumerate(col_names) if "Undefined" not in fea_name]
     roi_fea_df = roi_fea_df.iloc[:, interested_col_inds]
 
+    # Feature processing
+    fea_lst = list(roi_fea_df.columns[2:])
+    for cur_fea in fea_lst:
+        # z-scoring feature
+        roi_fea_df[cur_fea] = (roi_fea_df[cur_fea] - roi_fea_df[cur_fea].mean()) / roi_fea_df[cur_fea].std(ddof=0)
+        # clipping (-3.0, 3.0)
+        roi_fea_df[cur_fea] = roi_fea_df[cur_fea].clip(-3.0, 3.0)
+
     # print ROI number counts
     print("In total, there are {} ROIs.".format(roi_fea_df.shape[0]))
     roi_stages = [ele for ele in roi_fea_df["ROI_Stage"].tolist()]
     for cur_stage in stage_order_lst:
         print("-{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages]))) 
-
+        
     # Merge features
     merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
     roi_fea_df.to_csv(merge_roi_fea_path, index=False)
