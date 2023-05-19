@@ -43,7 +43,7 @@ metadata_dir <- file.path(data_root_dir, "Metadata")
 roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
-# cn_from_order <- c("Undefined-CN1", "Epithelial1-CN2", "Proliferating-CN3", "Epithelial2- CN4", 
+# cn_from_order <- c("Undefined-CN1", "Epithelial1-CN2", "Proliferating-CN3", "Epithelial2-CN4", 
 #                    "Endothelial-CN5", "Fibroblast-CN6", "Macrophage-CN7", "PanImmune-CN8") 
 # cn_to_order <- rev(cn_from_order)
 
