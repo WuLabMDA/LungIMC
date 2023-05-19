@@ -44,7 +44,7 @@ if __name__ == "__main__":
     roi_lst = [os.path.splitext(ele)[0] for ele in roi_meta_df["image"].tolist()]
 
     # define color mapping
-    cell_color_dict = {"1": (214, 214, 214), "2": (226, 26, 28), "3": (102, 102, 0), "4": (255, 127, 0), "5": (255, 127, 0),
+    cell_color_dict = {"1": (214, 214, 214), "2": (226, 26, 28), "3": (102, 102, 0), "4": (255, 127, 0), "5": (255, 32, 169),
                        "6": (253, 190, 111), "7": (51, 160, 43), "8": (178, 223, 138)}    
 
     # generate voronoi graph one-by-one
