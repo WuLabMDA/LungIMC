@@ -30,17 +30,9 @@ if __name__ == "__main__":
 
     # load lesions
     lesion_df = pd.read_csv(lesion_info_path)
-    import pdb; pdb.set_trace()
-
-    # # lesion_df = lesion_df[lesion_df["Slide_Diag"] != "Normal"]
-    # lesion_df = lesion_df[~(lesion_df.Slide_Diag == "AAH") | ~(lesion_df.Slide_ID == "2571-1D")]
-    # slide_smoke_lst = []
-    # lesion_pid_lst = [ele for ele in lesion_df["Patient_ID"]]
-    # for pid in lesion_pid_lst:
-    #     slide_smoke_lst.append(patient_smoke_dict[pid])
-    # lesion_df["SmokeLevel"] = slide_smoke_lst
-
-
-    # # save to local
-    # slide_tmb_path = os.path.join(slide_tmb_dir, "lesion_tmb_info.xlsx")
-    # tmb_df.to_excel(slide_tmb_path, index = False)
+    tmb_df = lesion_df[~pd.isnull(lesion_df["TMB"])]
+    keep_columns = ["Slide_ID", "Slide_Diag", "TMB"]
+    tmb_df = tmb_df[keep_columns]
+    
+    slide_tmb_path = os.path.join(slide_tmb_dir, "lesion_tmb_info.csv")
+    tmb_df.to_csv(slide_tmb_path, index = False)
