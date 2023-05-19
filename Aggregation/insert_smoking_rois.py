@@ -26,6 +26,7 @@ if __name__ == "__main__":
     # load aggregated feature
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
     agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation.csv")
+    # agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation_raw.csv")
     roi_fea_df = pd.read_csv(agg_roi_fea_path)
 
     # Add smoking information
@@ -44,6 +45,8 @@ if __name__ == "__main__":
     roi_fea_df.loc[roi_fea_df["SmokeStatus"] == "Light", "SmokeStatus"] = "Never" # combine Light to Never
     # roi_fea_df = roi_fea_df[roi_fea_df["SmokeStatus"].isin(["Never", "Heavy"])]  # remove Light
     roi_fea_df.loc[roi_fea_df["ROI_Stage"] == "DistantNormal", "ROI_Stage"] = "Normal"
-    print("{} ROIs inside lesion.".format(len(roi_fea_df)))    
+    print("{} ROIs inside lesion.".format(len(roi_fea_df))) 
+
     lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
+    # lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas_raw.csv")
     roi_fea_df.to_csv(lesion_roi_fea_path, index = False)

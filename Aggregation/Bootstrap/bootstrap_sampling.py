@@ -31,8 +31,8 @@ if __name__ == "__main__":
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
 
     # load aggregated feature
-    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.xlsx")
-    roi_fea_df = pd.read_excel(lesion_roi_fea_path)
+    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
+    roi_fea_df = pd.read_csv(lesion_roi_fea_path)
     roi_names = roi_fea_df["ROI_ID"].tolist()
 
     # create empty slide dataframe
@@ -57,7 +57,7 @@ if __name__ == "__main__":
             for ele in rand_rois:
                 if ele in roi_names:
                     rand_inds.append(roi_names.index(ele))
-            if len(rand_inds) < (args.rand_roi_num - 10):
+            if len(rand_inds) < (args.rand_roi_num - 20):
                 print("{} sampling {}".format(cur_lesion, len(rand_inds)))
             rand_lesion_df = roi_fea_df.iloc[rand_inds]
             smoke_lst = rand_lesion_df["SmokeStatus"].tolist()
@@ -75,5 +75,5 @@ if __name__ == "__main__":
                 row_val_lst.append(np.mean(rand_lesion_df[cur_fea].tolist()))
             slide_df.loc[len(slide_df.index)] = row_val_lst
     # Check slide dataframe information 
-    bootstrap_lesion_fea_path = os.path.join(slide_agg_dir, "lesion_bootstrap_feas.xlsx")
-    slide_df.to_excel(bootstrap_lesion_fea_path, index = False)
+    bootstrap_lesion_fea_path = os.path.join(slide_agg_dir, "lesion_bootstrap_feas.csv")
+    slide_df.to_csv(bootstrap_lesion_fea_path, index = False)

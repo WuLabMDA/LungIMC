@@ -86,6 +86,7 @@ if __name__ == "__main__":
     volcano_dir = os.path.join(slide_agg_dir, "ROI-Volcano")
     if not os.path.exists(volcano_dir):
         os.makedirs(volcano_dir)
+        
     # # plot volcano 
     # plot_name = "{}_roi_volcano_plot".format(args.path_stage)
     # fig_path = os.path.join(volcano_dir, plot_name)

@@ -112,6 +112,13 @@ if __name__ == "__main__":
     roi_fea_df.insert(loc=1, column="ROI_Stage", value=roi_stage_lst)
     roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
 
+    # print ROI number counts
+    print("In total, there are {} ROIs.".format(roi_fea_df.shape[0]))
+    roi_stages = [ele for ele in roi_fea_df["ROI_Stage"].tolist()]
+    stage_order_lst = ["Normal", "DistantNormal", "AAH", "AIS", "MIA", "ADC"]    
+    for cur_stage in stage_order_lst:
+        print("-{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages]))) 
+
     # Feature processing
     fea_lst = list(roi_fea_df.columns[2:])
     for cur_fea in fea_lst:
@@ -120,13 +127,7 @@ if __name__ == "__main__":
         # clipping (-3.0, 3.0)
         roi_fea_df[cur_fea] = roi_fea_df[cur_fea].clip(-3.0, 3.0)
 
-    # print ROI number counts
-    print("In total, there are {} ROIs.".format(roi_fea_df.shape[0]))
-    roi_stages = [ele for ele in roi_fea_df["ROI_Stage"].tolist()]
-    stage_order_lst = ["Normal", "DistantNormal", "AAH", "AIS", "MIA", "ADC"]    
-    for cur_stage in stage_order_lst:
-        print("-{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages]))) 
-
     # Merge features
     agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation.csv")
+    # agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation_raw.csv")
     roi_fea_df.to_csv(agg_roi_fea_path, index=False)

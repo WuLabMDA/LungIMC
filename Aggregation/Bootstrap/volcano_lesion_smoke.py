@@ -30,15 +30,14 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_bootstrap_feas.xlsx")
-    lesion_fea_df = pd.read_excel(lesion_fea_path)
+    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_bootstrap_feas.csv")
+    lesion_fea_df = pd.read_csv(lesion_fea_path)
 
     # normalize all features between 0.0 to 1.0
     lesion_fea_columns = [ele for ele in lesion_fea_df.columns.tolist()]
     lesion_fea_names = lesion_fea_columns[3:]
     for fea in lesion_fea_names:
-        lesion_fea_df[fea] = (lesion_fea_df[fea] - lesion_fea_df[fea].mean()) / lesion_fea_df[fea].std(ddof=0)
-        lesion_fea_df[fea] = (lesion_fea_df[fea].clip(-2.0, 2.0) + 2.0) / 4.0
+        lesion_fea_df[fea] = (lesion_fea_df[fea] + 3.0) / 6.0
 
     # filtering stage
     stage_fea_df = lesion_fea_df[lesion_fea_df["LesionStage"] == args.path_stage]
@@ -86,15 +85,15 @@ if __name__ == "__main__":
     volcano_dir = os.path.join(slide_agg_dir, "Bootstrap-Volcano")
     if not os.path.exists(volcano_dir):
         os.makedirs(volcano_dir)
-    # plot volcano 
-    plot_name = "{}_slide_volcano_plot".format(args.path_stage)
-    fig_path = os.path.join(volcano_dir, plot_name)
-    visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
-        lfc_thr=(0.0, 0.0), pv_thr=(0.05, 0.05), sign_line=True, 
-        xlm=(-1.4, 1.5, 0.1), ylm=(0, 5, 1),
-        gstyle=2, axtickfontsize=10,
-        plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
-        figname=fig_path, figtype="pdf")
+    # # plot volcano 
+    # plot_name = "{}_slide_volcano_plot".format(args.path_stage)
+    # fig_path = os.path.join(volcano_dir, plot_name)
+    # visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
+    #     lfc_thr=(0.0, 0.0), pv_thr=(0.05, 0.05), sign_line=True, 
+    #     xlm=(-1.4, 1.5, 0.1), ylm=(0, 5, 1),
+    #     gstyle=2, axtickfontsize=10,
+    #     plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
+    #     figname=fig_path, figtype="pdf")
 
     fea_txt_name = "{}_bootstrap_feas.txt".format(args.path_stage)
     fea_tx_path = os.path.join(volcano_dir, fea_txt_name)
