@@ -30,7 +30,8 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     slide_tmb_dir = os.path.join(dataset_dir, args.tmb_dir)
-    lesion_fea_path = os.path.join(slide_tmb_dir, "lesion_avg_feas.csv")
+    # lesion_fea_path = os.path.join(slide_tmb_dir, "lesion_avg_feas.csv")
+    lesion_fea_path = os.path.join(slide_tmb_dir, "lesion_weigh_feas.csv")
     lesion_fea_df = pd.read_csv(lesion_fea_path)
 
     # normalize all features between 0.0 to 1.0
