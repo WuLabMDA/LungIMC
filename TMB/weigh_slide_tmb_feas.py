@@ -6,6 +6,8 @@ import json, pytz, pickle
 from datetime import datetime
 import pandas as pd
 import numpy as np
+from sklearn.metrics import pairwise_distances
+from scipy.spatial.distance import cosine
 
 
 def set_args():
@@ -61,11 +63,19 @@ if __name__ == "__main__":
                 print("Current stage is: {}".format(cur_stage))
             cur_lesion_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(stage_rois)]
             lesion_fea_df = cur_lesion_df.iloc[:, 3:]
-            for cur_fea in roi_fea_columns:
-                row_val_lst.append(np.mean(cur_lesion_df[cur_fea].tolist()))
+            # # average ROIs
+            # for cur_fea in roi_fea_columns:
+            #     row_val_lst.append(np.mean(cur_lesion_df[cur_fea].tolist()))
+            # kernel weighting ROIs
+            lesion_fea_np = lesion_fea_df.to_numpy()
+            kernel_mat = (1.0 - pairwise_distances(lesion_fea_np, metric="cosine") + 1.0) / 2.0
+            roi_weights = 1.0 / np.sum(kernel_mat, axis=0)
+            roi_weights = roi_weights /np.sum(roi_weights) # normalize
+            weigh_fea = np.matmul(roi_weights, lesion_fea_np)
+            row_val_lst.extend(weigh_fea.tolist())
+            # add lesions     
             slide_df.loc[len(slide_df.index)] = row_val_lst
 
-
-    # # Check slide dataframe information 
-    # lesion_fea_path = os.path.join(slide_tmb_dir, "lesion_weigh_feas.csv")
-    # slide_df.to_csv(lesion_fea_path, index = False)
+    # Check slide dataframe information 
+    lesion_fea_path = os.path.join(slide_tmb_dir, "lesion_weigh_feas.csv")
+    slide_df.to_csv(lesion_fea_path, index = False)
