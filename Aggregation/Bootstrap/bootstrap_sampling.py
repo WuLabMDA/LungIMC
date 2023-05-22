@@ -63,14 +63,12 @@ if __name__ == "__main__":
             smoke_lst = rand_lesion_df["SmokeStatus"].tolist()
             if len(set(smoke_lst)) != 1:
                 print("Multiple smokes in {}".format(cur_lesion))
-                continue  
-            cur_smoke = smoke_lst[0]                      
+                continue
             stage_lst = rand_lesion_df["ROI_Stage"].tolist()
             if len(set(stage_lst)) != 1:
                 print("Multiple stages in {}".format(cur_lesion))
                 continue
-            cur_stage = stage_lst[0]                
-            row_val_lst = [cur_lesion, cur_stage, cur_smoke]
+            row_val_lst = [cur_lesion, stage_lst[0], smoke_lst[0]]
             for cur_fea in roi_fea_columns:
                 row_val_lst.append(np.mean(rand_lesion_df[cur_fea].tolist()))
             slide_df.loc[len(slide_df.index)] = row_val_lst
