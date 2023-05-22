@@ -42,7 +42,7 @@ if __name__ == "__main__":
     for cur_lesion in lesion_lst:
         roi_names = [roi_lst[ind] for ind in np.arange(len(roi_lst)) if roi_lst[ind].startswith(cur_lesion)]
         cur_lesion_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(roi_names)]
-        cur_tmbs = [ele for ele in cur_lesion_df["TMB"].tolist()]
+        cur_tmbs = cur_lesion_df["TMB"].tolist()
         if len(set(cur_tmbs)) != 1:
             print("Multiple TMBs in {}".format(cur_lesion))
             continue
@@ -50,19 +50,22 @@ if __name__ == "__main__":
         distinct_stages = list(set(stage_lst))
         if len(distinct_stages) > 1:
             print("{} has mutliple stages.".format(cur_lesion))
-            continue
+            continue        
         for cur_stage in distinct_stages:
             row_val_lst = [cur_lesion, cur_stage, cur_tmbs[0]]
             stage_rois = []
             for cur_roi, roi_stage in zip(roi_names, stage_lst):
                 if roi_stage == cur_stage:
                     stage_rois.append(cur_roi)
+            if len(stage_rois) == 1:
+                print("Current stage is: {}".format(cur_stage))
             cur_lesion_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(stage_rois)]
             lesion_fea_df = cur_lesion_df.iloc[:, 3:]
             for cur_fea in roi_fea_columns:
                 row_val_lst.append(np.mean(cur_lesion_df[cur_fea].tolist()))
             slide_df.loc[len(slide_df.index)] = row_val_lst
 
-    # Check slide dataframe information 
-    lesion_fea_path = os.path.join(slide_tmb_dir, "lesion_avg_feas.csv")
-    slide_df.to_csv(lesion_fea_path, index = False)
+
+    # # Check slide dataframe information 
+    # lesion_fea_path = os.path.join(slide_tmb_dir, "lesion_weigh_feas.csv")
+    # slide_df.to_csv(lesion_fea_path, index = False)
