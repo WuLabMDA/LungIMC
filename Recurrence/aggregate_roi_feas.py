@@ -101,10 +101,13 @@ if __name__ == "__main__":
     roi_diag_lst = [ele for ele in roi_info_df["ROI_Diag"].tolist()]
 
     # obtain roi stages
+    # obtain roi stages
     roi_stage_lst = []
     for loc, diag in zip(roi_loc_lst, roi_diag_lst):
         if loc == "Tumor":
             roi_stage_lst.append(diag)
+        elif loc == "AdjacentNormal":
+            roi_stage_lst.append(loc)
         else:
             roi_stage_lst.append("Normal")
 
@@ -114,11 +117,13 @@ if __name__ == "__main__":
     roi_stage_df  = roi_stage_df.reindex(index=ct_proportion_density_df["ROI_ID"])
     roi_stage_df = roi_stage_df.reset_index()
     roi_stage_lst = [ele for ele in roi_stage_df["ROI_Stage"].tolist()]
-
-    # insert stage column and sort
     roi_fea_df.insert(loc=1, column="ROI_Stage", value=roi_stage_lst)
-    # # print ROI number counts
-    # print("In total, there are {} ROIs.".format(roi_fea_df.shape[0]))
+    roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
+    # print ROI number counts
+    print("In total, there are {} ROIs.".format(roi_fea_df.shape[0]))
+    col_names = roi_fea_df.columns.tolist()
+    interested_col_inds = [ind for ind, fea_name in enumerate(col_names) if "Undefined" not in fea_name]
+    roi_fea_df = roi_fea_df.iloc[:, interested_col_inds]
 
     # Feature processing
     fea_lst = list(roi_fea_df.columns[2:])
@@ -129,7 +134,7 @@ if __name__ == "__main__":
         roi_fea_df[cur_fea] = roi_fea_df[cur_fea].clip(-3.0, 3.0)
 
     # filtering lesion recurrence
-    roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "Normal"]
+    roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] == "AAH"]
     roi_recurrence_inds = []
     for ind, roi_name in enumerate(roi_fea_df["ROI_ID"]):
         lesion_name = roi_name[:-7]
