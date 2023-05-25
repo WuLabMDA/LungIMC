@@ -18,6 +18,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])                        
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
+    parser.add_argument("--volcano_dir",            type=str,       default="Volcano")    
     parser.add_argument("--pval_thresh",            type=float,     default=0.05)         
     parser.add_argument("--path_stage",             type=str,       default="AAH")
 
@@ -82,25 +83,28 @@ if __name__ == "__main__":
                 never_ones.append(cur_fea_name)
         stage_vol_df.loc[len(stage_vol_df.index)] = [cur_fea_name, fea_log_fc, fea_pval]
 
-    volcano_dir = os.path.join(slide_agg_dir, "Slide-Volcano")
+    volcano_dir = os.path.join(slide_agg_dir, args.volcano_dir, "Lesion")
     if not os.path.exists(volcano_dir):
         os.makedirs(volcano_dir)
-    # # plot volcano 
-    # plot_name = "{}_slide_volcano_plot".format(args.path_stage)
-    # fig_path = os.path.join(volcano_dir, plot_name)
-    # visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
-    #     lfc_thr=(0.0, 0.0), pv_thr=(0.05, 0.05), sign_line=True, 
-    #     xlm=(-1.4, 1.5, 0.1), ylm=(0, 5, 1),
-    #     gstyle=2, axtickfontsize=10,
-    #     plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
-    #     figname=fig_path, figtype="pdf")
 
-    print("Slide on stage {}".format(args.path_stage))
-    print("No. Never Smoker: {}".format(len(never_inds)))
-    print("No. Heavy Smoker: {}".format(len(heavy_inds)))
-    print("Minimum p-val before adjustment: {}".format(np.min(fea_pval_lst)))
-    print("Minimum p-val after adjustment: {}".format(np.min(adjusted_pvals)))
-    print("--Heavy smokers dominant features:")
-    print(heavy_ones)
-    print("Never smokers dominant features:")
-    print(never_ones)
+    # save feature information
+    fea_txt_name = "{}_lesion_feas.txt".format(args.path_stage)
+    fea_tx_path = os.path.join(volcano_dir, fea_txt_name)
+    with open(fea_tx_path, 'w') as file:
+        file.write("Slide on stage {}\n".format(args.path_stage))
+        file.write("No. Heavy Smoker: {}\n".format(len(heavy_inds)))
+        file.write("No. Never Smoker: {}\n".format(len(never_inds)))
+        file.write("Minimum p-val before adjustment: {}\n".format(np.min(fea_pval_lst)))
+        file.write("Minimum p-val after adjustment: {}\n".format(np.min(adjusted_pvals)))
+        file.write("--Heavy smokers ({}) dominant features:\n {}\n".format(len(heavy_ones), heavy_ones))
+        file.write("--Never smokers ({}) dominant features:\n {}\n".format(len(never_ones), never_ones))        
+        
+    # plot volcano 
+    plot_name = "{}_lesion_volcano_plot".format(args.path_stage)
+    fig_path = os.path.join(volcano_dir, plot_name)
+    visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
+        lfc_thr=(0.0, 0.0), pv_thr=(0.05, 0.05), sign_line=True, 
+        xlm=(-1.4, 1.5, 0.1), ylm=(0, 5, 1),
+        gstyle=2, axtickfontsize=10,
+        plotlegend=True, legendlabels=["Smoker Significant Up", "No Signficance", "Smoker Significant Down"],
+        figname=fig_path, figtype="pdf")
