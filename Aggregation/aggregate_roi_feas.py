@@ -119,6 +119,13 @@ if __name__ == "__main__":
     for cur_stage in stage_order_lst:
         print("-{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages]))) 
 
+    col_names = roi_fea_df.columns.tolist()
+    interested_col_inds = [ind for ind, fea_name in enumerate(col_names) if "Undefined" not in fea_name]
+    roi_fea_df = roi_fea_df.iloc[:, interested_col_inds]
+
+    # # save raw features
+    # agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation_raw.csv")
+
     # Feature processing
     fea_lst = list(roi_fea_df.columns[2:])
     for cur_fea in fea_lst:
@@ -126,8 +133,7 @@ if __name__ == "__main__":
         roi_fea_df[cur_fea] = (roi_fea_df[cur_fea] - roi_fea_df[cur_fea].mean()) / roi_fea_df[cur_fea].std(ddof=0)
         # clipping (-3.0, 3.0)
         roi_fea_df[cur_fea] = roi_fea_df[cur_fea].clip(-3.0, 3.0)
-
-    # Merge features
     agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation.csv")
-    # agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation_raw.csv")
+
+    # save feature    
     roi_fea_df.to_csv(agg_roi_fea_path, index=False)
