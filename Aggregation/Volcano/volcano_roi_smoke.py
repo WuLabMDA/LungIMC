@@ -87,16 +87,7 @@ if __name__ == "__main__":
     volcano_dir = os.path.join(slide_agg_dir, args.volcano_dir, "ROI")
     if not os.path.exists(volcano_dir):
         os.makedirs(volcano_dir)
-        
-    # plot volcano 
-    plot_name = "{}_roi_volcano_plot".format(args.path_stage)
-    fig_path = os.path.join(volcano_dir, plot_name)
-    visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
-        lfc_thr=(0.0, 0.0), pv_thr=(args.pval_thresh, args.pval_thresh), sign_line=True, 
-        xlm=(-0.6, 0.7, 0.1), ylm=(0, 12, 2), gstyle=2, axtickfontsize=10,
-        plotlegend=True, legendlabels=["Smoker Significant Up", "No Signficance", "Smoker Significant Down"],
-        figname=fig_path, figtype="pdf")
-    
+
     # save feature information
     fea_txt_name = "{}_roi_feas.txt".format(args.path_stage)
     fea_tx_path = os.path.join(volcano_dir, fea_txt_name)
@@ -108,3 +99,13 @@ if __name__ == "__main__":
         file.write("Minimum p-val after adjustment: {}\n".format(np.min(adjusted_pvals)))
         file.write("--Heavy smokers ({}) dominant features:\n {}\n".format(len(heavy_ones), heavy_ones))
         file.write("--Never smokers ({}) dominant features:\n {}\n".format(len(never_ones), never_ones))
+
+    # plot volcano 
+    plot_name = "{}_roi_volcano_plot".format(args.path_stage)
+    fig_path = os.path.join(volcano_dir, plot_name)
+    visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
+        lfc_thr=(0.0, 0.0), pv_thr=(args.pval_thresh, args.pval_thresh), sign_line=True, 
+        xlm=(-0.6, 0.7, 0.1), ylm=(0, 15, 2), gstyle=2, axtickfontsize=10,
+        plotlegend=True, legendlabels=["Smoker Significant Up", "No Signficance", "Smoker Significant Down"],
+        figname=fig_path, figtype="pdf")
+    
