@@ -86,15 +86,14 @@ if __name__ == "__main__":
     if not os.path.exists(volcano_dir):
         os.makedirs(volcano_dir)
         
-    # # plot volcano 
-    # plot_name = "{}_roi_volcano_plot".format(args.path_stage)
-    # fig_path = os.path.join(volcano_dir, plot_name)
-    # visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
-    #     lfc_thr=(0.0, 0.0), pv_thr=(args.pval_thresh, args.pval_thresh), sign_line=True, 
-    #     xlm=(-0.7, 0.8, 0.1), ylm=(0, 10, 2),
-    #     gstyle=2, axtickfontsize=10,
-    #     plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
-    #     figname=fig_path, figtype="pdf")
+    # plot volcano 
+    fig_path = os.path.join(volcano_dir, "recurrence_roi_volcano_plot")
+    visuz.GeneExpression.volcano(df=stage_vol_df, lfc="Log2FC", pv="Pvalue", geneid="Feature", 
+        lfc_thr=(0.0, 0.0), pv_thr=(args.pval_thresh, args.pval_thresh), sign_line=True, 
+        xlm=(-0.7, 0.8, 0.1), ylm=(0, 10, 2),
+        gstyle=2, axtickfontsize=10,
+        plotlegend=True, legendlabels=["Smoker significant up", "No signficance", "Smoker significant down"],
+        figname=fig_path, figtype="pdf")
 
     print("No. NonRecurrence ROIs: {}".format(len(nonrecur_inds)))
     print("No. Recurrence ROIs: {}".format(len(recur_inds)))
