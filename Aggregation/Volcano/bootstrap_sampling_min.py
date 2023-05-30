@@ -84,5 +84,5 @@ if __name__ == "__main__":
             row_val_lst.extend(lesion_fea.tolist())
             slide_df.loc[len(slide_df.index)] = row_val_lst
     # Check slide dataframe information 
-    bootstrap_lesion_fea_path = os.path.join(slide_agg_dir, "lesion_bmean_feas.csv")
+    bootstrap_lesion_fea_path = os.path.join(slide_agg_dir, "lesion_bmin_feas.csv")
     slide_df.to_csv(bootstrap_lesion_fea_path, index = False)

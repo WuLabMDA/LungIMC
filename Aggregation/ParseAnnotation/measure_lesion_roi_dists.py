@@ -15,6 +15,7 @@ def set_args():
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])  
     parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")  
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
+    parser.add_argument("--dist_dir",               type=str,       default="Distance")
 
     args = parser.parse_args()
     return args
@@ -26,7 +27,8 @@ if __name__ == "__main__":
     dataset_dir = os.path.join(args.data_root, args.data_set)
     # load location information
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-    lesion_roi_loc_path = os.path.join(slide_agg_dir, "lesion_roi_loc.pkl")
+    distance_dir = os.path.join(slide_agg_dir, args.dist_dir)
+    lesion_roi_loc_path = os.path.join(distance_dir, "lesion_roi_loc.pkl")
     lesion_roi_dict = None
     with open(lesion_roi_loc_path, 'rb') as handle:
         lesion_roi_dict = pickle.load(handle)        
@@ -58,6 +60,6 @@ if __name__ == "__main__":
     print("ROI total number is: {}".format(ttl_roi_num))
     print("ROI inside number is: {}".format(inside_roi_num))
     # save information to json
-    lesion_roi_dist_path = os.path.join(slide_agg_dir, "lesion_roi_dist.json")
+    lesion_roi_dist_path = os.path.join(distance_dir, "lesion_roi_dist.json")
     with open(lesion_roi_dist_path, 'w') as fp:
         json.dump(lesion_roi_weight_dict, fp)

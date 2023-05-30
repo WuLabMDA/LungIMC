@@ -17,6 +17,8 @@ def set_args():
     parser = argparse.ArgumentParser(description = "Visualize Cell Neighborhood")
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])  
+    parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
+    parser.add_argument("--dist_dir",               type=str,       default="Distance")    
     parser.add_argument("--reduction_ratio",        type=float,     default=5.0) 
                     
     args = parser.parse_args()
@@ -28,9 +30,12 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     demo_root_dir = os.path.join(dataset_dir, "NatureFigures", "Fig03")
-
     annotation_dir = os.path.join(demo_root_dir, "Slidesannotation")
-    imitation_dir = os.path.join(demo_root_dir, "Imitations")
+    
+    # prepare folders for annotation imitation
+    slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
+    distance_dir = os.path.join(slide_agg_dir, args.dist_dir)
+    imitation_dir = os.path.join(distance_dir, "Imitations")
     if not os.path.exists(imitation_dir):
         os.makedirs(imitation_dir)
 

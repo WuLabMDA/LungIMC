@@ -83,7 +83,7 @@ if __name__ == "__main__":
                 never_ones.append(cur_fea_name)
         stage_vol_df.loc[len(stage_vol_df.index)] = [cur_fea_name, fea_log_fc, fea_pval]
 
-    volcano_dir = os.path.join(slide_agg_dir, args.volcano_dir, "Bmean")
+    volcano_dir = os.path.join(slide_agg_dir, args.volcano_dir, "Bmin")
     if not os.path.exists(volcano_dir):
         os.makedirs(volcano_dir)
 

@@ -14,6 +14,7 @@ def set_args():
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])  
     parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")  
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
+    parser.add_argument("--dist_dir",               type=str,       default="Distance")
 
     args = parser.parse_args()
     return args
@@ -25,9 +26,9 @@ if __name__ == "__main__":
     dataset_dir = os.path.join(args.data_root, args.data_set)
     # load location information
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-
-    # save information to json
-    lesion_roi_dist_path = os.path.join(slide_agg_dir, "lesion_roi_dist.json")
+    distance_dir = os.path.join(slide_agg_dir, args.dist_dir)
+    # load information
+    lesion_roi_dist_path = os.path.join(distance_dir, "lesion_roi_dist.json")
     lesion_roi_weight_dict =  None
     with open(lesion_roi_dist_path) as fp:
         lesion_roi_weight_dict = json.load(fp)

@@ -18,6 +18,7 @@ def set_args():
     parser.add_argument("--data_root",              type=str,       default="/Data")
     parser.add_argument("--data_set",               type=str,       default="HumanWholeIMC", choices=["HumanWholeIMC", "HumanSampling35"])  
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
+    parser.add_argument("--dist_dir",               type=str,       default="Distance")
 
     args = parser.parse_args()
     return args
@@ -62,6 +63,9 @@ if __name__ == "__main__":
             lesion_roi_dict[cur_slide] = lesion_dict
     print("There are {} lesions with annotated ROIs.".format(len(lesion_roi_dict)))
     # save information to pkl
-    lesion_roi_loc_path = os.path.join(slide_agg_dir, "lesion_roi_loc.pkl")
+    distance_dir = os.path.join(slide_agg_dir, args.dist_dir)
+    if not os.path.exists(distance_dir):
+        os.makedirs(distance_dir)
+    lesion_roi_loc_path = os.path.join(distance_dir, "lesion_roi_loc.pkl")
     with open(lesion_roi_loc_path, 'wb') as handle:
         pickle.dump(lesion_roi_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
