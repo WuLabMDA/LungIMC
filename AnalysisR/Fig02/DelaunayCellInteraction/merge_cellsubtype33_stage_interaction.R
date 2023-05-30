@@ -10,7 +10,7 @@ data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
 threshold_val <- 50
-cell_subtype_interaction_name <- paste0("SubtypeDelaunayInteractionThreshold", threshold_val, ".RData")
+cell_subtype_interaction_name <- paste0("Subtype33DelaunayInteractionThreshold", threshold_val, ".RData")
 cell_subtype_interaction_path <- file.path(celltype_delaunay_dir, cell_subtype_interaction_name)
 load(cell_subtype_interaction_path)
 
