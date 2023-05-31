@@ -130,11 +130,11 @@ if __name__ == "__main__":
 
     # plot 
     fig, ax = plt.subplots()
-    ax.plot(fea_num_lst, avg_overlap_ratios, 'o', linewidth=1, label="Average-{:.3f}".format(avg_overlap_area))
-    ax.plot(fea_num_lst, max_overlap_ratios, 'o', linewidth=1, label="Max-{:.3f}".format(max_overlap_area))
-    ax.plot(fea_num_lst, min_overlap_ratios, 'o', linewidth=1, label="Min-{:.3f}".format(min_overlap_area))
-    ax.plot(fea_num_lst, bmax_overlap_ratios, 'o', linewidth=1, label="B-Max-{:.3f}".format(bmax_overlap_area))
-    ax.plot(fea_num_lst, bmin_overlap_ratios, 'o', linewidth=1, label="B-Min-{:.3f}".format(bmin_overlap_area))    
+    ax.plot(fea_num_lst, avg_overlap_ratios, '--', linewidth=2, label="Average-{:.3f}".format(avg_overlap_area))
+    ax.plot(fea_num_lst, max_overlap_ratios, '--', linewidth=2, label="Max-{:.3f}".format(max_overlap_area))
+    ax.plot(fea_num_lst, min_overlap_ratios, '--', linewidth=2, label="Min-{:.3f}".format(min_overlap_area))
+    ax.plot(fea_num_lst, bmax_overlap_ratios, '--', linewidth=2, label="B-Max-{:.3f}".format(bmax_overlap_area))
+    ax.plot(fea_num_lst, bmin_overlap_ratios, '--', linewidth=2, label="B-Min-{:.3f}".format(bmin_overlap_area))    
     ax.legend()
 
     plot_name = "{}-Lesion-Feature-{}-Dominant".format(args.path_stage, args.dominant)
