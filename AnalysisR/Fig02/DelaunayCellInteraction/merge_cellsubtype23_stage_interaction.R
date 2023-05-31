@@ -46,7 +46,7 @@ roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
 
-from_order <- c("Epithelial", "B-Cells", "Neutrophil", "NK Cells", "Dendritic-Cells", "Endothelial-Cell",
+from_order <- c("Epithelial", "B-Cells", "Neutrophil", "NK-Cells", "Dendritic-Cell", "Endothelial-Cell",
                 "Naive CD8 T-Cells", "Cytotoxic CD8 T-Cells", "Memory CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", 
                 "Naive CD4 T-Cells", "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", 
                 "Treg-Cells", "Proliferating-Cell", "CD163+ Macrophage", "CD163- Macrophage", 
