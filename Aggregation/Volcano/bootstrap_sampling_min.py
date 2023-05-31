@@ -17,7 +17,7 @@ def set_args():
     parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")  
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
     parser.add_argument("--rand_roi_num",           type=int,       default=50)
-    parser.add_argument("--rand_times",             type=int,       default=3)
+    parser.add_argument("--rand_times",             type=int,       default=5)
     parser.add_argument("--rand_seed",              type=int,       default=1234)
 
     args = parser.parse_args()
