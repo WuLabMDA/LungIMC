@@ -60,39 +60,39 @@ if __name__ == "__main__":
         avg_overlap_ratios.append(in_num * 1.0 / fea_num)
     avg_overlap_area = np.sum(avg_overlap_ratios) / len(avg_overlap_ratios)
 
-    # min
-    min_lesion_rank_name = "{}_Lesion_VolcanoFeatures_min.csv".format(args.path_stage)
-    min_lesion_rank_volcano_path = os.path.join(lesion_rank_dir, min_lesion_rank_name)
-    min_lesion_volcano_df = pd.read_csv(min_lesion_rank_volcano_path)
-    if args.dominant == "Heavy":
-        min_lesion_volcano_df = min_lesion_volcano_df[min_lesion_volcano_df["Log2FC"] > 0.0]
-    else:
-        min_lesion_volcano_df = min_lesion_volcano_df[min_lesion_volcano_df["Log2FC"] < 0.0]
-    min_lesion_volcano_df.sort_values(by="Pvalue")
-    min_lesion_features = [ele for ele in min_lesion_volcano_df["Feature"].tolist()]
-    min_overlap_ratios = []
-    for fea_num in fea_num_lst:
-        lesion_feas = min_lesion_features[:fea_num]
-        in_num = np.sum([ele in roi_features for ele in lesion_feas])
-        min_overlap_ratios.append(in_num * 1.0 / fea_num)
-    min_overlap_area = np.sum(min_overlap_ratios) / len(min_overlap_ratios)    
+    # # min
+    # min_lesion_rank_name = "{}_Lesion_VolcanoFeatures_min.csv".format(args.path_stage)
+    # min_lesion_rank_volcano_path = os.path.join(lesion_rank_dir, min_lesion_rank_name)
+    # min_lesion_volcano_df = pd.read_csv(min_lesion_rank_volcano_path)
+    # if args.dominant == "Heavy":
+    #     min_lesion_volcano_df = min_lesion_volcano_df[min_lesion_volcano_df["Log2FC"] > 0.0]
+    # else:
+    #     min_lesion_volcano_df = min_lesion_volcano_df[min_lesion_volcano_df["Log2FC"] < 0.0]
+    # min_lesion_volcano_df.sort_values(by="Pvalue")
+    # min_lesion_features = [ele for ele in min_lesion_volcano_df["Feature"].tolist()]
+    # min_overlap_ratios = []
+    # for fea_num in fea_num_lst:
+    #     lesion_feas = min_lesion_features[:fea_num]
+    #     in_num = np.sum([ele in roi_features for ele in lesion_feas])
+    #     min_overlap_ratios.append(in_num * 1.0 / fea_num)
+    # min_overlap_area = np.sum(min_overlap_ratios) / len(min_overlap_ratios)    
 
-    # max
-    max_lesion_rank_name = "{}_Lesion_VolcanoFeatures_max.csv".format(args.path_stage)
-    max_lesion_rank_volcano_path = os.path.join(lesion_rank_dir, max_lesion_rank_name)
-    max_lesion_volcano_df = pd.read_csv(max_lesion_rank_volcano_path)
-    if args.dominant == "Heavy":
-        max_lesion_volcano_df = max_lesion_volcano_df[max_lesion_volcano_df["Log2FC"] > 0.0]
-    else:
-        max_lesion_volcano_df = max_lesion_volcano_df[max_lesion_volcano_df["Log2FC"] < 0.0]
-    max_lesion_volcano_df.sort_values(by="Pvalue")
-    max_lesion_features = [ele for ele in max_lesion_volcano_df["Feature"].tolist()]
-    max_overlap_ratios = []
-    for fea_num in fea_num_lst:
-        lesion_feas = max_lesion_features[:fea_num]
-        in_num = np.sum([ele in roi_features for ele in lesion_feas])
-        max_overlap_ratios.append(in_num * 1.0 / fea_num)
-    max_overlap_area = np.sum(max_overlap_ratios) / len(max_overlap_ratios)  
+    # # max
+    # max_lesion_rank_name = "{}_Lesion_VolcanoFeatures_max.csv".format(args.path_stage)
+    # max_lesion_rank_volcano_path = os.path.join(lesion_rank_dir, max_lesion_rank_name)
+    # max_lesion_volcano_df = pd.read_csv(max_lesion_rank_volcano_path)
+    # if args.dominant == "Heavy":
+    #     max_lesion_volcano_df = max_lesion_volcano_df[max_lesion_volcano_df["Log2FC"] > 0.0]
+    # else:
+    #     max_lesion_volcano_df = max_lesion_volcano_df[max_lesion_volcano_df["Log2FC"] < 0.0]
+    # max_lesion_volcano_df.sort_values(by="Pvalue")
+    # max_lesion_features = [ele for ele in max_lesion_volcano_df["Feature"].tolist()]
+    # max_overlap_ratios = []
+    # for fea_num in fea_num_lst:
+    #     lesion_feas = max_lesion_features[:fea_num]
+    #     in_num = np.sum([ele in roi_features for ele in lesion_feas])
+    #     max_overlap_ratios.append(in_num * 1.0 / fea_num)
+    # max_overlap_area = np.sum(max_overlap_ratios) / len(max_overlap_ratios)  
 
     # bmin
     bmin_lesion_rank_name = "{}_Lesion_VolcanoFeatures_bmin.csv".format(args.path_stage)
@@ -131,10 +131,11 @@ if __name__ == "__main__":
     # plot 
     fig, ax = plt.subplots()
     ax.plot(fea_num_lst, avg_overlap_ratios, '--', linewidth=2, label="Average-{:.3f}".format(avg_overlap_area))
-    ax.plot(fea_num_lst, max_overlap_ratios, '--', linewidth=2, label="Max-{:.3f}".format(max_overlap_area))
-    ax.plot(fea_num_lst, min_overlap_ratios, '--', linewidth=2, label="Min-{:.3f}".format(min_overlap_area))
+    # ax.plot(fea_num_lst, max_overlap_ratios, '--', linewidth=2, label="Max-{:.3f}".format(max_overlap_area))
+    # ax.plot(fea_num_lst, min_overlap_ratios, '--', linewidth=2, label="Min-{:.3f}".format(min_overlap_area))
     ax.plot(fea_num_lst, bmax_overlap_ratios, '--', linewidth=2, label="B-Max-{:.3f}".format(bmax_overlap_area))
-    ax.plot(fea_num_lst, bmin_overlap_ratios, '--', linewidth=2, label="B-Min-{:.3f}".format(bmin_overlap_area))    
+    ax.plot(fea_num_lst, bmin_overlap_ratios, '--', linewidth=2, label="B-Min-{:.3f}".format(bmin_overlap_area))
+    ax.set_ylim(0.0, 1.0)    
     ax.legend()
 
     plot_name = "{}-Lesion-Feature-{}-Dominant".format(args.path_stage, args.dominant)

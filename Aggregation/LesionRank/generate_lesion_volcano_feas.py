@@ -20,7 +20,7 @@ def set_args():
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
     parser.add_argument("--rank_dir",               type=str,       default="Rank")      
     parser.add_argument("--path_stage",             type=str,       default="AAH", choices=["AAH", "AIS", "MIA", "ADC"])
-    parser.add_argument("--aggregate_manner",       type=str,       default="avg", choices=["avg", "max", "min", "bmax", "bmin"]) 
+    parser.add_argument("--agg_manner",             type=str,       default="avg", choices=["avg", "bmax", "bmin"]) 
 
     args = parser.parse_args()
     return args
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     dataset_dir = os.path.join(args.data_root, args.data_set)
     slide_agg_dir = os.path.join(dataset_dir, args.aggregation_dir)
-    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_{}_feas.csv".format(args.aggregate_manner))
+    lesion_fea_path = os.path.join(slide_agg_dir, "lesion_{}_feas.csv".format(args.agg_manner))
     lesion_fea_df = pd.read_csv(lesion_fea_path)
 
     # normalize all features between 0.0 to 1.0
@@ -80,8 +80,6 @@ if __name__ == "__main__":
     lesion_rank_dir = os.path.join(slide_agg_dir, args.rank_dir, "Lesion")
     if not os.path.exists(lesion_rank_dir):
         os.makedirs(lesion_rank_dir)
-    lesion_rank_name = "{}_Lesion_VolcanoFeatures_{}.csv".format(args.path_stage, args.aggregate_manner)
+    lesion_rank_name = "{}_Lesion_VolcanoFeatures_{}.csv".format(args.path_stage, args.agg_manner)
     lesion_rank_volcano_path = os.path.join(lesion_rank_dir, lesion_rank_name)
     stage_vol_df.to_csv(lesion_rank_volcano_path, index = False)        
-
-    
