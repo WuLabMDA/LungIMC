@@ -64,10 +64,9 @@ if __name__ == "__main__":
         lesion_fea_df = cur_lesion_df.iloc[:, 3:]     
         lesion_fea_np = lesion_fea_df.to_numpy()
         kernel_mat = 1.0 - pairwise_distances(lesion_fea_np, metric="cosine") / 2.0
-        import pdb; pdb.set_trace()
-
-    #     # row_val_lst.append(lesion_iqr)
-    #     slide_ith_df.loc[len(slide_ith_df.index)] = row_val_lst
-    # # Check slide dataframe information 
-    # lesion_ith_path = os.path.join(lesion_ith_dir, "lesion_ith_entire_fea.csv")
-    # slide_ith_df.to_csv(lesion_ith_path, index = False)
+        kernel_triu = kernel_mat[np.triu_indices(len(roi_inds), k = 1)]
+        row_val_lst.append(np.median(kernel_triu))
+        slide_ith_df.loc[len(slide_ith_df.index)] = row_val_lst
+    # Check slide dataframe information 
+    lesion_ith_path = os.path.join(lesion_ith_dir, "lesion_ith_entire_fea.csv")
+    slide_ith_df.to_csv(lesion_ith_path, index = False)
