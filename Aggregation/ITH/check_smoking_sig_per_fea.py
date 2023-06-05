@@ -7,6 +7,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 from scipy import stats
+from statsmodels.stats import multitest
 
 
 def set_args():
@@ -16,8 +17,9 @@ def set_args():
     parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")  
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
     parser.add_argument("--ith_dir",                type=str,       default="ITH")
-    parser.add_argument("--path_stage",             type=str,       default="AAH", choices=["AAH", "AIS", "MIA", "ADC"])    
-
+    parser.add_argument("--pval_thresh",            type=float,     default=0.05)
+    parser.add_argument("--path_stage",             type=str,       default="AAH", choices=["AAH", "AIS", "MIA", "ADC"])
+    
     args = parser.parse_args()
     return args
 
@@ -50,8 +52,8 @@ if __name__ == "__main__":
     print("{} heavy smokers".format(len(heavy_inds)))
 
     # collect features 
-    sig_fea_lst = []
     fea_pval_lst = []
+    p_fea_names = []
     for cur_fea_name in lesion_fea_names:
         cur_fea_lst = [ele for ele in stage_fea_df[cur_fea_name].tolist()]
         never_feas = [cur_fea_lst[ele] for ele in never_inds]
@@ -60,7 +62,14 @@ if __name__ == "__main__":
         fea_pval = fea_ttest.pvalue
         if math.isnan(fea_pval):
             fea_pval = 1.0  
-        if fea_pval < 0.05:
-            sig_fea_lst.append(cur_fea_name)
-            fea_pval_lst.append(fea_pval)
-    print("{} features with signficance ITH".format(len(sig_fea_lst)))
+        fea_pval_lst.append(fea_pval)
+        if fea_pval < args.pval_thresh:
+            p_fea_names.append(cur_fea_name)
+
+
+    # p-value FDR adjustment 
+    pval_rejects, adjusted_pvals = multitest.fdrcorrection(fea_pval_lst)    
+    sig_fea_num = np.sum([ele < args.pval_thresh for ele in adjusted_pvals])
+    print("{} features with signficance ITH".format(sig_fea_num))
+    print("Before FDR, significant features:")
+    print(p_fea_names)
