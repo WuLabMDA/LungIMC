@@ -44,7 +44,7 @@ RUN pip install openslide-python==1.2.0
 RUN pip install tensorly==0.8.0 
 RUN pip install pycontour==1.5.1
 RUN pip install bioinfokit==2.1.0
-RUN conda install -c conda-forge -y mscorefonts
+RUN pip install vtk==9.2.5 PyQt5==5.15.8
 
 # Create some folders for python packages
 WORKDIR /.local
