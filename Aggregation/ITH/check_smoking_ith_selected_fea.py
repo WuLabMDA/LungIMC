@@ -10,6 +10,8 @@ from scipy import stats
 from statsmodels.stats import multitest
 from sklearn.metrics import pairwise_distances
 from scipy.spatial.distance import cosine
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def set_args():
@@ -22,7 +24,8 @@ def set_args():
     parser.add_argument("--pval_thresh",            type=float,     default=0.05)
     parser.add_argument("--dominant",               type=str,       default="Heavy", choices=["Heavy", "Never"])
     parser.add_argument("--path_stage",             type=str,       default="AAH", choices=["AAH", "AIS", "MIA", "ADC"])
-    
+    parser.add_argument("--plot_format",            type=str,       default=".png", choices=[".png", ".pdf"])       
+
     args = parser.parse_args()
     return args
 
@@ -36,6 +39,9 @@ if __name__ == "__main__":
     lesion_ith_dir = os.path.join(slide_agg_dir, args.ith_dir)
     lesion_ith_path = os.path.join(lesion_ith_dir, "lesion_ith_per_fea.csv")
     slide_ith_df = pd.read_csv(lesion_ith_path)
+    heatmap_dir = os.path.join(lesion_ith_dir, args.path_stage + "-" + args.dominant)
+    if not os.path.exists(heatmap_dir):
+        os.makedirs(heatmap_dir)
 
     # obtain feature names
     lesion_fea_columns = [ele for ele in slide_ith_df.columns.tolist()]
@@ -102,15 +108,28 @@ if __name__ == "__main__":
     slide_ith_df = pd.DataFrame(columns=slide_column_lst)
 
     for cur_lesion in lesion_roi_dict.keys():
-        roi_inds = [roi_names.index(cur_roi) for cur_roi in lesion_roi_dict[cur_lesion]]
+        roi_lst = lesion_roi_dict[cur_lesion]
+        roi_inds = [roi_names.index(cur_roi) for cur_roi in roi_lst]
         cur_lesion_df = roi_fea_df.iloc[roi_inds]
         stage_lst = cur_lesion_df["ROI_Stage"].tolist()
         smoke_lst = cur_lesion_df["SmokeStatus"].tolist()
-        row_val_lst = [cur_lesion, stage_lst[0], smoke_lst[0]]
+        lesion_stage = stage_lst[0]
+        lesion_smoke = smoke_lst[0]
+        if lesion_stage != args.path_stage or lesion_smoke != args.dominant:
+            continue
+        row_val_lst = [cur_lesion, lesion_stage, lesion_smoke]
         # lesion_fea_df = cur_lesion_df.iloc[:, 3:] 
         lesion_select_df = cur_lesion_df[p_fea_names]
         lesion_fea_np = lesion_select_df.to_numpy()
         kernel_mat = 1.0 - pairwise_distances(lesion_fea_np, metric="cosine") / 2.0
+        # save heatmap
+        kernel_df = pd.DataFrame(kernel_mat)
+        plt.figure()
+        lesion_roi_names = [ele[-3:] for ele in roi_lst]
+        sns.heatmap(kernel_df, cmap='viridis', xticklabels=lesion_roi_names, yticklabels=lesion_roi_names)
+        plot_path = os.path.join(heatmap_dir, cur_lesion + args.plot_format)
+        plt.savefig(plot_path, transparent=False, dpi=300)
+        # obtain ITH
         kernel_triu = kernel_mat[np.triu_indices(len(roi_inds), k = 1)]
         row_val_lst.append(np.median(kernel_triu))
         slide_ith_df.loc[len(slide_ith_df.index)] = row_val_lst
