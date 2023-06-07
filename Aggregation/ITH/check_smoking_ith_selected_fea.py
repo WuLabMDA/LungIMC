@@ -115,20 +115,19 @@ if __name__ == "__main__":
         smoke_lst = cur_lesion_df["SmokeStatus"].tolist()
         lesion_stage = stage_lst[0]
         lesion_smoke = smoke_lst[0]
-        if lesion_stage != args.path_stage or lesion_smoke != args.dominant:
-            continue
+
         row_val_lst = [cur_lesion, lesion_stage, lesion_smoke]
         # lesion_fea_df = cur_lesion_df.iloc[:, 3:] 
         lesion_select_df = cur_lesion_df[p_fea_names]
         lesion_fea_np = lesion_select_df.to_numpy()
         kernel_mat = 1.0 - pairwise_distances(lesion_fea_np, metric="cosine") / 2.0
-        # save heatmap
-        kernel_df = pd.DataFrame(kernel_mat)
-        plt.figure()
-        lesion_roi_names = [ele[-3:] for ele in roi_lst]
-        sns.heatmap(kernel_df, cmap='viridis', xticklabels=lesion_roi_names, yticklabels=lesion_roi_names)
-        plot_path = os.path.join(heatmap_dir, cur_lesion + args.plot_format)
-        plt.savefig(plot_path, transparent=False, dpi=300)
+        if lesion_stage == args.path_stage and lesion_smoke == args.dominant:
+            kernel_df = pd.DataFrame(kernel_mat)
+            plt.figure()
+            lesion_roi_names = [ele[-3:] for ele in roi_lst]
+            sns.heatmap(kernel_df, cmap='viridis', vmin=0.0, vmax=1.0, xticklabels=lesion_roi_names, yticklabels=lesion_roi_names)
+            plot_path = os.path.join(heatmap_dir, cur_lesion + args.plot_format)
+            plt.savefig(plot_path, transparent=False, dpi=300)
         # obtain ITH
         kernel_triu = kernel_mat[np.triu_indices(len(roi_inds), k = 1)]
         row_val_lst.append(np.median(kernel_triu))
