@@ -42,8 +42,6 @@ if __name__ == "__main__":
     ann_slide_lst = [ele for ele in slide_lst if os.path.exists(os.path.join(annotation_dir, ele + ".xml"))]
 
     for ind, cur_slide in enumerate(ann_slide_lst):
-        if cur_slide != "2166-1B":
-            continue
         print("Imitate on {} {}/{}".format(cur_slide, ind+1, len(ann_slide_lst)))
         # create background image
         cur_slide_path = os.path.join(annotation_dir, cur_slide + ".svs")
