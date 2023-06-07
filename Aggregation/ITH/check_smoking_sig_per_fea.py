@@ -71,5 +71,5 @@ if __name__ == "__main__":
     pval_rejects, adjusted_pvals = multitest.fdrcorrection(fea_pval_lst)    
     sig_fea_num = np.sum([ele < args.pval_thresh for ele in adjusted_pvals])
     print("{} features with signficance ITH".format(sig_fea_num))
-    print("Before FDR, significant features:")
+    print("Before FDR, {} significant features:".format(len(p_fea_names)))
     print(p_fea_names)

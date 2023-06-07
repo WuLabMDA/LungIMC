@@ -121,7 +121,7 @@ if __name__ == "__main__":
         lesion_select_df = cur_lesion_df[p_fea_names]
         lesion_fea_np = lesion_select_df.to_numpy()
         kernel_mat = 1.0 - pairwise_distances(lesion_fea_np, metric="cosine") / 2.0
-        if lesion_stage == args.path_stage and lesion_smoke == args.dominant:
+        if lesion_stage == args.path_stage:
             kernel_df = pd.DataFrame(kernel_mat)
             plt.figure()
             lesion_roi_names = [ele[-3:] for ele in roi_lst]
