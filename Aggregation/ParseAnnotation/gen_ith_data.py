@@ -46,7 +46,10 @@ if __name__ == "__main__":
         # create background image
         cur_slide_path = os.path.join(annotation_dir, cur_slide + ".svs")
         cur_slide_head = openslide.OpenSlide(cur_slide_path)
-        slide_width, slide_height = cur_slide_head.dimensions 
+        slide_width, slide_height = cur_slide_head.dimensions
+        if len(cur_slide_head.level_dimensions) <= args.dlevel:
+            print("{} only has {} levels.".format(cur_slide, len(cur_slide_head.level_dimensions)))
+            continue
         # read image
         cur_slide_img = cur_slide_head.read_region(location=(0,0), level=args.dlevel, size=cur_slide_head.level_dimensions[args.dlevel])
         cur_slide_img = np.asarray(cur_slide_img)[:,:,:3]
