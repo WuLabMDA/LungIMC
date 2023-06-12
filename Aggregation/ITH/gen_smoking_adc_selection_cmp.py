@@ -18,6 +18,7 @@ def set_args():
     parser.add_argument("--feature_dir",            type=str,       default="FeatureAnalysis")  
     parser.add_argument("--aggregation_dir",        type=str,       default="Aggregation")
     parser.add_argument("--ith_dir",                type=str,       default="ITH")
+    parser.add_argument("--roi_num",                type=int,       default=10)
     parser.add_argument("--rand_seed",              type=int,       default=1234)
 
     args = parser.parse_args()
@@ -70,11 +71,19 @@ if __name__ == "__main__":
         # RawITH
         kernel_mat = 1.0 - pairwise_distances(lesion_fea_np, metric="cosine") / 2.0
         kernel_triu = kernel_mat[np.triu_indices(len(roi_inds), k = 1)]
+        raw_ith = np.median(kernel_triu)
+        row_val_lst.append(raw_ith)
         # RandomITH
-        import pdb; pdb.set_trace()
-
-        row_val_lst.append(np.median(kernel_triu))
+        if lesion_fea_np.shape[0] <= args.roi_num:
+            row_val_lst.append(raw_ith)
+        else:
+            np.random.shuffle(lesion_fea_np)
+            random_fea_np = lesion_fea_np[:args.roi_num, :]
+            random_kernel_mat = 1.0 - pairwise_distances(random_fea_np, metric="cosine") / 2.0
+            random_kernel_triu = random_kernel_mat[np.triu_indices(args.roi_num, k = 1)]
+            random_ith = np.median(random_kernel_triu)
+            row_val_lst.append(random_ith)        
         slide_ith_df.loc[len(slide_ith_df.index)] = row_val_lst
     # Check slide dataframe information 
-    lesion_ith_path = os.path.join(lesion_ith_dir, "lesion_ith_adc.csv")
+    lesion_ith_path = os.path.join(lesion_ith_dir, "lesion_ith_adc_{}.csv".format(args.roi_num))
     slide_ith_df.to_csv(lesion_ith_path, index = False)
