@@ -50,16 +50,13 @@ if __name__ == "__main__":
     # load lesion roi features
     lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
     roi_fea_df = pd.read_csv(lesion_roi_fea_path)
-    fea_roi_lst = [ele for ele in roi_fea_df["ROI_ID"]]
-    for ind, cur_roi in enumerate(fea_roi_lst):
-        if cur_roi not in dist_roi_names and roi_fea_df.loc[ind, "ROI_Stage"] != "DistantNormal":
-            print(cur_roi)
-
-
-    # roi_fea_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(dist_roi_names)]
-    # roi_core_dist_lst = [roi_distance_dict[ele] for ele in roi_fea_df["ROI_ID"]]
-    # roi_fea_df.insert(loc = 3, column = "CoreDist", value = roi_core_dist_lst)
-
-    # # save features with distance information
-    # lesion_roi_dist_fea_path = os.path.join(slide_agg_dir, "lesion_roi_dist_feas.csv")
-    # roi_fea_df.to_csv(lesion_roi_dist_fea_path, index = False)    
+    # fea_roi_lst = [ele for ele in roi_fea_df["ROI_ID"]]
+    # for ind, cur_roi in enumerate(fea_roi_lst):
+    #     if cur_roi not in dist_roi_names and roi_fea_df.loc[ind, "ROI_Stage"] != "DistantNormal":
+    #         print(cur_roi)
+    roi_fea_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(dist_roi_names)]
+    roi_core_dist_lst = [roi_distance_dict[ele] for ele in roi_fea_df["ROI_ID"]]
+    roi_fea_df.insert(loc = 3, column = "CoreDist", value = roi_core_dist_lst)
+    # save features with distance information
+    lesion_roi_dist_fea_path = os.path.join(slide_agg_dir, "lesion_roi_dist_feas.csv")
+    roi_fea_df.to_csv(lesion_roi_dist_fea_path, index = False)    
