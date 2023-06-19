@@ -86,8 +86,9 @@ if __name__ == "__main__":
         lesion_dict["LesionStage"] = lesion_stage_lst[0]
         lesion_dict["SmokeStatus"] = lesion_smoke_lst[0]
         # sorting by distance to core
-        lesion_fea_df.sort_values(by = ["CoreDist"])
+        lesion_fea_df = lesion_fea_df.sort_values(by = ["CoreDist"])
         lesion_dict["LesionROIs"] = [ele for ele in lesion_fea_df["ROI_ID"].tolist()]
+        lesion_dict["CoreDist"] = [ele for ele in lesion_fea_df["CoreDist"].tolist()]
         for cur_fea in study_fea_lst:
             lesion_dict[cur_fea] = [ele for ele in lesion_fea_df[cur_fea].tolist()]        
         core_distprog_dict[lesion_name] = lesion_dict
