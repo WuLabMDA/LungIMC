@@ -71,7 +71,7 @@ if __name__ == "__main__":
         handle_lst = [newHandles[newLabels.index(ele)] for ele in label_lst]
         plt.legend(handle_lst, label_lst, loc = "upper right")
         plt.xlim(0, 25000)
-        plt.ylim(0, 1.0)
+        # plt.ylim(0, 1.0)
         plt.xlabel("Distance to Lesion Core (" + u"\u03bcm)")
         plt.title("Lesion Evolution: {}".format(cur_fea))        
         # save plotting

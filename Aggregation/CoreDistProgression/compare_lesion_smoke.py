@@ -71,7 +71,7 @@ if __name__ == "__main__":
         label_lst = ["Never Smoker", "Heavy Smoker"]
         handle_lst = [newHandles[newLabels.index(ele)] for ele in label_lst]
         plt.legend(handle_lst, label_lst, loc = "upper right")
-        plt.ylim(0, 1.0)
+        # plt.ylim(0, 1.0)
         plt.xlabel("Distance to Lesion Core (" + u"\u03bcm)")
         plt.title("{} Never vs. Heavy Smoker: {}".format(args.path_stage, cur_fea)) 
         # save plotting

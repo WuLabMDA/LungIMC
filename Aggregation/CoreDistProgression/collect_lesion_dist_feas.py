@@ -50,7 +50,8 @@ if __name__ == "__main__":
             roi_distance_dict[cur_roi] = cur_lesion_dict[cur_roi]["CoreDist"]
     dist_roi_names = [ele for ele in roi_distance_dict.keys()]
     # load lesion roi features
-    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
+    # lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas.csv")
+    lesion_roi_fea_path = os.path.join(slide_agg_dir, "lesion_roi_feas_raw.csv")
     roi_fea_df = pd.read_csv(lesion_roi_fea_path)
     roi_fea_df = roi_fea_df[roi_fea_df["ROI_ID"].isin(dist_roi_names)]
     roi_core_dist_lst = [roi_distance_dict[ele] for ele in roi_fea_df["ROI_ID"]]
@@ -62,9 +63,9 @@ if __name__ == "__main__":
     # filter interested study features
     filter_col_names = [ele for ele in roi_fea_df.columns.tolist()[:4]] + study_fea_lst
     roi_fea_df = roi_fea_df[filter_col_names]
-    # normalize feature values to 0 and 1
-    for fea in study_fea_lst:
-        roi_fea_df[fea] = (roi_fea_df[fea] + 3.0) / 6.0
+    # # normalize feature values to 0 and 1
+    # for fea in study_fea_lst:
+    #     roi_fea_df[fea] = (roi_fea_df[fea] + 3.0) / 6.0
     print("There are {} ROIs with features.".format(roi_fea_df.shape[0]))
     roi_fea_lst = [ele for ele in roi_fea_df["ROI_ID"].tolist()]
 
