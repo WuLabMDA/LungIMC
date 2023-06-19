@@ -65,13 +65,10 @@ if __name__ == "__main__":
     # normalize feature values to 0 and 1
     for fea in study_fea_lst:
         roi_fea_df[fea] = (roi_fea_df[fea] + 3.0) / 6.0
-
     print("There are {} ROIs with features.".format(roi_fea_df.shape[0]))
     roi_fea_lst = [ele for ele in roi_fea_df["ROI_ID"].tolist()]
-    # save features with distance information
-    lesion_roi_core_dist_fea_path = os.path.join(slide_distprog_dir, "lesion_roi_coredist_feas.csv")
-    roi_fea_df.to_csv(lesion_roi_core_dist_fea_path, index = False) 
 
+    # collect lesion features
     core_distprog_dict = {}
     ttl_roi_num = 0
     for lesion_name in lesion_roi_dist_dict.keys():
@@ -86,9 +83,13 @@ if __name__ == "__main__":
         if len(set(lesion_smoke_lst)) != 1:
             print(" has different roi smoke status.".format(lesion_name))
         lesion_dict = {}
-        lesion_dict["LesionROIs"] = sorted(lesion_rois)
         lesion_dict["LesionStage"] = lesion_stage_lst[0]
         lesion_dict["SmokeStatus"] = lesion_smoke_lst[0]
+        # sorting by distance to core
+        lesion_fea_df.sort_values(by = ["CoreDist"])
+        lesion_dict["LesionROIs"] = [ele for ele in lesion_fea_df["ROI_ID"].tolist()]
+        for cur_fea in study_fea_lst:
+            lesion_dict[cur_fea] = [ele for ele in lesion_fea_df[cur_fea].tolist()]        
         core_distprog_dict[lesion_name] = lesion_dict
     print("There are {} ROIs with distances to core.".format(ttl_roi_num))
     
