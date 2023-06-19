@@ -62,6 +62,10 @@ if __name__ == "__main__":
     # filter interested study features
     filter_col_names = [ele for ele in roi_fea_df.columns.tolist()[:4]] + study_fea_lst
     roi_fea_df = roi_fea_df[filter_col_names]
+    # normalize feature values to 0 and 1
+    for fea in study_fea_lst:
+        roi_fea_df[fea] = (roi_fea_df[fea] + 3.0) / 6.0
+
     print("There are {} ROIs with features.".format(roi_fea_df.shape[0]))
     roi_fea_lst = [ele for ele in roi_fea_df["ROI_ID"].tolist()]
     # save features with distance information
