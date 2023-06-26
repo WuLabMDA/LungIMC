@@ -6,8 +6,8 @@ library(dittoSeq)
 library(RColorBrewer)
 library(openxlsx)
 
-data_root_dir <- "E:/LungIMCData/HumanSampling35/LungROIProcessing/Steinbock"
-# data_root_dir <- "E:/LungIMCData/HumanWholeIMC/LungROIProcessing/Steinbock"
+# data_root_dir <- "E:/LungIMCData/HumanSampling35/LungROIProcessing/Steinbock"
+data_root_dir <- "E:/LungIMCData/HumanWholeIMC/LungROIProcessing/Steinbock"
 
 
 # Load steinbock generated data
