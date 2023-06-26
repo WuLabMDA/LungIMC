@@ -68,7 +68,7 @@ if __name__ == "__main__":
     roi_fea_lst = [ele for ele in roi_fea_df["ROI_ID"].tolist()]
 
     # collect lesion features
-    margin_core_cols = ["Loc",] + study_fea_lst
+    margin_core_cols = ["Lesion", "Loc",] + study_fea_lst
     margin_core_df = pd.DataFrame(columns = margin_core_cols)
     for lesion_name in lesion_roi_dist_dict.keys():
         lesion_info = lesion_roi_dist_dict[lesion_name]
@@ -81,8 +81,8 @@ if __name__ == "__main__":
         lesion_margin_df = lesion_fea_df[lesion_fea_df["CoreMargin"] == "TumorMargin"]
         if len(lesion_core_df) == 0 or len(lesion_margin_df) == 0:
             continue
-        lesion_core_lst = ["TumorCore", ]
-        lesion_margin_lst = ["TumorMargin", ]
+        lesion_core_lst = [lesion_name, "TumorCore", ]
+        lesion_margin_lst = [lesion_name, "TumorMargin", ]
         for cur_fea in study_fea_lst:
             lesion_core_lst.append(np.mean([ele for ele in lesion_core_df[cur_fea].tolist()]))
             lesion_margin_lst.append(np.mean([ele for ele in lesion_margin_df[cur_fea].tolist()]))
