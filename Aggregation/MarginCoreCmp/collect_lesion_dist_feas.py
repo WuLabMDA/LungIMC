@@ -46,7 +46,7 @@ if __name__ == "__main__":
     for cur_lesion in lesion_roi_dist_dict.keys():
         cur_lesion_dict = lesion_roi_dist_dict[cur_lesion]
         for cur_roi in cur_lesion_dict.keys():
-            if cur_lesion_dict[cur_roi]["BorderDist"] > 1500:
+            if cur_lesion_dict[cur_roi]["BorderDist"] > 1000:
                 roi_distance_dict[cur_roi] = "TumorCore"
             else:
                 roi_distance_dict[cur_roi] = "TumorMargin"
