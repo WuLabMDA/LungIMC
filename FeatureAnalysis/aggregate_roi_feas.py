@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
 
     # Aggregate features
-    roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, ct_interaction_df, ct_state_df,
+    roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, ct_state_df, ct_interaction_df, 
                             cn_proportion_density_df, cn_morph_df, cn_state_df, cn_interaction_df], axis=1)
     # Insert ROI stage information
     roi_info_path = os.path.join(metadata_dir, "ROI_Info.xlsx")
