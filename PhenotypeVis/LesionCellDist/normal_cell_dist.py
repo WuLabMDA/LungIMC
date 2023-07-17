@@ -62,10 +62,10 @@ if __name__ == "__main__":
             roi_slide_map[roi_id].append(slide_id)
             
     # load cell phenotype information
-    cell_phenotype_path = os.path.join(cellphenotype_dir, "cell_phenotypes.csv")
+    cell_phenotype_path = os.path.join(cellphenotype_dir, "cell_ct_cn_morphs.csv")
     cell_phenotype_df = pd.read_csv(cell_phenotype_path)
     cell_id_lst = cell_phenotype_df["cell_id"]
-    celltype_lst = cell_phenotype_df["celltype"]
+    celltype_lst = cell_phenotype_df["cell_type"]
     cell_phenotype_dict = {}
     for cell_id, celltype in zip(cell_id_lst, celltype_lst):
         cell_phenotype_dict[cell_id] = celltype
@@ -116,7 +116,7 @@ if __name__ == "__main__":
     lesion_ratio_df = pd.DataFrame(df_zip_lst, columns = df_col_lst)
 
     # plot a Stacked Bar Chart using matplotlib
-    lesion_ratio_df.plot(x="Lesion", kind="bar", stacked=True, title="Cell Type Fraction", colormap=plt.get_cmap("tab20"), figsize=(25, 12))
+    lesion_ratio_df.plot(x="Lesion", kind="bar", stacked=True, width=0.8, title="Cell Type Fraction", colormap=plt.get_cmap("tab20"), figsize=(25, 12))
     plt.legend(bbox_to_anchor=(1.04, 0.5), loc="center left", borderaxespad=0)
     plot_name = "NormalCellFraction"
     plot_path = os.path.join(stat_result_dir, plot_name + args.plot_format)

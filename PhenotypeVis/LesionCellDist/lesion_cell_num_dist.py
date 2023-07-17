@@ -52,7 +52,7 @@ if __name__ == "__main__":
         lesion_roi_dict[leion_name] = set()
     
     # load cell phenotype information
-    cell_phenotype_path = os.path.join(cellphenotype_dir, "cell_phenotypes.csv")
+    cell_phenotype_path = os.path.join(cellphenotype_dir, "cell_ct_cn_morphs.csv")
     cell_phenotype_df = pd.read_csv(cell_phenotype_path)
     cell_id_lst = cell_phenotype_df["cell_id"]
     for cell_id in cell_id_lst:
@@ -70,7 +70,7 @@ if __name__ == "__main__":
         average_num_lst.append(average_num)
 
     lesion_cell_df = pd.DataFrame({"LesionName": lesion_merge_lst, "CellNum": average_num_lst})
-    lesion_cell_df.plot.bar(x="LesionName", y="CellNum", figsize=(25, 12))
+    lesion_cell_df.plot.bar(x="LesionName", y="CellNum", width=0.8, figsize=(25, 12))
     plot_name = "LesionTotalCellNum"
     plot_path = os.path.join(stat_result_dir, plot_name + args.plot_format)
     plt.savefig(plot_path, transparent=False, dpi=300)
