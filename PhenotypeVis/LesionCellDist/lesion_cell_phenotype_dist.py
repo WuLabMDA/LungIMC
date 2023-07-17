@@ -60,10 +60,10 @@ if __name__ == "__main__":
                        "Macrophage", "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC", "NK-Cell", "Proliferating-Cell", "Undefined"]    
     
     # load cell phenotype information
-    cell_phenotype_path = os.path.join(cellphenotype_dir, "cell_phenotypes.csv")
+    cell_phenotype_path = os.path.join(cellphenotype_dir, "cell_ct_cn_morphs.csv")
     cell_phenotype_df = pd.read_csv(cell_phenotype_path)
     cell_id_lst = cell_phenotype_df["cell_id"]
-    celltype_lst = cell_phenotype_df["celltype"]
+    celltype_lst = cell_phenotype_df["cell_type"]
     cell_phenotype_dict = {}
     for cell_id, celltype in zip(cell_id_lst, celltype_lst):
         cell_phenotype_dict[cell_id] = celltype
@@ -130,7 +130,7 @@ if __name__ == "__main__":
     # merge multiple dataframes
     lesion_df = pd.concat(lesion_df_lst, axis=0)
     # plot a Stacked Bar Chart using matplotlib
-    lesion_df.plot(x="Lesion", kind="bar", stacked=True, title="Cell Type Fraction", colormap=plt.get_cmap("tab20"), figsize=(25, 12))
+    lesion_df.plot(x="Lesion", kind="bar", stacked=True, width=0.8, title="Cell Type Fraction", colormap=plt.get_cmap("tab20"), figsize=(25, 12))
     plt.legend(bbox_to_anchor=(1.04, 0.5), loc="center left", borderaxespad=0)
     plot_name = "LesionCellFraction"
     plot_path = os.path.join(stat_result_dir, plot_name + args.plot_format)
