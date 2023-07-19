@@ -68,14 +68,7 @@ cell_name_lst <- c()
 cell_ratio_lst <- c()
 
 # list all cell subtypes
-interested_cell_lst <- c("Ki67+ Epithelial", "Ki67+ PDL1+ Epithelial", "CD73+ Epithelial", "Other Epithelial",
-                  "Ki67+ B-Cells", "Ki67- B-Cells", "Neutrophil", "Ki67+ NK Cells", "Ki67- NK Cells", 
-                  "Ki67+ Dendritic Cells", "HLADR+ Dendritic Cells", "Other Dendritic Cells", "Endothelial-Cell",
-                  "Cytotoxic CD8 T-Cells", "Memory CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", "Naive CD8 T-Cells",
-                  "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Naive CD4 T-Cells", 
-                  "Ki67+ Treg-Cells", "Ki67- Treg-Cells", "Proliferating-Cell", "CD163+ Macrophage",
-                  "CD163+ Ki67+ Macrophage", "CD163- Macrophage", "CD163- PDL1+ Macrophage", "Monocyte",
-                  "MDSC", "Fibroblast", "Undefined")
+interested_cell_lst <- c("Cytotoxic CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", "Memory CD8 T-Cells", "Naive CD8 T-Cells")
 all_stage_lst <- c("Normal", "AAH", "AIS", "MIA", "ADC")
 
 
@@ -95,5 +88,5 @@ subtype_proportion_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "Pr
 if (!file.exists(subtype_proportion_dir))
     dir.create(subtype_proportion_dir, recursive = TRUE)
 stage_subcell_ratio_df <- data.frame(Stage=stage_name_lst, CellType=cell_name_lst, CellRatio=cell_ratio_lst)
-stage_subcell_ratio_path <- file.path(subtype_proportion_dir, "stage_subtype_cell_ratios.csv")
+stage_subcell_ratio_path <- file.path(subtype_proportion_dir, "stage_CD8T_cell_ratios.csv")
 write.csv(stage_subcell_ratio_df, stage_subcell_ratio_path, row.names=FALSE)

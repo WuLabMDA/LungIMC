@@ -52,7 +52,7 @@ lesion_indices = c()
 cell_id_lst <- rownames(colData(spe))
 for (cur_roi in interested_roi_vec) 
     lesion_indices <- append(lesion_indices, which(startsWith(cell_id_lst, cur_roi)))
-celltype_lst <- spe$celltype
+celltype_lst <- spe$cellsubtype
 celltype_lst <- celltype_lst[lesion_indices]
 cell_slide_lst <- spe$slide_id[lesion_indices]
 cell_stage_lst <- vector("character", length(cell_slide_lst))
@@ -84,9 +84,9 @@ for (cur_stage in all_stage_lst) {
     }
 }
 
-subtype_proportion_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "ProportionDensity", "SubtypeProportion")
+subtype_proportion_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "ProportionDensity", "ProportionEvolution")
 if (!file.exists(subtype_proportion_dir))
     dir.create(subtype_proportion_dir, recursive = TRUE)
 stage_subcell_ratio_df <- data.frame(Stage=stage_name_lst, CellType=cell_name_lst, CellRatio=cell_ratio_lst)
-stage_subcell_ratio_path <- file.path(proportion_evolution_dir, "stage_all_subcell_ratios.csv")
+stage_subcell_ratio_path <- file.path(subtype_proportion_dir, "stage_B_cell_ratios.csv")
 write.csv(stage_subcell_ratio_df, stage_subcell_ratio_path, row.names=FALSE)

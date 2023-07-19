@@ -3,7 +3,7 @@ library(tidyverse)
 ## set directory
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 proportion_evolution_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "ProportionDensity", "ProportionEvolution")
-stage_all_cell_ratio_path <- file.path(proportion_evolution_dir, "stage_all_cell_ratios.csv")
+stage_all_cell_ratio_path <- file.path(proportion_evolution_dir, "stage_major_cell_ratios.csv")
 cell_ratio_df <- read.csv(stage_all_cell_ratio_path)
 
 cell_ratio_df$Stage <- factor(cell_ratio_df$Stage, 
@@ -17,7 +17,7 @@ ggplot(cell_ratio_df, aes(x = Stage, y = CellRatio, fill = CellType)) +
           panel.background = element_blank(), axis.line = element_line(colour = "black")) +
     ggtitle("Major Cell Proportions")
 
-stage_all_cell_plot_path <- file.path(proportion_evolution_dir, "stage_all_cell_ratios.pdf")
+stage_all_cell_plot_path <- file.path(proportion_evolution_dir, "stage_major_cell_ratios.pdf")
 ggsave(filename = stage_all_cell_plot_path, device='pdf', width=5, height=8, dpi=300)
 while (!is.null(dev.list()))
     dev.off()    
