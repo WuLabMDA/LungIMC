@@ -54,12 +54,12 @@ celltype_lst <- spe$cellsubtype
 celltype_lst <- celltype_lst[lesion_indices]
 
 
-subtype_proportion_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "ProportionDensity", "CD8TCellProportion")
+subtype_proportion_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "ProportionDensity", "EpithelialCellProportion")
 if (!file.exists(subtype_proportion_dir))
     dir.create(subtype_proportion_dir, recursive = TRUE)
 
 # list all cell subtypes
-interested_cell_lst <- c("Cytotoxic CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", "Memory CD8 T-Cells", "Naive CD8 T-Cells")
+interested_cell_lst <- c("CD73+ Epithelial", "Ki67+ Epithelial", "Ki67+ PDL1+ Epithelial", "Other Epithelial")
 for (cell_type in interested_cell_lst) {
     # collect information
     ratio_lst <- c()
