@@ -38,8 +38,7 @@ for (ind in 1:nrow(roi_df)) {
 ## obtain immune ratio
 cell_id_lst <- rownames(colData(spe))
 celtype_lst <- spe$celltype
-immune_lst <- c("CD4-T-Cell", "CD8-T-Cell", "T-Reg-Cell", "B-Cell", "Macrophage", 
-                "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC", "NK-Cell")
+immune_lst <- c("Macrophage", "Monocyte", "Dendritic-Cell", "Neutrophil", "MDSC")
 
 immune_desnity_vec <- c()
 for (ir in 1:length(roi_vec)) {
@@ -66,13 +65,13 @@ ggplot(stage_immune_density_df, aes(x = factor(Stage, level=stage_order), y=Dens
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
     geom_beeswarm(cex = 0.8, size=1.6)   
 
-immune_density_plot_path <- file.path(data_root_dir, "NatureFigures", "Fig01", "Stage-Immune-Density.pdf")
+immune_density_plot_path <- file.path(data_root_dir, "NatureFigures", "Fig01", "Stage-Myeloid-Density.pdf")
 ggsave(filename = immune_density_plot_path, device='pdf', width=8, height=8, dpi=300)
 while (!is.null(dev.list()))
     dev.off()
 
 
-immune_density_pfile <- file(file.path(data_root_dir, "NatureFigures", "Fig01", "Stage-Immune-Density-pval.txt"), "w")
+immune_density_pfile <- file(file.path(data_root_dir, "NatureFigures", "Fig01", "Stage-Myeloid-Density-pval.txt"), "w")
 # Welch Two Sample t-test p-value
 normal_aah_ttest <- t.test(stage_immune_density_df$Density[stage_immune_density_df$Stage=="Normal"], stage_immune_density_df$Density[stage_immune_density_df$Stage=="AAH"])
 writeLines(paste0("Normal-AAH:", normal_aah_ttest$p.value), immune_density_pfile)

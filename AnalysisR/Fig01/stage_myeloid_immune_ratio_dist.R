@@ -72,3 +72,28 @@ ggsave(filename = immune_density_plot_path, device='pdf', width=8, height=8, dpi
 while (!is.null(dev.list()))
     dev.off()
 
+
+immune_ratio_pfile <- file(file.path(data_root_dir, "NatureFigures", "Fig01", "Stage-Myeloid-Immune-Ratio-pval.txt"), "w")
+# Welch Two Sample t-test p-value
+normal_aah_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="Normal"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="AAH"])
+writeLines(paste0("Normal-AAH:", normal_aah_ttest$p.value), immune_ratio_pfile)
+normal_ais_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="Normal"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="AIS"])
+writeLines(paste0("Normal-AIS:", normal_ais_ttest$p.value), immune_ratio_pfile)
+normal_mia_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="Normal"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="MIA"])
+writeLines(paste0("Normal-MIA:", normal_mia_ttest$p.value), immune_ratio_pfile)
+normal_adc_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="Normal"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="ADC"])
+writeLines(paste0("Normal-ADC:", normal_adc_ttest$p.value), immune_ratio_pfile)
+aah_ais_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="AAH"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="AIS"])
+writeLines(paste0("AAH-AIS:", aah_ais_ttest$p.value), immune_ratio_pfile)
+aah_mia_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="AAH"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="MIA"])
+writeLines(paste0("AAH-MIA:", aah_mia_ttest$p.value), immune_ratio_pfile)
+aah_adc_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="AAH"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="ADC"])
+writeLines(paste0("AAH-ADC:", aah_adc_ttest$p.value), immune_ratio_pfile)
+ais_mia_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="AIS"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="MIA"])
+writeLines(paste0("AIS-MIA:", ais_mia_ttest$p.value), immune_ratio_pfile)
+ais_adc_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="AIS"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="ADC"])
+writeLines(paste0("AIS-ADC:", ais_adc_ttest$p.value), immune_ratio_pfile)
+mia_adc_ttest <- t.test(stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="MIA"], stage_myeloid_ratio_df$Ratio[stage_myeloid_ratio_df$Stage=="ADC"])
+writeLines(paste0("MIA-ADC:", mia_adc_ttest$p.value), immune_ratio_pfile)
+close(immune_ratio_pfile)
+
