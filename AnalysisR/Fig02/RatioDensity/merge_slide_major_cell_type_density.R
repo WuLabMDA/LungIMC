@@ -54,7 +54,7 @@ celltype_lst <- spe$celltype
 celltype_lst <- celltype_lst[lesion_indices]
 
 
-major_density_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "ProportionDensity", "MajorDensity")
+major_density_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "ProportionDensity", "MajorDensityMM2")
 if (!file.exists(major_density_dir))
     dir.create(major_density_dir, recursive = TRUE)
 
@@ -80,7 +80,7 @@ for (cell_type in all_cell_lst) {
         slide_roi_df <- roi_df[roi_df$ROI_ID %in% slide_cell_rois,]
         slide_roi_area <- sum(slide_roi_df$Area)
         slide_celltypes <- celltype_lst[slide_cell_indices]
-        slide_cell_density <- sum(slide_celltypes == cell_type) / slide_roi_area
+        slide_cell_density <- sum(slide_celltypes == cell_type) * 1000000 / slide_roi_area
         # gather information
         density_lst <- append(density_lst, slide_cell_density)
         slide_index <- which(slide_info_df$Slide_ID == cur_slide)
