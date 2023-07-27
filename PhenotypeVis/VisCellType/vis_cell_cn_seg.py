@@ -76,4 +76,6 @@ if __name__ == "__main__":
             phenotype_img[:,:,1] += roi_cell_mask * cell_color[1]
             phenotype_img[:,:,2] += roi_cell_mask * cell_color[2]
         cell_phenotype_path = os.path.join(cell_vis_dir, img_name + args.plot_format)
+        zero_mask = (phenotype_img == [0.,0.,0.]).all(axis=2)
+        phenotype_img[zero_mask] = [255, 255, 255]        
         io.imsave(cell_phenotype_path, phenotype_img)
