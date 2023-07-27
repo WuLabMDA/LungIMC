@@ -1,4 +1,5 @@
 library(imcRtools)
+library(tidyverse)
 library(readxl)
 library(ggplot2)
 library(ggbeeswarm)
@@ -63,9 +64,10 @@ MinMeanSEMMax <- function(x) {
 stage_order <- c("Normal", "AAH", "AIS", "MIA", "ADC")
 ggplot(stage_immune_density_df, aes(x = factor(Stage, level=stage_order), y=Density)) + 
     stat_summary(fun.data=MinMeanSEMMax, geom="boxplot", colour="black") + 
-    geom_beeswarm(cex = 0.8, size=1.6)   
+    ylim(0, 3000) + 
+    geom_beeswarm(cex = 0.58, size=1.6)   
 
-immune_density_plot_path <- file.path(data_root_dir, "NatureFigures", "Fig01", "Stage-Lymphoid-Density.pdf")
+immune_density_plot_path <- file.path(data_root_dir, "NatureFigures", "Fig01", "Stage-Lymphoid-Density-New.pdf")
 ggsave(filename = immune_density_plot_path, device='pdf', width=8, height=8, dpi=300)
 while (!is.null(dev.list()))
     dev.off()
