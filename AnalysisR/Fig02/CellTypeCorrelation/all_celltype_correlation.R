@@ -9,7 +9,8 @@ library(stringr)
 ## load all interactions
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
-cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200", ".RData"))
+# cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200", ".RData"))
+cell_spatial_path <- file.path(phenotype_dir, "DelaunayInteraction", paste0("DelaunayInteractionThreshold50", ".RData"))
 load(cell_spatial_path)
 
 ## load ROI diagnosis information
@@ -49,6 +50,6 @@ cell_type_corr <- round(cor(cell_ratio_df), 2)
 to_order <- c("Undefined", "Fibroblast", "MDSC", "Monocyte", "Macrophage", "Proliferating-Cell", "T-Reg-Cell", "CD4-T-Cell", "CD8-T-Cell", 
               "Endothelial-Cell", "Dendritic-Cell", "NK-Cell", "Neutrophil", "B-Cell", "Epithelial-Cell")
 cell_type_corr <- cell_type_corr[, to_order]
-ggcorrplot(cell_type_corr, method = "circle")
+ggcorrplot(cell_type_corr)
 
 

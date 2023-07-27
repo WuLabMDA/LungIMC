@@ -9,7 +9,8 @@ library(stringr)
 ## load all interactions
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
-cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200", ".RData"))
+# cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200", ".RData"))
+cell_spatial_path <- file.path(phenotype_dir, "DelaunayInteraction", paste0("DelaunayInteractionThreshold50", ".RData"))
 load(cell_spatial_path)
 
 ## load ROI diagnosis information
