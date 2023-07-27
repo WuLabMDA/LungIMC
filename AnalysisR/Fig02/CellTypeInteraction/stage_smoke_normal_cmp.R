@@ -17,25 +17,20 @@ metadata_dir <- file.path(data_root_dir, "Metadata")
 roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
-## load tbm information
-slide_info_path <- file.path(metadata_dir, "TMB", "LungSlideTMB2.csv")
-roi_slide_info <- read.csv(slide_info_path)
 
-# AAH/AIS/MIA/ADC
-path_stage <- "AAH"
-subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
+lesion_info_path <- file.path(metadata_dir, "Lesion_Info.xlsx")
+lesion_meta_info <- read.xlsx(lesion_info_path)
+patient_info_path <- file.path(metadata_dir, "Patient_Info.xlsx")
+patient_meta_info <- read.xlsx(patient_info_path)
+lesion_smoke_df <- left_join(lesion_meta_info, patient_meta_info, by = join_by(Patient_ID == PatientID))
+lesion_normal_df <- subset(lesion_smoke_df, Slide_Diag == "Normal")
+low_subset_smoke <- subset(lesion_normal_df, SmokeStatus=="Non-Smoker")
+high_subset_smoke <- subset(lesion_normal_df, SmokeStatus=="Smoker")
+subset_roi_info <- subset(roi_meta_info, ROI_Diag=="Normal")
 roi_slides <- str_extract_all(subset_roi_info$ROI_ID, ".+(?=-ROI)", simplify = TRUE)
 subset_roi_info <- cbind(subset_roi_info, roi_slides)
-
-subset_smoke_info <- filter(roi_slide_info, Stages==path_stage)
-low_subset_smoke <- filter(subset_smoke_info, Smoke=="Non-smoker")
-high_subset_smoke <- filter(subset_smoke_info, Smoke=="Smoker")
-
-
-low_sub_roi_info <- filter(subset_roi_info, roi_slides %in% low_subset_smoke$Slides)
-high_sub_roi_info <- filter(subset_roi_info, roi_slides %in% high_subset_smoke$Slides)
-
-
+low_sub_roi_info <- filter(subset_roi_info, roi_slides %in% low_subset_smoke$Slide_ID)
+high_sub_roi_info <- filter(subset_roi_info, roi_slides %in% high_subset_smoke$Slide_ID)
 low_sub_roi_lst <- low_sub_roi_info$ROI_ID
 high_sub_roi_lst <- high_sub_roi_info$ROI_ID
 
