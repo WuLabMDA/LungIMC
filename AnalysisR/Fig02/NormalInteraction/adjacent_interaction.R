@@ -8,7 +8,8 @@ library(stringr)
 ## load all interactions
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
-cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200", ".RData"))
+# cell_spatial_path <- file.path(phenotype_dir, paste0("InteractionsTestIter200", ".RData"))
+cell_spatial_path <- file.path(phenotype_dir, "DelaunayInteraction", paste0("DelaunayInteractionThreshold50", ".RData"))
 load(cell_spatial_path)
 
 ## load ROI diagnosis information
@@ -17,7 +18,7 @@ roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
 # AdjacentNormal of Normal/AAH/AIS/MIA/ADC
-path_stage <- "ADC"
+path_stage <- "AAH"
 subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="AdjacentNormal")
 
 
@@ -31,7 +32,7 @@ to_order <- c("Undefined", "Fibroblast", "MDSC", "Monocyte", "Macrophage", "Prol
               "Endothelial-Cell", "Dendritic-Cell", "NK-Cell", "Neutrophil", "B-Cell", "Epithelial-Cell")
 
 max_per_val <- 1.000
-min_per_val <- -0.428
+min_per_val <- -1.000
 
 subset_out %>% as_tibble() %>%
     group_by(from_label, to_label) %>%
