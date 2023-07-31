@@ -43,9 +43,15 @@ metadata_dir <- file.path(data_root_dir, "Metadata")
 roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
 
+
 # AdjacentNormal of Normal/AAH/AIS/MIA/ADC
+# Normal/AAH/AIS/MIA/ADC
 path_stage <- "ADC"
-subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="AdjacentNormal")
+if (path_stage == "Normal") {
+    subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage)
+} else {
+    subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
+}
 
 
 subset_roi_lst <- subset_roi_info$ROI_ID
@@ -68,6 +74,6 @@ subset_out %>% as_tibble() %>%
     mutate(to_label=factor(to_label, levels=to_order)) %>%
     ggplot() +
     geom_tile(aes(from_label, to_label, fill = sum_sigval)) +
-    scale_fill_continuous(limits=c(min_per_val, max_per_val), breaks=seq(5)) +
+    scale_fill_continuous(limits=c(min_per_val, max_per_val), breaks=seq(5)) +     
     scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
