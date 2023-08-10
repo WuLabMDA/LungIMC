@@ -17,7 +17,7 @@ library(hrbrthemes)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
-spe_celltype_name <-"lung_spe_33_cell_subtypes_final"
+spe_celltype_name <-"lung_spe_32_cell_subtypes_final"
 spe_celltype_path <- file.path(phenotype_dir, paste0(spe_celltype_name, ".rds"))
 spe <- readRDS(spe_celltype_path)
 
@@ -59,7 +59,7 @@ if (!file.exists(subtype_proportion_dir))
     dir.create(subtype_proportion_dir, recursive = TRUE)
 
 # list all cell subtypes
-interested_cell_lst <- c("CD163- Macrophage", "CD163- PDL1+ Macrophage", "CD163+ Ki67+ Macrophage", "CD163+ Macrophage")
+interested_cell_lst <- c("CD163- Macrophages", "Ki67+ Macrophages", "CD163+ Macrophages")
 for (cell_type in interested_cell_lst) {
     # collect information
     ratio_lst <- c()
