@@ -67,9 +67,8 @@ if __name__ == "__main__":
             lesion_fea_lst = cur_lesion_df[cur_fea].tolist()
             # lesion_iqr = np.percentile(lesion_fea_lst, 75) - np.percentile(lesion_fea_lst, 25)
             lesion_iqr = stats.iqr(lesion_fea_lst)
-            import pdb; pdb.set_trace()
             row_val_lst.append(lesion_iqr)
         slide_ith_df.loc[len(slide_ith_df.index)] = row_val_lst
-    # # Check slide dataframe information 
-    # lesion_ith_path = os.path.join(lesion_ith_dir, "lesion_ith_per_fea.csv")
-    # slide_ith_df.to_csv(lesion_ith_path, index = False)
+    # Check slide dataframe information 
+    lesion_ith_path = os.path.join(lesion_ith_dir, "lesion_ith_per_fea.csv")
+    slide_ith_df.to_csv(lesion_ith_path, index = False)
