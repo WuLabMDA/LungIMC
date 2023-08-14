@@ -80,3 +80,13 @@ if __name__ == "__main__":
                 os.makedirs(fea_ith_plot_dir)
             fea_ith_path = os.path.join(fea_ith_plot_dir, "{}.pdf".format(cur_fea))
             plt.savefig(fea_ith_path, transparent=False, dpi=300)
+
+            # write p-value
+            ith_f = open(os.path.join(fea_ith_plot_dir, "{}.txt".format(cur_fea)), "w")
+            ith_f.write("AAH-AIS p-value: {}\n".format(stats.ttest_ind(aah_lst, ais_lst).pvalue))
+            ith_f.write("AAH-MIA p-value: {}\n".format(stats.ttest_ind(aah_lst, mia_lst).pvalue))
+            ith_f.write("AAH-ADC p-value: {}\n".format(stats.ttest_ind(aah_lst, adc_lst).pvalue))
+            ith_f.write("AIS-MIA p-value: {}\n".format(stats.ttest_ind(ais_lst, mia_lst).pvalue))
+            ith_f.write("AIS-ADC p-value: {}\n".format(stats.ttest_ind(ais_lst, adc_lst).pvalue))
+            ith_f.write("MIA-ADC p-value: {}\n".format(stats.ttest_ind(mia_lst, adc_lst).pvalue))
+            ith_f.close()
