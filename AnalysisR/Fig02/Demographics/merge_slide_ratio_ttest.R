@@ -470,5 +470,8 @@ adjust_df %>% ggplot() +
                    size = p.to.Z(Pvals), shape = gGroup, color = Cmps)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-
+# adjust_df %>% ggplot() +
+#     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
+#                    size = p.to.Z(Pvals), color = Cmps)) +
+#     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 

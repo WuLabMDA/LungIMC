@@ -429,8 +429,8 @@ for (cell_type in all_cell_lst) {
     else
         mia_size_cmps <- append(mia_size_cmps, FALSE) 
     ## ADC Size
-    cell_ratio_df <- data.frame(Density=adc_size_ratio_lst, Size=adc_size_status_lst)    
-    long_density_df <- gather(cell_ratio_df, key = "variable", value = "value", -Density) 
+    cell_density_df <- data.frame(Density=adc_size_density_lst, Size=adc_size_status_lst)    
+    long_density_df <- gather(cell_density_df, key = "variable", value = "value", -Density) 
     adc_size_ttest <- t.test(long_density_df$Density[long_density_df$value=="Low"], long_density_df$Density[long_density_df$value=="High"])
     adc_size_pvals <- append(adc_size_pvals, adc_size_ttest$p.value)
     if (mean(long_density_df$Density[long_density_df$value=="High"]) >= mean(long_density_df$Density[long_density_df$value=="Low"]))
@@ -473,6 +473,8 @@ adjust_df %>% ggplot() +
                    size = p.to.Z(Pvals), shape = gGroup, color = Cmps)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-
-
+# adjust_df %>% ggplot() +
+#     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
+#                    size = p.to.Z(Pvals), color = Cmps)) +
+#     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
