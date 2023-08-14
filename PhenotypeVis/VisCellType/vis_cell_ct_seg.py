@@ -52,9 +52,9 @@ if __name__ == "__main__":
     cell_phenotypes = ["Epithelial-Cell", "Endothelial-Cell", "Fibroblast", "CD4-T-Cell", "CD8-T-Cell",
                     "T-Reg-Cell", "B-Cell", "Macrophage", "Monocyte", "Dendritic-Cell", 
                     "Neutrophil", "MDSC", "NK-Cell", "Proliferating-Cell", "Undefined"]
-    phenotype_colors = [(226, 26, 28), (255, 127, 0), (253, 190, 111), (106, 61, 154), (31, 119, 180),
-                       (51, 51, 0), (202, 178, 214), (51, 160, 43), (254, 255, 153), (165, 206, 226),
-                       (102, 51, 0), (178, 223, 138),  (230, 88, 160), (102, 102, 0), (214, 214, 214)]
+    phenotype_colors = [(108, 206, 226), (255, 159, 0), (227, 135, 180), (44, 160, 44), (152, 223, 138),
+                       (255, 152, 150), (148, 103, 189), (140, 117, 75), (196, 156, 148), (253, 190, 111),
+                       (127, 127, 127), (178, 223, 138),  (219, 219, 141), (118, 154, 225), (214, 214, 214)]
     phenotype_color_dict = {cell_type: color for cell_type, color in zip(cell_phenotypes, phenotype_colors)}
 
     for img_ind in np.arange(len(img_lst)):
