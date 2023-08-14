@@ -17,7 +17,7 @@ library(hrbrthemes)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
-spe_celltype_name <-"lung_spe_33_cell_subtypes_final"
+spe_celltype_name <-"lung_spe_32_cell_subtypes_final"
 spe_celltype_path <- file.path(phenotype_dir, paste0(spe_celltype_name, ".rds"))
 spe <- readRDS(spe_celltype_path)
 
@@ -27,7 +27,7 @@ roi_info_name <- "ROI_Info_Aggregation.csv"
 roi_info_path <- file.path(metadata_dir, roi_info_name)
 roi_df <- read_csv(roi_info_path)
 # load lesion information
-slide_info_name <- "Lesion_Info_Aggregation.csv"
+slide_info_name <- "Lesion_Info_AggregationSize.csv"
 slide_info_path <- file.path(metadata_dir, slide_info_name)
 slide_info_df <- read_csv(slide_info_path)
 # load patient information
@@ -53,14 +53,14 @@ cell_id_lst <- cell_id_lst[lesion_indices]
 celltype_lst <- spe$cellsubtype
 celltype_lst <- celltype_lst[lesion_indices]
 
-all_cell_lst <- c("Ki67+ Epithelial", "Ki67+ PDL1+ Epithelial", "CD73+ Epithelial", "Other Epithelial",
-                  "Ki67+ B-Cells", "Ki67- B-Cells", "Neutrophil", "Ki67+ NK Cells", "Ki67- NK Cells", 
+all_cell_lst <- c("Ki67+ Epithelial", "Ki67+ PDL1+ Epithelial", "CD73+ Epithelial", "Other Epithelial", 
+                  "Ki67+ B-Cells", "Ki67- B-Cells", "Ki67+ NK Cells", "Ki67- NK Cells",
                   "Ki67+ Dendritic Cells", "HLADR+ Dendritic Cells", "Other Dendritic Cells", "Endothelial-Cell",
                   "Cytotoxic CD8 T-Cells", "Memory CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", "Naive CD8 T-Cells",
-                  "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Naive CD4 T-Cells", 
-                  "Ki67+ Treg-Cells", "Ki67- Treg-Cells", "Proliferating-Cell", "CD163+ Macrophage",
-                  "CD163+ Ki67+ Macrophage", "CD163- Macrophage", "CD163- PDL1+ Macrophage", "Monocyte",
-                  "MDSC", "Fibroblast", "Undefined")
+                  "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Naive CD4 T-Cells",
+                  "Ki67+ Treg-Cells", "Ki67- Treg-Cells", "Proliferating-Cell", 
+                  "CD163+ Macrophages", "Ki67+ Macrophages", "CD163- Macrophages",
+                  "Neutrophil", "Monocyte", "MDSC", "Fibroblast", "Undefined")
 
 age_pvals <- c()
 age_cmps <- c()
@@ -110,7 +110,14 @@ adc_egfr_other_pvals <- c()
 adc_egfr_other_cmps <- c()
 adc_kras_other_pvals <- c()
 adc_kras_other_cmps <- c()
-
+aah_size_pvals <- c()
+aah_size_cmps <- c()
+ais_size_pvals <- c()
+ais_size_cmps <- c()
+mia_size_pvals <- c()
+mia_size_cmps <- c()
+adc_size_pvals <- c()
+adc_size_cmps <- c()
 
 for (cell_type in all_cell_lst) {
     # collect information
@@ -135,6 +142,15 @@ for (cell_type in all_cell_lst) {
     mia_egfr_kras_status_lst <- c()
     adc_egfr_kras_ratio_lst <- c()
     adc_egfr_kras_status_lst <- c()
+    
+    aah_size_ratio_lst <- c()
+    aah_size_status_lst <- c()
+    ais_size_ratio_lst <- c()
+    ais_size_status_lst <- c()
+    mia_size_ratio_lst <- c()
+    mia_size_status_lst <- c()
+    adc_size_ratio_lst <- c()
+    adc_size_status_lst <- c()   
     
     # iterate by slide
     stage_slide_lst <- slide_info_df$Slide_ID
@@ -165,6 +181,7 @@ for (cell_type in all_cell_lst) {
         cur_diag <- slide_info_df$Slide_Diag[ir]
         cur_tmb <- slide_info_df$TMB[ir]
         cur_egfr_kras <- slide_info_df$EGFR_KRAS[ir]
+        cur_size <- slide_info_df$TumorSize[ir]
         if (!is.na(cur_tmb)) {
             if (cur_diag == "AAH") {
                 aah_tmb_ratio_lst <- append(aah_tmb_ratio_lst, slide_cell_ratio)
@@ -193,6 +210,24 @@ for (cell_type in all_cell_lst) {
                 adc_egfr_kras_status_lst <- append(adc_egfr_kras_status_lst, cur_egfr_kras)
             }              
         }
+        if (!is.na(cur_size)) {
+            if (cur_diag == "AAH") {
+                aah_size_ratio_lst <- append(aah_size_ratio_lst, slide_cell_ratio)
+                aah_size_status_lst <- append(aah_size_status_lst, cur_size)
+            }
+            if (cur_diag == "AIS") {
+                ais_size_ratio_lst <- append(ais_size_ratio_lst, slide_cell_ratio)
+                ais_size_status_lst <- append(ais_size_status_lst, cur_size)
+            }
+            if (cur_diag == "MIA") {
+                mia_size_ratio_lst <- append(mia_size_ratio_lst, slide_cell_ratio)
+                mia_size_status_lst <- append(mia_size_status_lst, cur_size)
+            }
+            if (cur_diag == "ADC") {
+                adc_size_ratio_lst <- append(adc_size_ratio_lst, slide_cell_ratio)
+                adc_size_status_lst <- append(adc_size_status_lst, cur_size)
+            }            
+        }             
     }   
     
     cell_ratio_df <- data.frame(Ratio=ratio_lst, Gender=gender_lst, Race=race_lst, Age=age_lst, Smoke=smoke_lst, Stage=stage_lst)
@@ -364,7 +399,44 @@ for (cell_type in all_cell_lst) {
     if (mean(long_ratio_df$Ratio[long_ratio_df$value=="KRAS"]) >= mean(long_ratio_df$Ratio[long_ratio_df$value=="Other"]))
         adc_kras_other_cmps <- append(adc_kras_other_cmps, TRUE)
     else
-        adc_kras_other_cmps <- append(adc_kras_other_cmps, FALSE)         
+        adc_kras_other_cmps <- append(adc_kras_other_cmps, FALSE)
+    
+    ## AAH Size
+    cell_ratio_df <- data.frame(Ratio=aah_size_ratio_lst, Size=aah_size_status_lst)    
+    long_ratio_df <- gather(cell_ratio_df, key = "variable", value = "value", -Ratio) 
+    aah_size_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="Low"], long_ratio_df$Ratio[long_ratio_df$value=="High"])
+    aah_size_pvals <- append(aah_size_pvals, aah_size_ttest$p.value)
+    if (mean(long_ratio_df$Ratio[long_ratio_df$value=="High"]) >= mean(long_ratio_df$Ratio[long_ratio_df$value=="Low"]))
+        aah_size_cmps <- append(aah_size_cmps, TRUE)
+    else
+        aah_size_cmps <- append(aah_size_cmps, FALSE)      
+    ## AIS Size
+    cell_ratio_df <- data.frame(Ratio=ais_size_ratio_lst, Size=ais_size_status_lst)    
+    long_ratio_df <- gather(cell_ratio_df, key = "variable", value = "value", -Ratio) 
+    ais_size_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="Low"], long_ratio_df$Ratio[long_ratio_df$value=="High"])
+    ais_size_pvals <- append(ais_size_pvals, ais_size_ttest$p.value)
+    if (mean(long_ratio_df$Ratio[long_ratio_df$value=="High"]) >= mean(long_ratio_df$Ratio[long_ratio_df$value=="Low"]))
+        ais_size_cmps <- append(ais_size_cmps, TRUE)
+    else
+        ais_size_cmps <- append(ais_size_cmps, FALSE)  
+    ## MIA Size
+    cell_ratio_df <- data.frame(Ratio=mia_size_ratio_lst, Size=mia_size_status_lst)    
+    long_ratio_df <- gather(cell_ratio_df, key = "variable", value = "value", -Ratio) 
+    mia_size_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="Low"], long_ratio_df$Ratio[long_ratio_df$value=="High"])
+    mia_size_pvals <- append(mia_size_pvals, mia_size_ttest$p.value)
+    if (mean(long_ratio_df$Ratio[long_ratio_df$value=="High"]) >= mean(long_ratio_df$Ratio[long_ratio_df$value=="Low"]))
+        mia_size_cmps <- append(mia_size_cmps, TRUE)
+    else
+        mia_size_cmps <- append(mia_size_cmps, FALSE) 
+    ## ADC Size
+    cell_ratio_df <- data.frame(Ratio=adc_size_ratio_lst, Size=adc_size_status_lst)    
+    long_ratio_df <- gather(cell_ratio_df, key = "variable", value = "value", -Ratio) 
+    adc_size_ttest <- t.test(long_ratio_df$Ratio[long_ratio_df$value=="Low"], long_ratio_df$Ratio[long_ratio_df$value=="High"])
+    adc_size_pvals <- append(adc_size_pvals, adc_size_ttest$p.value)
+    if (mean(long_ratio_df$Ratio[long_ratio_df$value=="High"]) >= mean(long_ratio_df$Ratio[long_ratio_df$value=="Low"]))
+        adc_size_cmps <- append(adc_size_cmps, TRUE)
+    else
+        adc_size_cmps <- append(adc_size_cmps, FALSE)       
 }
 
 p_val_df <- data.frame(Age=age_pvals, Gender=gender_pvals, Race=race_pvals, Smoke=smoke_pvals,
@@ -373,19 +445,21 @@ p_val_df <- data.frame(Age=age_pvals, Gender=gender_pvals, Race=race_pvals, Smok
                        AIS_ADC=ais_adc_pvals, MIA_ADC=mia_adc_pvals, AAH_TMB=aah_tmb_pvals, AIS_TMB=ais_tmb_pvals, 
                        MIA_TMB=mia_tmb_pvals, ADC_TMB=adc_tmb_pvals, MIA_EGFR_KRAS=mia_egfr_kras_pvals, 
                        MIA_EGFR_OTHER=mia_egfr_other_pvals, MIA_KRAS_OTHER=mia_kras_other_pvals, 
-                       ADC_EGFR_KRAS=adc_egfr_kras_pvals, ADC_EGFR_OTHER=adc_egfr_other_pvals, 
-                       ADC_KRAS_OTHER=adc_kras_other_pvals, row.names = all_cell_lst)
+                       ADC_EGFR_KRAS=adc_egfr_kras_pvals, ADC_EGFR_OTHER=adc_egfr_other_pvals, ADC_KRAS_OTHER=adc_kras_other_pvals, 
+                       AAH_Size=aah_size_pvals, AIS_Size=ais_size_pvals, MIA_Size=mia_size_pvals, ADC_Size=adc_size_pvals, 
+                       row.names = all_cell_lst)
 p_cmp_df <- data.frame(Age=age_cmps, Gender=gender_cmps, Race=race_cmps, Smoke=smoke_cmps,
                        Normal_AAH=normal_aah_cmps, Normal_AIS=normal_ais_cmps, Normal_MIA=normal_mia_cmps, Normal_ADC=normal_adc_cmps,
                        AAH_AIS=aah_ais_cmps, AAH_MIA=aah_mia_cmps, AAH_ADC=aah_adc_cmps, AIS_MIA=ais_mia_cmps,
                        AIS_ADC=ais_adc_cmps, MIA_ADC=mia_adc_cmps, AAH_TMB=aah_tmb_cmps, AIS_TMB=ais_tmb_cmps,
                        MIA_TMB=mia_tmb_cmps, ADC_TMB=adc_tmb_cmps, MIA_EGFR_KRAS=mia_egfr_kras_cmps, 
                        MIA_EGFR_OTHER=mia_egfr_other_cmps, MIA_KRAS_OTHER=mia_kras_other_cmps, 
-                       ADC_EGFR_KRAS=adc_egfr_kras_cmps, ADC_EGFR_OTHER=adc_egfr_other_cmps,                        
-                       ADC_KRAS_OTHER=adc_kras_other_cmps, row.names = all_cell_lst)
+                       ADC_EGFR_KRAS=adc_egfr_kras_cmps, ADC_EGFR_OTHER=adc_egfr_other_cmps, ADC_KRAS_OTHER=adc_kras_other_cmps, 
+                       AAH_Size=aah_size_cmps, AIS_Size=ais_size_cmps, MIA_Size=mia_size_cmps, ADC_Size=adc_size_cmps, row.names = all_cell_lst)
 var_order <- c("Age", "Gender", "Race", "Smoke", "Normal_AAH", "Normal_AIS", "Normal_MIA", "Normal_ADC", "AAH_AIS", "AAH_MIA", 
                "AAH_ADC", "AIS_MIA", "AIS_ADC", "MIA_ADC", "AAH_TMB", "AIS_TMB", "MIA_TMB", "ADC_TMB", "MIA_EGFR_KRAS", 
-               "MIA_EGFR_OTHER", "MIA_KRAS_OTHER", "ADC_EGFR_KRAS", "ADC_EGFR_OTHER", "ADC_KRAS_OTHER")
+               "MIA_EGFR_OTHER", "MIA_KRAS_OTHER", "ADC_EGFR_KRAS", "ADC_EGFR_OTHER", "ADC_KRAS_OTHER",
+               "AAH_Size", "AIS_Size", "MIA_Size", "ADC_Size")
 
 group_df <- p_val_df %>% rownames_to_column(var = "CellType") %>% gather(Vars, Pvals, -CellType) 
 group_df$AdjustPs <- p.adjust(group_df$Pvals, method = "fdr")
