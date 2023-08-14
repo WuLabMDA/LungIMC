@@ -22,20 +22,20 @@ cell_spatial_path <- file.path(cell_type_interaction_path)
 load(cell_spatial_path)
 
 ct_palette <- c(
-    "#CAB2D6", # B-Cell
-    "#6A3D9A", # CD4-T-Cell
-    "#1F77B4", # CD8-T-Cell
-    "#A5CEE2", # Dendritic-Cell
-    "#FF7F00", # Endothelial-Cell
-    "#E21A1C", # Epithelial-Cell
-    "#FDBE6F", # Fibroblast
-    "#33A02B", # Macrophage
+    "#9467BD", # B-Cell
+    "#2CA02C", # CD4-T-Cell
+    "#98DF8A", # CD8-T-Cell
+    "#FDBE6F", # Dendritic-Cell
+    "#FF9F00", # Endothelial-Cell
+    "#6CCEE2", # Epithelial-Cell
+    "#E387B4", # Fibroblast
+    "#8C754B", # Macrophage
     "#B2DF8A", # MDSC
-    "#FEFF99", # Monocyte
-    "#663300", # Neutrophil
-    "#E658A0", # NK-Cell
-    "#666600", # Proliferating-Cell
-    "#333300", # T-Reg-Cell
+    "#C49C94", # Monocyte
+    "#7F7F7F", # Neutrophil
+    "#DBDB8D", # NK-Cell
+    "#769AE1", # Proliferating-Cell
+    "#FF9896", # T-Reg-Cell
     "#D6D6D6"  # Undefined
 )
 
