@@ -9,6 +9,7 @@ library(randomcoloR)
 library(tidyverse)
 library(readxl)
 library(knitr)
+library(comprehenr)
 
 ## set directory
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
@@ -20,6 +21,7 @@ cell_type_interaction_name <- paste0("DelaunayInteractionThreshold", threshold_v
 cell_type_interaction_path <- file.path(celltype_delaunay_dir, cell_type_interaction_name)
 cell_spatial_path <- file.path(cell_type_interaction_path)
 load(cell_spatial_path)
+
 
 ct_palette <- c(
     "#9467BD", # B-Cell
@@ -39,6 +41,13 @@ ct_palette <- c(
     "#D6D6D6"  # Undefined
 )
 
+
+# map_ct_palette <- c("B-Cell"="#9467BD", "CD4-T-Cell"="#2CA02C", "CD8-T-Cell"="#98DF8A",
+#                     "Dendritic-Cell"="#FDBE6F", "Endothelial-Cell"="#FF9F00", "Epithelial-Cell"="#6CCEE2",
+#                     "Fibroblast"="#E387B4", "Macrophage"="#8C754B", "MDSC"="#B2DF8A",
+#                     "Monocyte"="#C49C94", "Neutrophil"="#7F7F7F", "NK-Cell"="#DBDB8D",
+#                     "Proliferating-Cell"="#769AE1", "T-Reg-Cell"="#FF9896", "Undefined"="#D6D6D6")
+
 img_file_path <- file.path(data_root_dir, "LungROIProcessing", "Steinbock", "images.csv")
 img_data_df <- read_csv(img_file_path)
 num_img <- nrow(img_data_df)
@@ -46,26 +55,6 @@ num_img <- nrow(img_data_df)
 ct_delaunay_dir <- file.path(data_root_dir, "Results", "VisCT-Delaunay")
 if (!file.exists(ct_delaunay_dir))
     dir.create(ct_delaunay_dir)
-
-# # test roi
-# # Normal - 2323-5F-ROI002
-# # AAH - 2513-1G-ROI005
-# # AIS - H18-0255-6-ROI015
-# # MIA - 2513-1C-ROI012
-# # ADC - H18-0331-11-ROI003
-# test_roi_name <- "2323-5F-ROI002"
-# # cell connection visualization
-# plotSpatial(spe[, spe$sample_id == test_roi_name],
-#             img_id = "sample_id",
-#             node_color_by = "celltype",
-#             node_size_fix = 1.0,
-#             draw_edges = TRUE,
-#             colPairName = "delaunay_interaction_graph",
-#             edge_width_fix = 0.1,
-#             nodes_first = FALSE,
-#             directed = FALSE,
-#             edge_color_fix = "black") + 
-#     scale_color_manual(values = ct_palette) 
 
 
 for (ind in 1:num_img) {
@@ -75,7 +64,10 @@ for (ind in 1:num_img) {
     # # test roi
     # test_roi_name <- "2166-1B-ROI009"
     # cell connection visualization
-    plotSpatial(spe[, spe$sample_id == img_name],
+    roi_object <- spe[, spe$sample_id == img_name]
+    # roi_celltypes <- unique(object$celltype)
+    # ct_palette <- to_vec(for (ct in roi_celltypes) map_ct_palette[ct])
+    plotSpatial(roi_object,
                 img_id = "sample_id",
                 node_color_by = "celltype",
                 node_size_fix = 1.0,
