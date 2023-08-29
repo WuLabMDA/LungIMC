@@ -11,7 +11,7 @@ data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
 ## load spe object
-spe_cellsubtype_name <-"lung_spe_33_cell_subtypes_final"
+spe_cellsubtype_name <-"lung_spe_32_cell_subtypes_final"
 spe_cellsubtype_path <- file.path(phenotype_dir, paste0(spe_cellsubtype_name, ".rds"))
 spe <- readRDS(spe_cellsubtype_path)
 
@@ -32,7 +32,7 @@ celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
 if (!dir.exists(celltype_delaunay_dir))
     dir.create(celltype_delaunay_dir)
 
-cell_subtype_interaction_name <- paste0("Subtype33DelaunayInteractionThreshold", threshold_val, ".RData")
+cell_subtype_interaction_name <- paste0("Subtype32DelaunayInteractionThreshold", threshold_val, ".RData")
 cell_subtype_interaction_path <- file.path(celltype_delaunay_dir, cell_subtype_interaction_name)
 save(spe, interaction_out, file = cell_subtype_interaction_path)
 print(paste("Finish @", format(Sys.time(), "%a %b %d %X %Y")))
