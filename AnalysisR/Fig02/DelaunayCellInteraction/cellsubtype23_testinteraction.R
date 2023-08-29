@@ -11,7 +11,7 @@ data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
 ## load spe object
-spe_cellsubtype_name <-"lung_spe_33_cell_subtypes_final"
+spe_cellsubtype_name <-"lung_spe_32_cell_subtypes_final"
 spe_cellsubtype_path <- file.path(phenotype_dir, paste0(spe_cellsubtype_name, ".rds"))
 spe <- readRDS(spe_cellsubtype_path)
 
