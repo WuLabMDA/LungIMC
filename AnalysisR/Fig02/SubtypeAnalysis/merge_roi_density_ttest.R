@@ -19,7 +19,7 @@ data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
 # load cell phenotype information
-spe_celltype_name <-"lung_spe_33_cell_subtypes_final"
+spe_celltype_name <-"lung_spe_32_cell_subtypes_final"
 spe_celltype_path <- file.path(phenotype_dir, paste0(spe_celltype_name, ".rds"))
 spe <- readRDS(spe_celltype_path)
 
@@ -34,14 +34,14 @@ roi_info_path <- file.path(metadata_dir, roi_info_name)
 roi_df <- read_csv(roi_info_path)
 
 # list all cell types
-all_cell_lst <- c("Ki67+ Epithelial", "Ki67+ PDL1+ Epithelial", "CD73+ Epithelial", "Other Epithelial",
-                  "Ki67+ B-Cells", "Ki67- B-Cells", "Neutrophil", "Ki67+ NK Cells", "Ki67- NK Cells", 
+all_cell_lst <- c("Ki67+ Epithelial", "Ki67+ PDL1+ Epithelial", "CD73+ Epithelial", "Other Epithelial", 
+                  "Ki67+ B-Cells", "Ki67- B-Cells", "Ki67+ NK Cells", "Ki67- NK Cells",
                   "Ki67+ Dendritic Cells", "HLADR+ Dendritic Cells", "Other Dendritic Cells", "Endothelial-Cell",
                   "Cytotoxic CD8 T-Cells", "Memory CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", "Naive CD8 T-Cells",
-                  "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Naive CD4 T-Cells", 
-                  "Ki67+ Treg-Cells", "Ki67- Treg-Cells", "Proliferating-Cell", "CD163+ Macrophage",
-                  "CD163+ Ki67+ Macrophage", "CD163- Macrophage", "CD163- PDL1+ Macrophage", "Monocyte",
-                  "MDSC", "Fibroblast", "Undefined")
+                  "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Naive CD4 T-Cells",
+                  "Ki67+ Treg-Cells", "Ki67- Treg-Cells", "Proliferating-Cell", 
+                  "CD163+ Macrophages", "Ki67+ Macrophages", "CD163- Macrophages",
+                  "Neutrophil", "Monocyte", "MDSC", "Fibroblast", "Undefined")
 cell_id_lst <- rownames(colData(spe))
 celltype_lst <- spe$cellsubtype
 
@@ -360,7 +360,7 @@ adjust_df %>% ggplot() +
                    size = p.to.Z(Pvals), shape = gGroup, color = Cmps)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-# adjust_df %>% ggplot() +
-#     geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
-#                    size = p.to.Z(Pvals), color = Cmps)) +
-#     theme(axis.text.x = element_text(angle = 90, hjust = 1))
+adjust_df %>% ggplot() +
+    geom_point(aes(x = factor(Vars, level=var_order), y = factor(CellType, level=rev(all_cell_lst)),
+                   size = p.to.Z(Pvals), color = Cmps)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1))
