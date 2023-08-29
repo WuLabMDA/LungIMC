@@ -29,8 +29,8 @@ spe$cellsubtype[spe$cellsubtype=="HLADR+ Dendritic Cells"] <- "Dendritic-Cell"
 spe$cellsubtype[spe$cellsubtype=="Other Dendritic Cells"] <- "Dendritic-Cell"
 spe$cellsubtype[spe$cellsubtype=="Ki67+ Treg-Cells"] <- "Treg-Cells"
 spe$cellsubtype[spe$cellsubtype=="Ki67- Treg-Cells"] <- "Treg-Cells"
-spe$cellsubtype[spe$cellsubtype=="CD163+ Ki67+ Macrophage"] <- "CD163+ Macrophage"
-spe$cellsubtype[spe$cellsubtype=="CD163- PDL1+ Macrophage"] <- "CD163- Macrophage"
+spe$cellsubtype[spe$cellsubtype=="Ki67+ Macrophages"] <- "CD163+ Macrophages"
+
 
 # detecting all cells within a given distance to the center cell (expansion)
 threshold_val <- 50
