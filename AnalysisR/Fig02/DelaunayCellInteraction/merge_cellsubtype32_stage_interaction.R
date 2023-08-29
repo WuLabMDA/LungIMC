@@ -10,7 +10,7 @@ data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 celltype_delaunay_dir <- file.path(phenotype_dir, "DelaunayInteraction")
 threshold_val <- 50
-cell_subtype_interaction_name <- paste0("Subtype33DelaunayInteractionThreshold", threshold_val, ".RData")
+cell_subtype_interaction_name <- paste0("Subtype32DelaunayInteractionThreshold", threshold_val, ".RData")
 cell_subtype_interaction_path <- file.path(celltype_delaunay_dir, cell_subtype_interaction_name)
 load(cell_subtype_interaction_path)
 
@@ -47,13 +47,13 @@ roi_meta_info <- read.xlsx(roi_info_path)
 
 
 from_order <- c("Ki67+ Epithelial", "Ki67+ PDL1+ Epithelial", "CD73+ Epithelial", "Other Epithelial",
-                  "Ki67+ B-Cells", "Ki67- B-Cells", "Neutrophil", "Ki67+ NK Cells", "Ki67- NK Cells", 
-                  "Ki67+ Dendritic Cells", "HLADR+ Dendritic Cells", "Other Dendritic Cells", "Endothelial-Cell",
-                  "Cytotoxic CD8 T-Cells", "Memory CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", "Naive CD8 T-Cells",
-                  "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Naive CD4 T-Cells", 
-                  "Ki67+ Treg-Cells", "Ki67- Treg-Cells", "Proliferating-Cell", "CD163+ Macrophage",
-                  "CD163+ Ki67+ Macrophage", "CD163- Macrophage", "CD163- PDL1+ Macrophage", "Monocyte",
-                  "MDSC", "Fibroblast", "Undefined")
+                "Ki67+ B-Cells", "Ki67- B-Cells", "Neutrophil", "Ki67+ NK Cells", "Ki67- NK Cells", 
+                "Ki67+ Dendritic Cells", "HLADR+ Dendritic Cells", "Other Dendritic Cells", "Endothelial-Cell",
+                "Cytotoxic CD8 T-Cells", "Memory CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", 
+                "Naive CD8 T-Cells", "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", 
+                "Naive CD4 T-Cells", "Ki67+ Treg-Cells", "Ki67- Treg-Cells", "Proliferating-Cell", 
+                "CD163+ Macrophages", "CD163- Macrophages", "Ki67+ Macrophages", 
+                "Monocyte", "MDSC", "Fibroblast", "Undefined")
 to_order <- rev(from_order)
 
 # subset roi information
