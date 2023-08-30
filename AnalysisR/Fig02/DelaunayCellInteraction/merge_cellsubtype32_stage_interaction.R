@@ -15,7 +15,7 @@ cell_subtype_interaction_path <- file.path(celltype_delaunay_dir, cell_subtype_i
 load(cell_subtype_interaction_path)
 
 # replace NA to -1, both unavailable 0
-cell_type_num <- 33
+cell_type_num <- 32
 interaction_num <- cell_type_num * cell_type_num
 num_roi <- interaction_out@nrows / interaction_num
 for (nn in 1:num_roi) {
