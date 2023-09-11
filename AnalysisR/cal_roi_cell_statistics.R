@@ -17,11 +17,14 @@ print(paste("Total cell number: ", length(celltypes)))
 img_file_path <- file.path(data_root_dir, "LungROIProcessing", "Steinbock", "images.csv")
 img_data_df <- read_csv(img_file_path)
 num_img <- nrow(img_data_df)
-roi_cell_num <- vector("integer", num_img)
 
+sample_id_lst <- spe$sample_id
+roi_cell_num <- vector("integer", num_img)
 for (ind in 1:num_img) {
     img_fullname <- img_data_df$image[ind]
     img_name <- substr(img_fullname, 1, nchar(img_fullname) - 5)
-    roi_object <- spe[, spe$sample_id == img_name]
-    roi_cell_num[ind] <- length(roi_object$celltype)
+    roi_cell_num[ind] <- sum(sample_id_lst == img_name)
 }
+
+print(paste("mean:", mean(roi_cell_num)))
+print(paste("std:", sd(roi_cell_num)))
