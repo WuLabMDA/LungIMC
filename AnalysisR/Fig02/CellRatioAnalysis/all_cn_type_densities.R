@@ -56,12 +56,16 @@ all_type_lst[all_type_lst == 8] <- "Pan-Immune-CN8"
 all_cell_lst <- c("Undefined-CN1", "Epithelial1-CN2", "Proliferating-CN3", "Epithelial2-CN4",
                   "Endothelial-CN5", "Fibroblast-CN6", "Macrophage-CN7", "Pan-Immune-CN8")
 
+print("Density mean & std:")
 celltype_mean_ratio_lst <- list()
 for (cell_type in all_cell_lst) {
     cell_indices <- which(all_type_lst == cell_type)
-    cell_ratio <- mean(all_ratio_lst[cell_indices])
-    celltype_mean_ratio_lst <- append(celltype_mean_ratio_lst, cell_ratio)
+    cell_ratio_mean <- mean(all_ratio_lst[cell_indices])
+    cell_ratio_std <- sd(all_ratio_lst[cell_indices])
+    print(paste(cell_type, ": mean", cell_ratio_mean, "std", cell_ratio_std))
+    celltype_mean_ratio_lst <- append(celltype_mean_ratio_lst, cell_ratio_mean)
 }
+
 names(celltype_mean_ratio_lst) <- all_cell_lst
 celltype_mean_ratio_lst <- celltype_mean_ratio_lst[order(unlist(celltype_mean_ratio_lst), decreasing=TRUE)]
 
