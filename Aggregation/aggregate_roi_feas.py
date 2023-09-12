@@ -110,6 +110,7 @@ if __name__ == "__main__":
 
     # insert stage column and sort
     roi_fea_df.insert(loc=1, column="ROI_Stage", value=roi_stage_lst)
+    # remove adjacent normal ROIs
     roi_fea_df = roi_fea_df[roi_fea_df["ROI_Stage"] != "AdjacentNormal"]
 
     # print ROI number counts
@@ -119,12 +120,10 @@ if __name__ == "__main__":
     for cur_stage in stage_order_lst:
         print("-{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages]))) 
 
+    # remove undefined-related features
     col_names = roi_fea_df.columns.tolist()
     interested_col_inds = [ind for ind, fea_name in enumerate(col_names) if "Undefined" not in fea_name]
     roi_fea_df = roi_fea_df.iloc[:, interested_col_inds]
-
-    # # save raw features
-    # agg_roi_fea_path = os.path.join(slide_agg_dir, "roi_fea_aggregation_raw.csv")
 
     # Feature processing
     fea_lst = list(roi_fea_df.columns[2:])
