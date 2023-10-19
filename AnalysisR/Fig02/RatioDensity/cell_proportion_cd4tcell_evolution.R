@@ -68,7 +68,7 @@ cell_name_lst <- c()
 cell_ratio_lst <- c()
 
 # list all cell subtypes
-interested_cell_lst <- c("Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Memory CD4 T-Cells", "Naive CD4 T-Cells")
+interested_cell_lst <- c("Ki67- Treg-Cells", "Ki67+ Treg-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Memory CD4 T-Cells", "Naive CD4 T-Cells")
 all_stage_lst <- c("Normal", "AAH", "AIS", "MIA", "ADC")
 
 
@@ -88,5 +88,15 @@ subtype_proportion_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "Pr
 if (!file.exists(subtype_proportion_dir))
     dir.create(subtype_proportion_dir, recursive = TRUE)
 stage_subcell_ratio_df <- data.frame(Stage=stage_name_lst, CellType=cell_name_lst, CellRatio=cell_ratio_lst)
+stage_subcell_ratio_df["CellType"][stage_subcell_ratio_df["CellType"] == "Ki67- Treg-Cells"] <- "Treg-Cells"
+stage_subcell_ratio_df["CellType"][stage_subcell_ratio_df["CellType"] == "Ki67+ Treg-Cells"] <- "Treg-Cells"
+stage_subcell_ratio_df[1, "CellRatio"] <- stage_subcell_ratio_df[1, "CellRatio"] + stage_subcell_ratio_df[2, "CellRatio"]
+stage_subcell_ratio_df[7, "CellRatio"] <- stage_subcell_ratio_df[7, "CellRatio"] + stage_subcell_ratio_df[8, "CellRatio"]
+stage_subcell_ratio_df[13, "CellRatio"] <- stage_subcell_ratio_df[13, "CellRatio"] + stage_subcell_ratio_df[14, "CellRatio"]
+stage_subcell_ratio_df[19, "CellRatio"] <- stage_subcell_ratio_df[19, "CellRatio"] + stage_subcell_ratio_df[20, "CellRatio"]
+stage_subcell_ratio_df[25, "CellRatio"] <- stage_subcell_ratio_df[25, "CellRatio"] + stage_subcell_ratio_df[26, "CellRatio"]
+stage_subcell_ratio_df <- stage_subcell_ratio_df[-c(2, 8, 14, 20, 26), ]
+
+
 stage_subcell_ratio_path <- file.path(subtype_proportion_dir, "stage_CD4T_cell_ratios.csv")
 write.csv(stage_subcell_ratio_df, stage_subcell_ratio_path, row.names=FALSE)

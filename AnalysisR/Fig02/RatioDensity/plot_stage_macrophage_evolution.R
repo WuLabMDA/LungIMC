@@ -6,9 +6,8 @@ subtype_proportion_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "Pr
 stage_subcell_ratio_path <- file.path(subtype_proportion_dir, "stage_macrophage_ratios.csv")
 cell_ratio_df <- read.csv(stage_subcell_ratio_path)
 
-cell_ratio_df$Stage <- factor(cell_ratio_df$Stage, 
-                              levels = c("Normal", "AAH", "AIS", "MIA", "ADC"))
-cell_type_orders <- c("CD163- Macrophages", "Ki67+ Macrophages", "CD163+ Macrophages")
+cell_ratio_df$Stage <- factor(cell_ratio_df$Stage, levels = c("Normal", "AAH", "AIS", "MIA", "ADC"))
+cell_type_orders <- c("CD163- Macrophages", "CD163+ Macrophages")
 cell_ratio_df$CellType <- factor(cell_ratio_df$CellType, levels = rev(cell_type_orders))
 ggplot(cell_ratio_df, aes(x = Stage, y = CellRatio, fill = CellType)) + 
     geom_bar(stat="identity", position = "fill") +

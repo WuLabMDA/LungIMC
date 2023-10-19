@@ -8,7 +8,7 @@ cell_ratio_df <- read.csv(stage_subcell_ratio_path)
 
 cell_ratio_df$Stage <- factor(cell_ratio_df$Stage, 
                               levels = c("Normal", "AAH", "AIS", "MIA", "ADC"))
-cell_type_orders <- c("Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Memory CD4 T-Cells", "Naive CD4 T-Cells")
+cell_type_orders <- c("Treg-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", "Memory CD4 T-Cells", "Naive CD4 T-Cells")
 cell_ratio_df$CellType <- factor(cell_ratio_df$CellType, levels = rev(cell_type_orders))
 ggplot(cell_ratio_df, aes(x = Stage, y = CellRatio, fill = CellType)) + 
     geom_bar(stat="identity", position = "fill") +

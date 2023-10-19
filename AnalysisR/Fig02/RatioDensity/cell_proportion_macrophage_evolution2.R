@@ -88,5 +88,14 @@ subtype_proportion_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "Pr
 if (!file.exists(subtype_proportion_dir))
     dir.create(subtype_proportion_dir, recursive = TRUE)
 stage_subcell_ratio_df <- data.frame(Stage=stage_name_lst, CellType=cell_name_lst, CellRatio=cell_ratio_lst)
+stage_subcell_ratio_df["CellType"][stage_subcell_ratio_df["CellType"] == "Ki67+ Macrophages"] <- "CD163+ Macrophages"
+stage_subcell_ratio_df[2, "CellRatio"] <- stage_subcell_ratio_df[2, "CellRatio"] + stage_subcell_ratio_df[3, "CellRatio"]
+stage_subcell_ratio_df[5, "CellRatio"] <- stage_subcell_ratio_df[5, "CellRatio"] + stage_subcell_ratio_df[6, "CellRatio"]
+stage_subcell_ratio_df[8, "CellRatio"] <- stage_subcell_ratio_df[8, "CellRatio"] + stage_subcell_ratio_df[9, "CellRatio"]
+stage_subcell_ratio_df[11, "CellRatio"] <- stage_subcell_ratio_df[11, "CellRatio"] + stage_subcell_ratio_df[12, "CellRatio"]
+stage_subcell_ratio_df[14, "CellRatio"] <- stage_subcell_ratio_df[14, "CellRatio"] + stage_subcell_ratio_df[15, "CellRatio"]
+stage_subcell_ratio_df <- stage_subcell_ratio_df[-c(3, 6, 9, 12, 15), ]
+
+
 stage_subcell_ratio_path <- file.path(subtype_proportion_dir, "stage_macrophage_ratios.csv")
 write.csv(stage_subcell_ratio_df, stage_subcell_ratio_path, row.names=FALSE)
