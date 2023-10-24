@@ -28,7 +28,7 @@ if __name__ == "__main__":
     feature_root_dir = os.path.join(dataset_dir, args.feature_dir)
 
     # load features
-    roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
+    roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation-new.csv")
     roi_fea_df = pd.read_csv(roi_fea_path)
 
     roi_stages = [ele for ele in roi_fea_df["ROI_Stage"].tolist()]
@@ -75,8 +75,7 @@ if __name__ == "__main__":
 
     all_fea_df.index = roi_stages
     all_fea_arr = all_fea_df.to_numpy().astype("float").T
-    import pdb; pdb.set_trace()
-    plt.imshow(all_fea_arr, cmap ="bwr", interpolation='none')
+    plt.imshow(all_fea_arr, cmap ="bwr", interpolation="none")
     plt.colorbar()
     fea_heatmap_path = os.path.join(feature_root_dir, "fea_heatmap_stage-new.pdf")
     plt.savefig(fea_heatmap_path, transparent=False, dpi=300)

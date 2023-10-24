@@ -87,10 +87,9 @@ if __name__ == "__main__":
     cn_interaction_delaunay_df = cn_interaction_delaunay_df.reset_index()
     cn_interaction_df = cn_interaction_delaunay_df.iloc[:, 1:]
 
-
     # Aggregate features
-    roi_fea_df = pd.concat([ct_proportion_density_df, ct_morph_df, ct_state_df, ct_interaction_df, 
-                            cn_proportion_density_df, cn_morph_df, cn_state_df, cn_interaction_df], axis=1)
+    roi_fea_df = pd.concat([ct_proportion_density_df, ct_interaction_df, ct_state_df, ct_morph_df,
+                            cn_proportion_density_df, cn_interaction_df, cn_state_df, cn_morph_df], axis=1)
     # Insert ROI stage information
     roi_info_path = os.path.join(metadata_dir, "ROI_Info.xlsx")
     roi_info_df = pd.read_excel(roi_info_path)
@@ -138,5 +137,5 @@ if __name__ == "__main__":
         print("-{} has {} ROIs".format(cur_stage, sum([ele==cur_stage for ele in roi_stages]))) 
         
     # Merge features
-    merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation.csv")
+    merge_roi_fea_path = os.path.join(feature_root_dir, "ROI_Fea_Aggregation-new.csv")
     roi_fea_df.to_csv(merge_roi_fea_path, index=False)
