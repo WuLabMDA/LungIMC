@@ -74,7 +74,7 @@ if __name__ == "__main__":
     # print(all_fea_df.shape)
 
     all_fea_df.index = roi_stages
-    plt.imshow(all_fea_df, cmap ="bwr", aspect=0.5)
+    plt.imshow(all_fea_df, cmap ="bwr")
     plt.colorbar()
     fea_heatmap_path = os.path.join(feature_root_dir, "fea_heatmap_stage.pdf")
     plt.savefig(fea_heatmap_path, transparent=False, dpi=300)
