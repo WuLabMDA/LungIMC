@@ -9,7 +9,7 @@ $ docker build -t lungimc:ping .
 $ docker run -it --rm --user $(id -u):$(id -g) \
   -p 14321:14321 --hostname 1mcprddgx05 \
   -v /rsrch1/ip/pchen6/Codes/LungIMC:/App/LungIMC \
-  -v /rsrch1/ip/pchen6/LungIMCData:/Data \
+  -v /rsrch7/wulab/Ping/HumanIMCData:/Data \
   --shm-size=480G --cpuset-cpus=150-255 \
   --name lungimc_ping lungimc:ping
 ```
