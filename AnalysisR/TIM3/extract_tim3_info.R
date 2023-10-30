@@ -22,10 +22,12 @@ roi_info_name <- "ROI_Info_Aggregation.csv"
 roi_info_path <- file.path(metadata_dir, roi_info_name)
 roi_df <- read_csv(roi_info_path)
 cell_stages <- vector("character", length(cell_ids))
+cell_locations <- vector("character", length(cell_ids))
 for (ind in 1:length(cell_rois)) {
     cell_roi <- cell_rois[ind]
     roi_index <- which(roi_df$ROI_ID == cell_roi)
     cell_stages[ind] <- roi_df$ROI_Diag[roi_index]
+    cell_locations[ind] <- roi_df$ROI_Location[roi_index]
 }
 
 TIM3_vals <- as.numeric(counts(spe)["TIM3",])
@@ -40,12 +42,13 @@ B7H3_vals <- as.numeric(counts(spe)["B7H3",])
 CTLA4_vals <- as.numeric(counts(spe)["CTLA4",])
 
 # contruct dataset
-cell_exp_df <- data.frame(cell_id = cell_ids, cell_roi = cell_rois, 
-                          cell_type = cell_types, cell_stage = cell_stages, 
+cell_exp_df <- data.frame(cell_id = cell_ids, cell_roi = cell_rois, cell_type = cell_types, 
+                          cell_location = cell_locations, cell_stage = cell_stages, 
                           TIM3 = TIM3_vals, ICOS = ICOS_vals, TIGIT = TIGIT_vals, 
                           CD73 = CD73_vals, PDL1 = PDL1_vals, LAG3 = LAG3_vals, 
                           VISTA = VISTA_vals, PD1 = PD1_vals,
                           B7H3 = B7H3_vals, CTLA4 = CTLA4_vals)
+cell_exp_df <- cell_exp_df[cell_exp_df$cell_location != "AdjacentNormal",]
 
 # save data
 tim3_dir <- file.path(phenotype_dir, "TIM3")

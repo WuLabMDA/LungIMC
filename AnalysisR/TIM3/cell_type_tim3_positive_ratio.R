@@ -28,4 +28,4 @@ for (ind in 1:length(unique_cell_types)) {
 
 # plot
 barplot(tim3_positive_ratios, main = "Major Cell Type TIM3 Positivity Proportion", 
-        xlab = "Cell Types", ylab = "Proportion", angle = 45)
+        xlab = "Cell Types", ylab = "Proportion", cex.names=0.5)
