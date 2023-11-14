@@ -53,6 +53,10 @@ to_order <- rev(from_order)
 max_per_val <- 1.000
 min_per_val <- -1.000
 
+subtype_interaction_dir <- file.path(data_root_dir, "NatureFigures", "Fig02", "AdjacentDistantInteraction", "23AdjacentNormal")
+if (!file.exists(subtype_interaction_dir))
+    dir.create(subtype_interaction_dir, recursive = TRUE)
+
 # AdjacentNormal of AAH/AIS/MIA/ADC
 interested_stages <- c("AAH", "AIS", "MIA", "ADC")
 for (path_stage in interested_stages) {
@@ -71,4 +75,8 @@ for (path_stage in interested_stages) {
         scale_fill_continuous(limits=c(min_per_val, max_per_val), breaks=seq(5)) +
         scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
         theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    subtype_interaction_plot_path <- file.path(subtype_interaction_dir, paste0("Adjacent-", path_stage, ".pdf"))
+    ggsave(filename = subtype_interaction_plot_path, device='pdf', width=18, height=15, dpi=300)
+    while (!is.null(dev.list()))
+        dev.off()    
 }
