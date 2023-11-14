@@ -6,8 +6,7 @@ library(openxlsx)
 library(stringr)
 
 ## load all interactions
-# data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
-data_root_dir <- "V:/Ping/HumanIMCData/HumanWholeIMC"
+data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 celltype_neighbor_dir <- file.path(phenotype_dir, "DelaunayInteraction")
 cell_subtype_interaction_name <- "Subtype23DelaunayInteractionThreshold50.RData"
