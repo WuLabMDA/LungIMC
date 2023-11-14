@@ -6,10 +6,11 @@ library(openxlsx)
 library(stringr)
 
 ## load all interactions
-data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
+# data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
+data_root_dir <- "V:/Ping/HumanIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
-celltype_neighbor_dir <- file.path(phenotype_dir, "NeighborhoodInteraction")
-cell_subtype_interaction_name <- "Subtype23NeighborhoodInteractionThreshold.RData"
+celltype_neighbor_dir <- file.path(phenotype_dir, "DelaunayInteraction")
+cell_subtype_interaction_name <- "Subtype23DelaunayInteractionThreshold50.RData"
 cell_subtype_interaction_path <- file.path(celltype_neighbor_dir, cell_subtype_interaction_name)
 load(cell_subtype_interaction_path)
 
@@ -43,34 +44,31 @@ for (nn in 1:num_roi) {
 metadata_dir <- file.path(data_root_dir, "Metadata")
 roi_info_path <- file.path(metadata_dir, "ROI_Info.xlsx")
 roi_meta_info <- read.xlsx(roi_info_path)
-
-# AdjacentNormal of AAH/AIS/MIA/ADC
-path_stage <- "AAH"
-subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
-
-subset_roi_lst <- subset_roi_info$ROI_ID
-subset_roi_num <- length(subset_roi_lst)
-subset_out <- interaction_out[interaction_out$group_by %in% subset_roi_lst, ]
-
 from_order <- c("Epithelial", "B-Cells", "Neutrophil", "NK-Cells", "Dendritic-Cell", "Endothelial-Cell",
                 "Naive CD8 T-Cells", "Cytotoxic CD8 T-Cells", "Memory CD8 T-Cells", "Exhausted CD8 T-Cells", "Ki67+ CD8 T-Cells", 
                 "Naive CD4 T-Cells", "Memory CD4 T-Cells", "Exhausted CD4 T-Cells", "Ki67+ CD4 T-Cells", 
-                "Treg-Cells", "Proliferating-Cell", "CD163+ Macrophage", "CD163- Macrophage", 
+                "Treg-Cells", "Proliferating-Cell", "CD163+ Macrophages", "CD163- Macrophages", 
                 "Monocyte", "MDSC", "Fibroblast", "Undefined")
 to_order <- rev(from_order)
-
 max_per_val <- 1.000
 min_per_val <- -1.000
 
-subset_out %>% as_tibble() %>%
-    group_by(from_label, to_label) %>%
-    summarize(sum_sigval = sum(sigval, na.rm = TRUE) / subset_roi_num) %>%
-    mutate(across(starts_with("sum"), ~case_when(.x >= 0 ~ .x / max_per_val, TRUE ~ - .x / min_per_val))) %>%
-    mutate(from_label=factor(from_label, levels=from_order)) %>%
-    mutate(to_label=factor(to_label, levels=to_order)) %>%
-    ggplot() +
-    geom_tile(aes(from_label, to_label, fill = sum_sigval)) +
-    scale_fill_continuous(limits=c(min_per_val, max_per_val), breaks=seq(5)) +
-    scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+# AdjacentNormal of AAH/AIS/MIA/ADC
+interested_stages <- c("AAH", "AIS", "MIA", "ADC")
+for (path_stage in interested_stages) {
+    subset_roi_info <- subset(roi_meta_info, ROI_Diag==path_stage & ROI_Location=="Tumor")
+    subset_roi_lst <- subset_roi_info$ROI_ID
+    subset_roi_num <- length(subset_roi_lst)
+    subset_out <- interaction_out[interaction_out$group_by %in% subset_roi_lst, ]
+    subset_out %>% as_tibble() %>%
+        group_by(from_label, to_label) %>%
+        summarize(sum_sigval = sum(sigval, na.rm = TRUE) / subset_roi_num) %>%
+        mutate(across(starts_with("sum"), ~case_when(.x >= 0 ~ .x / max_per_val, TRUE ~ - .x / min_per_val))) %>%
+        mutate(from_label=factor(from_label, levels=from_order)) %>%
+        mutate(to_label=factor(to_label, levels=to_order)) %>%
+        ggplot() +
+        geom_tile(aes(from_label, to_label, fill = sum_sigval)) +
+        scale_fill_continuous(limits=c(min_per_val, max_per_val), breaks=seq(5)) +
+        scale_fill_gradient2(low = "blue", mid = "white", high = "red") +
+        theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
