@@ -1,10 +1,11 @@
-library(imcRtools)
+# library(imcRtools)
 library(readxl)
 library(stringr)
 library(tidyverse)
 
 ## set directory
-data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
+# data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
+data_root_dir <- "/Volumes/wulab/Ping/HumanIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 
 spe_celltype_name <-"lung_spe_15_celltypes_final"
@@ -30,6 +31,9 @@ for (ind in 1:length(cell_rois)) {
     cell_locations[ind] <- roi_df$ROI_Location[roi_index]
 }
 
+cell_locations[cell_locations=="DistantNormal"] <- "Normal"
+
+# collect protein expression
 TIM3_vals <- as.numeric(counts(spe)["TIM3",])
 ICOS_vals <- as.numeric(counts(spe)["ICOS",])
 TIGIT_vals <- as.numeric(counts(spe)["TIGIT",])
@@ -40,23 +44,20 @@ VISTA_vals <- as.numeric(counts(spe)["VISTA",])
 PD1_vals <- as.numeric(counts(spe)["PD1",])
 B7H3_vals <- as.numeric(counts(spe)["B7H3",])
 CTLA4_vals <- as.numeric(counts(spe)["CTLA4",])
+IDO1_vals <- as.numeric(counts(spe)["IDO1",])
 
-# contruct dataset
+# construct dataset
 cell_exp_df <- data.frame(cell_id = cell_ids, cell_roi = cell_rois, cell_type = cell_types, 
                           cell_location = cell_locations, cell_stage = cell_stages, 
                           TIM3 = TIM3_vals, ICOS = ICOS_vals, TIGIT = TIGIT_vals, 
                           CD73 = CD73_vals, PDL1 = PDL1_vals, LAG3 = LAG3_vals, 
                           VISTA = VISTA_vals, PD1 = PD1_vals,
-                          B7H3 = B7H3_vals, CTLA4 = CTLA4_vals)
+                          B7H3 = B7H3_vals, CTLA4 = CTLA4_vals, IDO1 = IDO1_vals)
 cell_exp_df <- cell_exp_df[cell_exp_df$cell_location != "AdjacentNormal",]
 
 # save data
 tim3_dir <- file.path(phenotype_dir, "TIM3")
 if (!file.exists(tim3_dir))
     dir.create(tim3_dir, recursive = TRUE)
-tim3_path <- file.path(tim3_dir, "cell_tim3.rds")
+tim3_path <- file.path(tim3_dir, "all_cell_tim3.rds")
 saveRDS(cell_exp_df, file = tim3_path)
-
-
-
-
