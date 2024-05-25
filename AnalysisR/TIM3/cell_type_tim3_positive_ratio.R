@@ -4,7 +4,7 @@ library(tidyverse)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 tim3_dir <- file.path(phenotype_dir, "TIM3")
-tim3_path <- file.path(tim3_dir, "cell_tim3.rds")
+tim3_path <- file.path(tim3_dir, "all_cell_tim3.rds")
 cell_exp_df <- readRDS(tim3_path)
 
 # extract cell_types & TIM3 expression
