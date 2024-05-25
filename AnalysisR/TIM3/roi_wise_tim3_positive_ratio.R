@@ -4,7 +4,7 @@ library(tidyverse)
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 tim3_dir <- file.path(phenotype_dir, "TIM3")
-tim3_path <- file.path(tim3_dir, "cell_tim3.rds")
+tim3_path <- file.path(tim3_dir, "all_cell_tim3.rds")
 cell_exp_df <- readRDS(tim3_path)
 
 tim3_roi_proportion_dir <- file.path(tim3_dir, "CellType-ROI")
@@ -16,6 +16,12 @@ cell_types <- cell_exp_df$cell_type
 cell_rois <- cell_exp_df$cell_roi
 cell_stages <- cell_exp_df$cell_stage
 cell_tim3_vals <- cell_exp_df$TIM3
+
+for (cell_ind in 1:length(cell_exp_df$cell_id)) {
+  if (cell_locations[cell_ind] == "Normal")
+    cell_stages[cell_ind] <- "Normal"
+}
+
 
 unique_cell_types <- c("Epithelial-Cell", "Endothelial-Cell", "Fibroblast", "CD4-T-Cell", "CD8-T-Cell", 
                        "T-Reg-Cell", "B-Cell", "Macrophage", "Monocyte", "Dendritic-Cell", 
@@ -44,13 +50,16 @@ for (cur_type in unique_cell_types) {
     roi_ratio_df$Stage <- factor(roi_ratio_df$Stage, levels = c("Normal", "AAH", "AIS", "MIA", "ADC"))
     ggplot(roi_ratio_df, aes(x = Stage, y = Proportion, colour = Stage)) + 
         geom_boxplot() +
+        # geom_violin() + 
         geom_jitter(width = 0.1) + 
         ylim(0.0, 1.0) +
         theme(legend.position="none", panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
               panel.background = element_blank(), axis.line = element_line(colour = "black")) +
         ggtitle(paste0(cur_type, " - Proportion"))
     
-    tim3_proportion_plot_path <- file.path(tim3_roi_proportion_dir, paste0(cur_type, ".pdf"))
+    # calcualte p-val
+    pval <- kruskal.test(Proportion ~ Stage, data = roi_ratio_df) 
+    tim3_proportion_plot_path <- file.path(tim3_roi_proportion_dir, paste0(cur_type, "-Violin-pval-", toString(pval$p.value), ".pdf"))
     ggsave(filename = tim3_proportion_plot_path, device='pdf', width=5, height=8, dpi=300)
     while (!is.null(dev.list()))
         dev.off()
