@@ -1,8 +1,7 @@
 library(tidyverse)
 
 # prepare directory
-# data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
-data_root_dir <- "/Volumes/wulab/Ping/HumanIMCData/HumanWholeIMC"
+data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 tim3_dir <- file.path(phenotype_dir, "TIM3")
 tim3_path <- file.path(tim3_dir, "all_cell_tim3.rds")
@@ -89,89 +88,89 @@ roi_marker_exp_df <- data.frame(Stage = stage_lst,
 roi_marker_exp_df$Stage <- factor(roi_marker_exp_df$Stage, levels=c("Normal", "AAH", "AIS", "MIA", "ADC"))
 
 # TIM3
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(TIM3))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(TIM3))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(TIM3 ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("TIM3-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("TIM3-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # ICOS
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(ICOS))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(ICOS))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(ICOS ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("ICOS-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("ICOS-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # TIGIT
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(TIGIT))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(TIGIT))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(TIGIT ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("TIGIT-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("TIGIT-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # CD73
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(CD73))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(CD73))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(CD73 ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("CD73-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("CD73-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # PDL1
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(PDL1))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(PDL1))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(PDL1 ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("PDL1-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("PDL1-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # LAG3
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(LAG3))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(LAG3))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(LAG3 ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("LAG3-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("LAG3-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # VISTA
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(VISTA))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(VISTA))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(VISTA ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("VISTA-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("VISTA-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # PD1
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(PD1))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(PD1))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(PD1 ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("PD1-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("PD1-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # B7H3
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(B7H3))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(B7H3))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(B7H3 ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("B7H3-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("B7H3-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # CTLA4
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(CTLA4))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(CTLA4))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(CTLA4 ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("CTLA4-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("CTLA4-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
 
 # IDO1
-ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(IDO1))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+ggplot(roi_marker_exp_df, aes(x = Stage, y = log10(IDO1))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 pval <- kruskal.test(IDO1 ~ Stage, data = roi_marker_exp_df) 
-marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("IDO1-Stage-Violin-pval-", toString(pval$p.value), ".pdf"))
+marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("IDO1-Stage-Boxplot-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
 while (!is.null(dev.list()))
   dev.off()
