@@ -2,6 +2,8 @@ library(tidyverse)
 
 # prepare directory
 data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
+# data_root_dir <- "/Volumes/wulab/Ping/HumanIMCData/HumanWholeIMC"
+
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 tim3_dir <- file.path(phenotype_dir, "TIM3")
 tim3_path <- file.path(tim3_dir, "all_cell_tim3.rds")
@@ -79,10 +81,10 @@ for (cur_stage in unique_stages) {
     roi_marker_exp_df <- data.frame(TIM3 = tim3_lst, ICOS = icos_lst, TIGIT = tigit_lst, CD73 = cd73_lst,
                                     PDL1 = pdl1_lst, LAG3 = lag3_lst, VISTA = vista_lst, PD1 = pd1_lst,
                                     B7H3 = b7h3_lst, CTLA4 = ctla4_lst, IDO1 = ido1_lst)
-    ggplot(stack(roi_marker_exp_df), aes(x = ind, y = log10(values))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
-    #     geom_boxplot()
+    # ggplot(stack(roi_marker_exp_df), aes(x = ind, y = log10(values))) + geom_violin() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+    ggplot(stack(roi_marker_exp_df), aes(x = ind, y = log2(values))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
 
-    marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0(cur_stage, "-Violin-v1.pdf"))
+    marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0(cur_stage, "-BoxLog2.pdf"))
     ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
     while (!is.null(dev.list()))
         dev.off()
