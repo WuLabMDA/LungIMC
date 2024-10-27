@@ -1,8 +1,8 @@
 library(tidyverse)
 
 # prepare directory
-data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
-# data_root_dir <- "/Volumes/wulab/Ping/HumanIMCData/HumanWholeIMC"
+# data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
+data_root_dir <- "/Volumes/wulab/Ping/HumanIMCData/HumanWholeIMC"
 
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 tim3_dir <- file.path(phenotype_dir, "TIM3")
@@ -91,6 +91,9 @@ roi_marker_exp_df$Stage <- factor(roi_marker_exp_df$Stage, levels=c("Normal", "A
 
 # TIM3
 ggplot(roi_marker_exp_df, aes(x = Stage, y = log2(TIM3))) + geom_boxplot() + ylim(-6.0, 1.0) + geom_jitter(size = 0.2, width = 0.3)
+# add pairwise.wilcox.test test
+# test_res <- pairwise.wilcox.test(roi_marker_exp_df$TIM3, roi_marker_exp_df$Stage, p.adjust.method = "bonferroni") 
+
 pval <- kruskal.test(TIM3 ~ Stage, data = roi_marker_exp_df) 
 marker_expression_plot_path <- file.path(marker_expression_cmp_dir, paste0("TIM3-Stage-BoxplotLog2-pval-", toString(pval$p.value), ".pdf"))
 ggsave(filename = marker_expression_plot_path, device='pdf', width=8, height=5, dpi=300)
