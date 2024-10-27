@@ -3,6 +3,7 @@ ArchiveLung
 figures
 
 # Files
+._*
 *._
 *.jar
 .Rhistory
