@@ -1,8 +1,8 @@
 library(tidyverse)
 
 # prepare directory
-# data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
-data_root_dir <- "/Volumes/wulab/Ping/HumanIMCData/HumanWholeIMC"
+data_root_dir <- "E:/LungIMCData/HumanWholeIMC"
+# data_root_dir <- "/Volumes/wulab/Ping/HumanIMCData/HumanWholeIMC"
 
 phenotype_dir <- file.path(data_root_dir, "CellPhenotyping")
 tim3_dir <- file.path(phenotype_dir, "TIM3")
